@@ -106,3 +106,24 @@ WHERE {
 ```
 
 
+### trouver tous les éléments qui ont exactement value="Hunde" (mais va chercher vraiment partout)
+
+
+```
+PREFIX schema: <http://schema.org/>
+
+SELECT ?element ?type ?nom ?lang
+WHERE {
+  ?element schema:name ?nom .
+  
+  # On filtre pour avoir exactement "Hunde"
+  FILTER (STR(?nom) = "Hunde")
+  
+  # On récupère le type pour savoir si c'est un point ou un groupe
+  OPTIONAL { ?element a ?type . }
+  
+  # On récupère le tag de langue (devrait être @de)
+  BIND(LANG(?nom) AS ?lang)
+}
+```
+
