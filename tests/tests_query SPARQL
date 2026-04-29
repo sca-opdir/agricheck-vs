@@ -32,3 +32,32 @@ WHERE {
 }
 LIMIT 50
 ```
+
+### query par numéro d'identifiant PC Acontrol Masterliste
+
+```
+PREFIX schema: <http://schema.org/>
+PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+
+SELECT ?point ?id ?titreFR ?descriptionFR
+WHERE {
+  # On cherche l'objet qui a le type InspectionPoint
+  ?point a :InspectionPoint ;
+         # On filtre par l'identifiant exact que vous avez cité
+         :conjunctIdentifier "12.24_2025, E1, 01" .
+  
+  # On récupère les champs lisibles
+  OPTIONAL { 
+    ?point schema:name ?titreFR .
+    FILTER(LANG(?titreFR) = "fr")
+  }
+  
+  OPTIONAL { 
+    ?point schema:description ?descriptionFR .
+    FILTER(LANG(?descriptionFR) = "fr")
+  }
+  
+  # On récupère aussi l'ID court pour vérification
+  OPTIONAL { ?point schema:identifier ?id . }
+}
+```
