@@ -61,3 +61,48 @@ WHERE {
   OPTIONAL { ?point schema:identifier ?id . }
 }
 ```
+
+### retrouver le parent 
+
+```
+PREFIX schema: <http://schema.org/>
+PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+
+SELECT ?point ?idConjunct ?parentURI ?parentNom
+WHERE {
+  # 1. On identifie notre point précis
+  ?point :conjunctIdentifier "12.24_2025, E1, 01" .
+  
+  # 2. On suit le lien vers le groupe parent
+  ?point :belongsToGroup ?parentURI .
+  
+  # 3. On récupère le nom du parent (en français)
+  ?parentURI schema:name ?parentNom .
+  FILTER(LANG(?parentNom) = "fr")
+  
+}
+```
+
+### retracer l'ascendance de façon récursive
+
+```
+PREFIX schema: <http://schema.org/>
+PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+
+SELECT ?parentURI ?nomParent
+WHERE {
+  # 1. On cible votre point
+  ?point :conjunctIdentifier "12.24_2025, E1, 01" .
+  
+  # 2. On remonte via belongsToGroup OU schema:isPartOf de façon récursive
+  # Le symbole | signifie "OU"
+  ?point (:belongsToGroup|schema:isPartOf)+ ?parentURI .
+  
+  # 3. On récupère le nom
+  ?parentURI schema:name ?nomParent .
+  
+  FILTER(LANG(?nomParent) = "fr")
+}
+```
+
+
