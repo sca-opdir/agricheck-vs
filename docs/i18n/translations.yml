@@ -1,0 +1,184 @@
+de:
+  header:
+    title: Schweizer Kontrollpunkte? Einfach gefunden mit Agricheck!
+    lead: Durchsuchen Sie mit Agricheck die Kontrollpunkte, die auf Schweizer Landwirtschaftsbetrieben geprüft werden. Verfügbar sind alle schweizweit geltenden öffentlich-rechtlichen Kontrollpunkte und Kontrollpunkte, die von unterzeichnenden Label-Organisationen des Aktionsplans «Kontrollen auf Landwirtschaftsbetrieben" zur Verfügung gestellt wurden. Für weitere Informationen zu Entstehung, Inhalt und Einschränkungen von Agricheck, [besuchen Sie unsere Hilfsseite](about.html).
+  
+  search:
+    placeholder: Suchen Sie hier nach einem Stichwort und es werden alle Kontrollbereiche dazu grün eingefärbt.
+    button: Suche
+    reset: Suche zurücksetzen
+  
+  tree:
+    cardTitle: Kontrollpunkte-Gruppen
+    quickHelp: Klicken Sie in der Baumansicht auf die Quadrätchen, und wählen Sie alle Gruppen aus, die sie betreffen (grünes Häkchen heisst «ausgewählt»). Klicken sie danach rechts auf «Liste erstellen» und Sie erhalten Ihre Liste mit den für Ihren Betrieb gültigen Kontrollpunkten.
+  
+  actions:
+    title: Aktionen
+    generate: Liste erstellen
+  
+  checklist:
+    title: Meine Agricheck-Liste
+    print: Drucken / PDF
+    excel: Excel
+    copyLink: Link kopieren
+    copied: Kopiert!
+    excelSoon: Excel-Export wird demnächst unterstützt.
+    noGroups: Keine Gruppen angegeben.
+  
+  footerText: © Bundesamt für Landwirtschaft und beteiligte Labelorganisationen, Stand Februar 2026
+  
+  about: |
+    # Agricheck – Ihr Schnellzugriff auf Schweizer Kontrollpunkte
+    
+    Agricheck ist eine Webapplikation, die Landwirt:innen digitalen Zugang zu möglichst allen relevanten Kontrollpunkten auf Schweizer Landwirtschaftsbetrieben bietet. Die Anwendung verknüpft offene Daten des Bundes und Label-Organisationen.
+    
+    ## Wer hat diese App umgesetzt?
+    
+    Das Bundesamt für Landwirtschaft hat diese Webapplikation im Jahr 2025 im Rahmen des Aktionsplans «Kontrollen auf Landwirtschaftsbetrieben» erarbeitet. Er ist in Zusammenarbeit mit unterzeichnenden Organisationen des Aktionsplans entstanden.
+    
+    Zu berücksichtigen sind folgende Punkte:
+    
+    * Die Kontrollpunkte werden einmal jährlich aktualisiert, und zwar vor dem neuen Kalenderjahr.
+    * Eher unbedeutende Produktionszweige sind zugunsten der Übersichtlichkeit nicht abgebildet (z.B. Insekten).
+    * Es sind Kontrollpunkte von Labels abgebildet, welche den Aktionsplan Kontrollen in der Landwirtschaft unterzeichnet haben, sofern sie ihre Kontrollpunkte-Listen zur Verfügung gestellt haben. Kontrollpunkte von weiteren privatrechtlichen Organisationen könnten künftig ergänzt werden.
+    * Es wurden die Texte aus den Kontrollpunkte-Listen übernommen. Die Hilfstexte sind für Kontrolleure geschrieben worden und können deshalb für andere Personen nicht immer selbsterklärend sein.
+    * Sind die Kontrollpunkte in einer Sprache nicht verfügbar bzw. übersetzt, so werden sie in einer verfügbaren Sprachversion abgebildet.
+    * Die Herausgeber übernehmen keine Verantwortung für die Vollständigkeit, Verständlichkeit und Korrektheit der privatrechtlichen Kontrollpunktelisten.
+    
+    Wenden Sie sich bei Fragen an [acontrol@blw.admin.ch](mailto:acontrol@blw.admin.ch).
+
+  terms-of-use: |
+    ### Nutzungsbedingungen
+    
+    <img alt="Terms of Use: Free Use, Source Mandatory, Commercial Use by Permission" src="https://wp.opendata.swiss/wp-content/uploads/2021/02/terms_by-ask.png" style="height:30px;margin-bottom:10px">
+    
+    **Freie Nutzung. Quellenangabe ist Pflicht. Kommerzielle Nutzung nur mit Bewilligung des Datenlieferanten zulässig.**
+    
+    Die auf Agricheck publizierten Daten sind öffentlich einsehbar. Bitte beachten Sie jedoch:
+    
+    * **Keine kommerzielle Nutzung ohne Erlaubnis:** Eine Verwendung der Daten für kommerzielle Zwecke ist ohne explizite Einwilligung nicht gestattet.
+    * **Zuständigkeit:** Als zuständiger Datenlieferant gilt die jeweilige Labelorganisation, welche die spezifischen Kontrollpunkte verfasst hat. Für eine Bewilligung ist direkt die entsprechende Organisation zu kontaktieren.
+    * **Urheberrecht:** Alle Urheberrechte verbleiben beim Urheber. Es werden lediglich die oben genannten Nutzungsrechte eingeräumt.
+
+fr:
+  header:
+    title: Points de contrôle suisses ? Simplifiez-vous la vie avec Agricheck !
+    lead: Avec Agricheck, recherchez les points de contrôle qui sont vérifiés dans les exploitations agricoles suisses. Sont disponibles tous les points de contrôle de droit public valables dans toute la Suisse ainsi que les points de contrôle mis à disposition mis à la disposition des développeurs par les organisations de labellisation signataires du plan d’action « Contrôles dans les exploitations agricoles » . Pour plus d'informations sur l'origine, le contenu et les limites d'Agricheck, [consultez notre page d'aide](about.html).
+  
+  search:
+    placeholder: Recherchez ici un mot-clé et tous les groupes correspondants seront colorés.
+    button: Rechercher
+    reset: Réinitialiser la recherche
+  
+  tree:
+    cardTitle: Groupes de points de contrôle
+    quickHelp: Dans la vue arborescente, cliquez sur les cases pour sélectionner tous les groupes qui vous concernent (une coche verte signifie «sélectionné»). Cliquez ensuite sur «Créer la liste» à droite et vous recevrez la liste des points de contrôle valables pour votre exploitation.
+  
+  actions:
+    title: Actions
+    generate: Créer la liste
+  
+  checklist:
+    title: Ma liste Agricheck
+    print: Imprimer / PDF
+    excel: Excel
+    copyLink: Copier le lien
+    copied: Copié !
+    excelSoon: L’exportation Excel sera bientôt prise en charge.
+    noGroups: Aucun groupe fourni.
+  
+  footerText: © Office fédéral de l'agriculture et organisations de labels participantes, état en février 2026
+  
+  about: |
+    # Agricheck – Votre accès rapide aux points de contrôle suisses
+    
+    Agricheck est un application web qui offre aux agriculteurs et agricultrices un accès numérique à un maximum de points de contrôle pertinents sur les exploitations agricoles suisses. Pour ce faire, l'application associe les données de la Confédération et des organisations de labellisation à une interface utilisateur moderne.
+    
+    ## Qui a mis en œuvre cette application ?
+    
+    L'Office fédéral de l'agriculture a élaboré cette application web en 2025 dans le cadre du plan d'action « Contrôles sur les exploitations agricoles », en collaboration avec les organisations signataires de ce plan.
+    
+    Les points suivants sont à prendre en considération :
+    
+    * Les points de contrôle sont mis à jour une fois par an, avant le début de la nouvelle année civile.
+    * Certaines branches de production plutôt mineures ne sont pas représentées pour des raisons de clarté (par ex. les insectes).
+    * Les points de contrôle des labels qui ont signé le plan d'action « Contrôles dans l'agriculture » sont représentés (pour autant qu'ils aient été mis à disposition). Les points de contrôle d'autres organisations de droit privé pourraient être ajoutés à l'avenir.
+    * Les textes ont été repris des listes de points de contrôle. Les textes d'aide ont été rédigés pour les contrôleurs et peuvent donc ne pas être toujours explicites pour d'autres personnes.
+    * Si les points de contrôle ne sont pas disponibles ou traduits dans une langue donnée, ils s'affichent dans une version linguistique disponible.
+    * Les éditeurs n'assument aucune responsabilité quant à l'exhaustivité, la clarté et l'exactitude des listes de points de contrôle.
+    
+    Pour toute question, veuillez vous adresser à [acontrol@blw.admin.ch](mailto:acontrol@blw.admin.ch).
+
+  terms-of-use: |
+    ### Conditions d'utilisation
+    
+    <img alt="Conditions d'utilisation : utilisation libre, source obligatoire, utilisation commerciale sur autorisation" src="https://wp.opendata.swiss/wp-content/uploads/2021/02/terms_by-ask.png" style="height:30px;margin-bottom:10px">
+    
+    **Utilisation libre. La mention de la source est obligatoire. L'utilisation commerciale n'est autorisée qu'avec l'accord du fournisseur des données.**
+    
+    Les données publiées sur Agricheck sont accessibles au public. Veuillez toutefois noter les points suivants :
+    
+    * **Pas d'utilisation commerciale sans autorisation :** l'utilisation des données à des fins commerciales n'est pas autorisée sans accord explicite.
+    * **Responsabilité :** Le fournisseur de données responsable est l'organisation de labellisation qui a rédigé les points de contrôle spécifiques. Pour obtenir une autorisation, veuillez contacter directement l'organisation concernée.
+    * **Droits d'auteur :** Tous les droits d'auteur demeurent la propriété de l'auteur. Seuls les droits d'utilisation susmentionnés sont accordés.
+
+it:
+  header:
+    title: Punti di controllo svizzeri? Trovati facilmente con Agricheck!
+    lead: Con Agricheck puoi cercare i punti di controllo verificati nelle aziende agricole svizzere. Sono disponibili tutti i punti di controllo di diritto pubblico validi a livello nazionale e i punti di controllo messi a disposizione degli sviluppatori dalle organizzazioni di certificazione firmatarie del piano d'azione «Controlli nelle aziende agricole». Per maggiori informazioni sull'origine, il contenuto e le limitazioni di Agricheck, [visita la nostra pagina di aiuto](about.html).
+  
+  search:
+    placeholder: Cerca qui una parola chiave e tutti i gruppi trovati verranno colorati.
+    button: Cerca
+    reset: Resetta ricerca
+  
+  tree:
+    cardTitle: Gruppi di punti di controllo
+    quickHelp: Nella visualizzazione ad albero, clicca sulle caselle e seleziona tutti i gruppi che ti riguardano (un segno di spunta verde significa «selezionato»). Successivamente, clicca su «Crea elenco» a destra e riceverai la tua lista con i punti di controllo validi per te.
+  
+  actions:
+    title: Azioni
+    generate: Crea elenco
+  
+  checklist:
+    title: La mia lista di Agricheck
+    print: Stampa / PDF
+    excel: Excel
+    copyLink: Copia link
+    copied: Copiato!
+    excelSoon: L’esportazione in Excel sarà disponibile a breve.
+    noGroups: Nessun gruppo specificato.
+  
+  footerText: © Ufficio federale dell'agricoltura e organizzazioni di label partecipanti, stato febbraio 2026
+  
+  about: |
+    # Agricheck – Il tuo accesso rapido ai punti di controllo svizzeri
+    
+    Agricheck è un'applicazione web che offre agli agricoltori e alle agricoltrici un accesso digitale al maggior numero possibile di punti di controllo rilevanti nelle aziende agricole svizzere. A tal fine, l'applicazione combina i dati aperti della Confederazione e delle organizzazioni di certificazione con un'interfaccia utente moderna.
+    
+    ## Chi ha realizzato questa applicazione?
+    
+    L'Ufficio federale dell'agricoltura ha sviluppato questa questa applicazione web nel 2025 nell'ambito del piano d'actione «Controlli sulle aziende agricole», in collaborazione con le organizzazioni firmatarie di tale piano.
+    
+    È necessario tenere conto dei seguenti punti:
+    
+    * I punti di controllo vengono aggiornati una volta all'anno, prima dell'inizio del nuovo anno civile.
+    * Alcuni settori di attività piuttosto minori non sono rappresentati per motivi di chiarezza (ad es. gli insetti).
+    * Sono rappresentati i punti di controllo dei marchi che hanno sottoscritto il piano d'azione «Controlli in agricoltura», a condizione che abbiano messo a disposizione i loro elenchi di punti di controllo. In futuro potrebbero essere aggiunti i punti di controllo di altre organizzazioni di diritto privato. I testi sono stati ripresi dagli elenchi dei punti di controllo. I testi di aiuto sono stati redatti per i controllori e potrebbero quindi non essere sempre chiari per altre persone.
+    * Se i punti di controllo non sono disponibili o tradotti in una determinata lingua, vengono visualizzati in una versione linguistica disponibile.
+    * Gli editori non si assumono alcuna responsabilità per la completezza, la chiarezza e l'accuratezza degli elenchi di punti di controllo.
+    
+    Per qualsiasi domanda, si prega di contattare [acontrol@blw.admin.ch](mailto:acontrol@blw.admin.ch).
+
+  terms-of-use: |
+    ### Condizioni d'uso
+    
+    <img alt="Condizioni d'uso: uso gratuito, fonte obbligatoria, uso commerciale previa autorizzazione" src="https://wp.opendata.swiss/wp-content/uploads/2021/02/terms_by-ask.png" style="height:30px;margin-bottom:10px">
+    
+    **Uso gratuito. È obbligatorio citare la fonte. L'uso commerciale è consentito solo previa autorizzazione del fornitore dei dati.**
+    
+    I dati pubblicati su Agricheck sono accessibili al pubblico. Si prega tuttavia di notare quanto segue:
+    
+    * **Nessun uso commerciale senza autorizzazione:** l'uso dei dati per scopi commerciali non è consentito senza esplicito consenso.
+    * **Competenza:** il fornitore dei dati competente è l'organisatione di certificazione che ha redatto i punti di controllo specifici. Per ottenere l'autorizzazione è necessario contattare direttamente l'organisatione in questione.
+    * **Diritto d'autore:** Tutti i diritti d'autore rimangono in capo all'autore. Sono concessi unicamente i diritti di utilizzo summenzionati.

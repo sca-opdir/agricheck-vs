@@ -1,0 +1,17 @@
+tests/__pycache__/
+data/
+.DS_Store
+.Rhistory
+upload.sh
+notes.*
+test.*
+
+rdf/*.ttl
+!rdf/ontology.ttl
+!rdf/shape.ttl
+!rdf/mapping.ttl
+
+*.db
+.env
+
+venv/

@@ -1,0 +1,101 @@
+@prefix :        <https://agriculture.ld.admin.ch/inspection/> .
+@prefix sh:       <http://www.w3.org/ns/shacl#> .
+@prefix dcterms:  <http://purl.org/dc/terms/> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema:   <http://schema.org/> .
+
+# Check global constraints regarding all classes
+# ==============================================
+
+:UniqueLangPerPropertyShape
+    a                    sh:NodeShape ;
+
+    # target any subject using one of these props
+    sh:targetSubjectsOf  schema:name ;
+    sh:targetSubjectsOf  schema:description ;
+
+    # ensure max one schema:name per language
+    sh:property [
+      sh:path          schema:name ;
+      sh:uniqueLang    true ;
+      sh:message       "Only one schema:name per language is allowed on {this}." ;
+    ] ;
+
+    # ensure max one schema:description per language
+    sh:property [
+      sh:path          schema:description ;
+      sh:uniqueLang    true ;
+      sh:message       "Only one schema:description per language is allowed on {this}." ;
+    ] .
+
+# Check shape of dct:Collection
+# =============================
+
+:CollectionShape
+  a                 sh:NodeShape ;
+
+  # ─── Targets ───────────────────────────────────────────────────────────
+  # 1) All real collections:
+  sh:targetClass    dcterms:Collection ;
+  # 2) Any node that uses :hierarchyLevel (to catch wrong‐domain cases):
+  sh:targetSubjectsOf :hierarchyLevel ;
+
+  # Domain check: any focus (i.e. any subject of :hierarchyLevel) must be a Collection
+  sh:class          dcterms:Collection ;
+  sh:message        "Resource {this} uses :hierarchyLevel but is not a dcterms:Collection." ;
+
+  # ─── Property‐shapes on true collections ─────────────────────────────────
+  # (a) at most one hierarchyLevel
+  sh:property [
+    sh:path       :hierarchyLevel ;
+    sh:maxCount   1 ;
+    sh:message    "Collection {this} must not have more than one hierarchyLevel." ;
+  ] ;
+
+  # (b) must be a integer
+  sh:property [
+    sh:path        :hierarchyLevel ;
+    sh:datatype    xsd:integer ;
+    sh:message     "Hierarchy level for {this} has wrong datatype" ;
+    sh:resultPath  :hierarchyLevel ;
+  ] ;
+
+  # (c) depth‐alignment via SPARQL
+  sh:constraint [
+    a               sh:SPARQLConstraint ;
+    sh:message      """
+      hierarchyLevel for {this} (= {lvl}) does not match the number
+      of :isPartOf steps up to the root (= {depth}).
+    """ ;
+    sh:select       """
+      PREFIX :        <https://agriculture.ld.admin.ch/inspection/>
+      PREFIX dcterms:  <http://purl.org/dc/terms/>
+      PREFIX xsd:      <http://www.w3.org/2001/XMLSchema#>
+
+      SELECT
+        $this
+        (?lvl   AS ?lvl)
+        (?depth AS ?depth)
+      WHERE {
+        $this :hierarchyLevel ?lvl .
+
+        {
+          SELECT $this (COUNT(DISTINCT ?mid) AS ?depth)
+          WHERE { $this (:isPartOf)+ ?mid }
+          GROUP BY $this
+        }
+
+        FILTER( xsd:integer(?lvl) != ?depth )
+      }
+    """ ;
+  ] .
+
+# TODO: shape of :InspectionPoint
+# ===============================
+
+# Pattern of schema:identifier
+# ==================================
+# Example: 02.31.3 is OK,
+#          02.31.3_2016 is not OK
+# "^[0-9]+(\\.[0-9]+)*$"

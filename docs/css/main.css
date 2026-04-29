@@ -1,0 +1,179 @@
+.section-number, ul.checklist input {
+  margin-right: 0.5rem;
+}
+:root {
+  --primary: #3db85d;
+  --secondary: #6fe28e;
+  --secondary-light: #c8f7d4;
+  --light: #f8f9fa;
+  --white: #ffffff;
+  --muted: #6c757d;
+  --border: #dee2e6;
+  --navbar-h: 56px;
+}
+body, html {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 12pt;
+}
+main {
+  flex: 1 0 auto;
+}
+footer {
+  flex-shrink: 0;
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+  font-family: Inter, system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: none;
+}
+b, strong {
+  font-weight: 900;
+}
+.hover-opacity:hover {
+  opacity: 0.8;
+}
+input[type="search"]::-ms-clear,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.navbar-icons .nav-link {
+  color: var(--white) !important;
+  opacity: 0.9;
+}
+.navbar-icons .nav-link:hover {
+  opacity: 1;
+}
+.card-header {
+  font-weight: 600;
+}
+.section-number {
+  color: var(--muted);
+}
+ul.checklist {
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+ul.checklist li {
+  margin-bottom: 0.75rem;
+}
+ul.checklist label {
+  cursor: pointer;
+}
+.jstree-search {
+  background: var(--secondary) !important;
+  color: inherit !important;
+  font-weight: inherit !important;
+  font-style: normal !important;
+}
+.jstree-search-weak {
+  background: var(--secondary-light) !important;
+  color: inherit !important;
+  font-weight: inherit !important;
+  font-style: normal !important;
+}
+#tree li.jstree-checked > .jstree-anchor > .jstree-checkbox,
+#tree li.jstree-undetermined > .jstree-anchor > .jstree-checkbox {
+  background: var(--primary);
+  border-color: var(--primary);
+  position: relative;
+}
+#tree li.jstree-checked > .jstree-anchor > .jstree-checkbox::after {
+  content: "";
+  position: absolute;
+  top: 0.15em;
+  left: 0.26em;
+  width: 0.55em;
+  height: 0.3em;
+  border: 2px solid var(--white);
+  border-top: none;
+  border-right: none;
+  transform: rotate(-45deg);
+}
+#tree li.jstree-undetermined > .jstree-anchor > .jstree-checkbox::after {
+  content: "";
+  position: absolute;
+  top: 0.44em;
+  left: 0.2em;
+  width: 0.6em;
+  height: 2px;
+  background: var(--white);
+}
+#tree .jstree-anchor {
+  white-space: nowrap;
+  overflow: hidden;
+}
+#tree, #tree .jstree-container-ul, #treeCard .card-body {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+}
+.form-check-input {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  margin-top: 0.25em;
+  appearance: none;
+  background-color: var(--light);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: 2px solid var(--muted);
+}
+@media (min-width: 992px) {
+  #actionsWrapper {
+    position: sticky;
+    top: calc(var(--navbar-h) + 1rem);
+    align-self: flex-start;
+    z-index: 1010;
+  }
+}
+.tooltip {
+  z-index: 1080 !important;
+}
+.wide-tooltip .tooltip-inner {
+  --bs-tooltip-max-width: 800px;
+  text-align: left;
+}
+.wide-tooltip .tooltip-inner a {
+  color: var(--white);
+  text-decoration: underline;
+}
+
+/* Harmonize checklist fonts */
+ul.checklist label {
+  /* Ensure the container sets the baseline */
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--bs-body-color); /* Standard text color */
+}
+
+/* Ensure both the Name-Span and Description-Span inherit exactly */
+ul.checklist label span {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 400; /* Ensure normal weight */
+}
+
+/* Specific override for the description to only change color */
+ul.checklist label .text-muted {
+  color: var(--muted) !important;
+  /* Prevent any theme-specific font shrinking or changing */
+  font-size: inherit; 
+  font-family: inherit;
+}

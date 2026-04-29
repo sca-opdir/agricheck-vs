@@ -1,0 +1,14 @@
+Levenshtein>=0.27.3
+pathlib>=1.0.1
+pyparsing>=2.1.0
+pyshacl>=0.30.1
+rapidfuzz>=3.14.3
+rdflib>=7.5.0
+owlrl<8,>=7.1.2
+packaging>=21.3
+prettytable>=3.7.0
+html5rdf<2,>=1.2
+otsrdflib>=0.5.0
+pytest==9.0.3
+PyYAML==6.0.3
+markdown-it-py==4.0.0

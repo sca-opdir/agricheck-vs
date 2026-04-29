@@ -1,0 +1,490 @@
+@prefix : <https://agriculture.ld.admin.ch/inspection/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+
+:42EA1020A8742ACABFB1B7A426619C42 a dcterms:Collection ;
+    rdfs:label "BFC"@en ;
+    schema:hasPart :A07EF60442B92B978AAA3B546480A7C5,
+        :A07EF60442B92B978BBB3B546480A7C5,
+        :A07EF60442B92B978CCC3B546480A7C5 ;
+    rdfs:comment "A collection of all collections, makes querying easier."@de .
+
+:57A74BCEBD7A1D05E0532D0E870A0EAF a dcterms:Collection ;
+    schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 ;
+    rdfs:comment """
+        Für Sömmerung gelten nur die Kategorien Anmeldung für Direktzahlungen, Gesuchseinreichung und Kontrolle auf dem Betrieb.
+        """@de,
+        """
+        Pour l'estivage, seules les catégories « Inscription aux paiements directs », « Dépôt de la demande » et « Contrôle dans l'exploitation » s'appliquent.
+        """@fr,
+        """
+        Per l'estivazione valgono solo le categorie «Domanda di pagamenti diretti», «Presentazione della domanda» e «Controllo nell'azienda».
+        """@it .
+
+:84EA0583A8534BB0AFDC27A486652C3C a dcterms:Collection ;
+    rdfs:label "QM Schweizer Fleisch"@de,
+        "AQ-Viande Suisse"@fr,
+        "QM Carne Svizzera"@it ;
+    schema:isPartOf :A07EF60442B92B978CCC3B546480A7C5 ;
+    rdfs:comment """
+        Die Kontrollpunkte gelten für alle Betriebe, die beim privatrechtlichen Programm QM Schweizer Fleisch mitmachen, d.h. es sind privatrechtliche Kontrollpunkte.
+        Die Produktionsrichtlinien von QM Schweizer Fleisch finden Sie unter <a href="https://qm-schweizerfleisch.ch" target="_blank">qm-schweizerfleisch.ch</a>.
+        """@de,
+        """
+        Les points de contrôle s'appliquent à toutes les exploitations participant au programme privé AQ-Viande Suisse, c'est-à-dire qu'il s'agit de points de contrôle privés.
+        Les directives de production de AQ-Viande Suisse se trouvent sur <a href="https://www.aq-viandesuisse.ch/" target="_blank">aq-viandesuisse.ch/</a>.
+        """@fr,
+        """
+        I punti di controllo si applicano a tutte le aziende che partecipano al programma privato QM Carne Svizzera, cioè si tratta di punti di controllo privati.
+        Le linee guida di produzione di QM Carne Svizzera sono disponibili su <a href="https://qm-schweizerfleisch.ch" target="_blank">qm-schweizerfleisch.ch</a>.
+        """@it .
+
+:84EA1092A8794BB0AFD2B7A486619C7G a dcterms:Collection ;
+    rdfs:label "Natura-Beef / Natura-Veal"@de,
+        "Natura-Beef / Natura-Veal"@fr,
+        "Natura-Beef / Natura-Veal"@it,
+        "Natura-Beef / Natura-Veal"@rm ;
+    schema:isPartOf :A07EF60442B92B978CCC3B546480A7C5 ;
+    rdfs:comment """
+        Die Kontrollpunkte gelten für die Labels "Natura-Beef" und "Natura-Veal" von Mutterkuh Schweiz.
+        """@de,
+        """
+        Les points de contrôle s'appliquent aux labels "Natura-Beef" et "Natura-Veal" de Vache mère Suisse.
+        """@fr,
+        """
+        I punti di controllo si applicano ai marchi "Natura-Beef" e "Natura-Veal" di Vacca madre Svizzera.
+        """@it .
+
+:A07EF60442B92B9700003B546480A7C5 a dcterms:Collection ;
+    rdfs:label "Umwelt"@de,
+        "Environment"@en,
+        "Environnement"@fr,
+        "Ambiente"@it ;
+    schema:hasPart :57A74BCEB4C11D05E0532D0E870A0EAF,
+        :57A74BCEB5A41D05E0532D0E870A0EAF,
+        :957859627D824A60B076A86082454FCC ;
+    schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:A07EF60442B92B9722223B546480A7C5 a dcterms:Collection ;
+    rdfs:label "Strukturdaten"@de,
+        "Structural data"@en,
+        "Données structurelles"@fr,
+        "Dati strutturali"@it ;
+    schema:hasPart :57A74BCEB8251D05E0532D0E870A0EAF,
+        :57A74BCEB82A1D05E0532D0E870A0EAF,
+        :57A74BCEB82D1D05E0532D0E870A0EAF,
+        :57A74BCEBD821D05E0532D0E870A0EAF ;
+    schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:A07EF60442B92B9733333B546480A7C5 a dcterms:Collection ;
+    rdfs:label "Ökologischer Leistungsnachweis (ÖLN)"@de,
+        "Ecological performance proof (ÖLN)"@en,
+        "Prestations écologiques requises (PER)"@fr,
+        "Prova del rendimento ecologico (ÖLN)"@it ;
+    schema:hasPart :1D0B4931DC8C42C1A2DB50F8EB7961D4,
+        :25502ED4E5AC443FB25B7708CFBD797C,
+        :57A74BCEB1981D05E0532D0E870A0EAF,
+        :57A74BCEB82F1D05E0532D0E870A0EAF,
+        :57A74BCEB8371D05E0532D0E870A0EAF,
+        :57A74BCEBD8D1D05E0532D0E870A0EAF,
+        :57A74BCEC0911D05E0532D0E870A0EAF,
+        :57A74BCEC0981D05E0532D0E870A0EAF,
+        :57A74BCEC0A01D05E0532D0E870A0EAF,
+        :57A74BCEC2501D05E0532D0E870A0EAF,
+        :57A74BCEC5661D05E0532D0E870A0EAF,
+        :57A74BCEC5681D05E0532D0E870A0EAF,
+        :57A74BCEC56A1D05E0532D0E870A0EAF ;
+    schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:A07EF60442B92B9744443B546480A7C5 a dcterms:Collection ;
+    rdfs:label "Biodiversitätsförderflächen (BFF)"@de,
+        "Biodiversity promotion areas (BFF)"@en,
+        "Surfaces de promotion de la biodiversité (SPB)"@fr,
+        "Superfici per la promozione della biodiversità (SPB)"@it ;
+    schema:hasPart :03CBA0CCC0334AA497E94B0613BC4976,
+        :57A74BCEB3AD1D05E0532D0E870A0EAF,
+        :57A74BCEB3B11D05E0532D0E870A0EAF,
+        :57A74BCEB3B51D05E0532D0E870A0EAF,
+        :57A74BCEB3B91D05E0532D0E870A0EAF,
+        :57A74BCEB3BD1D05E0532D0E870A0EAF,
+        :57A74BCEB5321D05E0532D0E870A0EAF,
+        :57A74BCEB5361D05E0532D0E870A0EAF,
+        :57A74BCEBC5F1D05E0532D0E870A0EAF,
+        :57A74BCEBC631D05E0532D0E870A0EAF,
+        :57A74BCEBC671D05E0532D0E870A0EAF,
+        :57A74BCEBCDD1D05E0532D0E870A0EAF,
+        :57A74BCEBCE21D05E0532D0E870A0EAF,
+        :57A74BCEBD101D05E0532D0E870A0EAF,
+        :57A74BCEBD141D05E0532D0E870A0EAF,
+        :57A74BCEBD191D05E0532D0E870A0EAF,
+        :57A74BCEBD931D05E0532D0E870A0EAF,
+        :57A74BCEBD971D05E0532D0E870A0EAF,
+        :57A74BCEBD9C1D05E0532D0E870A0EAF,
+        :57A74BCEC3F01D05E0532D0E870A0EAF,
+        :57A74BCEC6E71D05E0532D0E870A0EAF,
+        :57A74BCEC6EB1D05E0532D0E870A0EAF,
+        :57A74BCEC6EF1D05E0532D0E870A0EAF,
+        :57A74BCEC6F31D05E0532D0E870A0EAF,
+        :57A74BCEC6F81D05E0532D0E870A0EAF,
+        :57A74BCEC6FC1D05E0532D0E870A0EAF,
+        :57A74BCEC7051D05E0532D0E870A0EAF,
+        :57A74BCEC7091D05E0532D0E870A0EAF,
+        :57A74BCEC70D1D05E0532D0E870A0EAF ;
+    schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:A07EF60442B92B9755553B546480A7C5 a dcterms:Collection ;
+    rdfs:label "Biologische Landwirtschaft"@de,
+        "Organic farming"@en,
+        "Agriculture biologique"@fr,
+        "Agricoltura biologica"@it ;
+    schema:hasPart :57A74BCEBCE51D05E0532D0E870A0EAF,
+        :57A74BCEBCED1D05E0532D0E870A0EAF,
+        :57A74BCEBCFE1D05E0532D0E870A0EAF,
+        :57A74BCEBD011D05E0532D0E870A0EAF,
+        :57A74BCEBD041D05E0532D0E870A0EAF,
+        :57A74BCEBD061D05E0532D0E870A0EAF,
+        :57A74BCEBDB51D05E0532D0E870A0EAF,
+        :57A74BCEBDBA1D05E0532D0E870A0EAF,
+        :57A74BCEC0C31D05E0532D0E870A0EAF,
+        :57A74BCEC7111D05E0532D0E870A0EAF,
+        :57A74BCEC7131D05E0532D0E870A0EAF ;
+    schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:A07EF60442B92B978AAA3B546480A7C5 a dcterms:Collection ;
+    rdfs:label "Gesetzliche Minimalanforderungen"@de,
+        "Exigences légales minimales"@fr,
+        "Requisiti minimi di legge"@it ;
+    rdfs:comment """
+        Diese Kontrollpunkte sind allgemeingültig und müssen von allen landwirtschaftlichen Betrieben erfüllt werden, welche die entsprechenden
+        Betriebszweige bewirtschaften -- unabhängig davon, ob sie Direktzahlungen beziehen oder nicht.
+        Es handeln sich z.B. um Vorgaben im Tierschutz und Umweltschutz. Die Kontrollpunkte und Hilfstexte wurden erarbeitet für die Kontrolleure.
+        Sie wurden nicht überarbeitet für Agricheck. Deshalb können sie teilweise sehr umfangreich und unübersichtlich sein.
+        """@de,
+        """
+        These control points are universally applicable and must be met by all agricultural holdings that manage the corresponding
+        farm branches -- regardless of whether they receive direct payments or not.
+        These are, for example, requirements in animal welfare and environmental protection. The control points and help texts were developed for inspectors.
+        They have not been revised for Agricheck. Therefore, they can sometimes be very extensive and confusing.
+        """@en,
+        """
+        Ces points de contrôle sont d'application générale et doivent être respectés par toutes les exploitations agricoles qui gèrent les branches
+        d'exploitation correspondantes -- qu'elles perçoivent ou non des paiements directs.
+        Il s'agit par exemple de prescriptions en matière de protection des animaux et de l'environnement. Les points de contrôle et les textes d'aide ont été élaborés pour les contrôleurs.
+        Ils n'ont pas été révisés pour Agricheck. C'est pourquoi ils peuvent parfois être très volumineux et peu clairs.
+        """@fr,
+        """
+        Questi punti di controllo sono di validità generale e devono essere soddisfatti da tutte le aziende agricole che gestiscono i corrispondenti
+        rami aziendali, indipendentemente dal fatto che ricevano o meno pagamenti diretti.
+        Si tratta, ad esempio, di requisiti in materia di protezione degli animali e dell'ambiente. I punti di controllo e i testi di aiuto sono stati sviluppati per gli ispettori.
+        Non sono stati rivisti per Agricheck. Pertanto, a volte possono essere molto estesi e poco chiari.
+        """@it .
+
+:A07EF60442B92B978BBB3B546480A7C5 a dcterms:Collection ;
+    rdfs:label "Direktzahlungen"@de,
+        "Paiements directs"@fr,
+        "Pagamenti diretti"@it ;
+    rdfs:comment """
+        Diese Kontrollpunkte beinhalten alle Punkte, welche erfüllt werden müssen, damit Sie Direktzahlungen erhalten.
+        Ebenfalls hier enthalten sind die Kontrollpunkte der Bio-Verordnung (Bundes-Bio).
+        Die Einhaltung von einem Teil der Kontrollpunkte sind Grundlage für die Direktzahlungsberechtigung (z.B. Einhaltung des ÖLN für ihre Betriebszweige).
+        Andere Punkte sind nur gültig, wenn Sie sich für das entsprechende Programm angemeldet haben.
+        Nur die schweizweit gültigen Kontrollpunkte sind abgebildet, das heisst Landschaftsqualitätsbeiträge sind z.B. ausgenommen.
+        """@de,
+        """
+        These control points include all points that must be met in order to receive direct payments.
+        Also included here are the control points of the Organic Farming Ordinance (Federal Organic).
+        Compliance with some of the control points is the basis for eligibility for direct payments (e.g., compliance with the Proof of Ecological Performance (PEP) for your farm branches).
+        Other points are only valid if you have registered for the corresponding program.
+        Only the control points valid throughout Switzerland are shown, meaning that landscape quality contributions, for example, are excluded.
+        """@en,
+        """
+        Ces points de contrôle comprennent tous les points qui doivent être remplis pour que vous puissiez recevoir des paiements directs.
+        Les points de contrôle de l'ordonnance sur l'agriculture biologique (Bio fédéral) y sont également inclus.
+        Le respect d'une partie des points de contrôle est la base du droit aux paiements directs (p. ex. le respect des PER pour vos branches d'exploitation).
+        D'autres points ne sont valables que si vous vous êtes inscrit au programme correspondant.
+        Seuls les points de contrôle valables pour toute la Suisse sont représentés, c'est-à-dire que les contributions à la qualité du paysage sont par exemple exclues.
+        """@fr,
+        """
+        Questi punti di controllo includono tutti i punti che devono essere soddisfatti per ricevere i pagamenti diretti.
+        Sono qui inclusi anche i punti di controllo dell'ordinanza sull'agricoltura biologica (Bio federale).
+        Il rispetto di una parte dei punti di controllo è la base per avere diritto ai pagamenti diretti (ad es. il rispetto della PER per i vostri rami aziendali).
+        Altri punti sono validi solo se vi siete iscritti al programma corrispondente.
+        Sono rappresentati solo i punti di controllo validi a livello svizzero, ciò significa che i contributi per la qualità del paesaggio, ad esempio, sono esclusi.
+        """@it .
+
+:A07EF60442B92B978CCC3B546480A7C5 a dcterms:Collection ;
+    rdfs:label "Labels"@de,
+        "Labels"@fr,
+        "Labels"@it .
+
+:A07EF60442B92B978EEE3B546480A7C5 a dcterms:Collection ;
+    rdfs:label "Bereich Tiergesundheit (Nutztiere, Bienen, Fische)"@de,
+        "Animal health sector (livestock, bees, fish)"@en,
+        "Domaine de la santé animale (animaux de rente, abeilles, poissons)"@fr,
+        "Ambito Salute degli animali (animali da reddito, api, pesci)"@it ;
+    schema:hasPart :57A74BCEB4991D05E0532D0E870A0EAF,
+        :F6F1708780C448C9A9218E008BB65138 ;
+    schema:isPartOf :A07EF60442B92B978AAA3B546480A7C5 .
+
+:A07EF60442B92B978FFF3B546480A7C5 a dcterms:Collection ;
+    rdfs:label "Tierschutz (Nutztiere)"@de,
+        "Animal welfare (farm animals)"@en,
+        "Protection des animaux (animaux de rente)"@fr,
+        "Protezione degli animali (animali da reddito)"@it ;
+    schema:hasPart :00DB673864714391B5EF1EE5B07D4274,
+        :1A1882BA1BE14BB480673263D608DFC9,
+        :2DA5033E61C6452FBDD77197702098CE,
+        :38234EBF19B24BA79C14948CB183F4DD,
+        :57A74BCEA8CF1D05E0532D0E870A0EAF,
+        :5EE7A5BDD9B549E4B5B219797AA02CA2,
+        :74C45BEBE6E74C65B2CCC4D449A7AC52,
+        :7C3B43BB6CCC4BE7B3A34E5A8A7524A6,
+        :7DB3145612F04733A166802688E2C67D,
+        :A10784CC04E84429B8FDF63C68DAD84F,
+        :BDAE131E2B6E45E9843E06849E70972C,
+        :C35517EED4C645939FAA761A87F35F85,
+        :CB5C473CB3F348FF867610CD77F846AA ;
+    schema:isPartOf :A07EF60442B92B978AAA3B546480A7C5 .
+
+:A07EF60442B92B97BBBB3B546480A7C5 a dcterms:Collection ;
+    rdfs:label "Sömmerung"@de,
+        "Alpine summering"@en,
+        "Estivage"@fr,
+        "Estivazione"@it ;
+    schema:hasPart :57A74BCEBE031D05E0532D0E870A0EAF,
+        :57A74BCEBE951D05E0532D0E870A0EAF,
+        :57A74BCEBE9C1D05E0532D0E870A0EAF,
+        :57A74BCEBEAE1D05E0532D0E870A0EAF,
+        :57A74BCEBEBC1D05E0532D0E870A0EAF,
+        :57A74BCEC3EC1D05E0532D0E870A0EAF,
+        :D21C9F2A93694CB48564CE922D20643F ;
+    schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:A3B3FF82CFC6FC6683E03B546480AE08 a dcterms:Collection ;
+    rdfs:label "Bio Suisse"@de,
+        "Bio Suisse"@en,
+        "Bio Suisse"@fr,
+        "Bio Suisse"@it ;
+    schema:isPartOf :A07EF60442B92B978CCC3B546480A7C5 ;
+    rdfs:comment """
+        Zusätzlich zu den hier aufgelisteten Kontrollpunkten für das Label «Bio Suisse», sind auf der gleichen Kontrolle auch die Checkpunkte der BioV relevant.
+        Weiterhin besteht die Möglichkeit, dass die Bio Kontrollstelle auch öffentlich rechtliche, wie auch weitere Programme kontrolliert, sofern sie hierfür einen entsprechenden Auftrag der Kantone haben.
+        Auskunft hierüber kann Ihnen Ihre Kontrollstelle erteilen.
+        """@de,
+        """
+        In addition to the control points listed here for the "Bio Suisse" label, the checkpoints of the Organic Farming Ordinance are also relevant during the same inspection.
+        Furthermore, it is possible that the organic inspection body also inspects public law programs as well as other programs, provided they have a corresponding mandate from the cantons.
+        Your inspection body can provide you with information regarding this.
+        """@en,
+        """
+        En plus des points de contrôle énumérés ici pour le label «Bio Suisse», les points de contrôle de l'Ordonnance bio sont également pertinents lors du même contrôle.
+        De plus, il est possible que l'organisme de contrôle bio vérifie également des programmes de droit public ainsi que d'autres programmes, pour autant qu'il dispose d'un mandat correspondant des cantons.
+        Votre organisme de contrôle peut vous renseigner à ce sujet.
+        """@fr,
+        """
+        Oltre ai punti di controllo elencati qui per il marchio «Bio Suisse», durante lo stesso controllo sono rilevanti anche i punti di controllo dell'Ordinanza bio.
+        Inoltre, esiste la possibilità che l'organismo di controllo bio verifichi anche programmi di diritto pubblico e altri programmi, a condizione che abbia un mandato corrispondente dai cantoni.
+        Il vostro organismo di controllo può fornirvi informazioni al riguardo.
+        """@it .
+
+:B3A2CF324826FC66839483546480AE12 a dcterms:Collection ;
+    rdfs:label "SwissGAP"@de,
+        "SwissGAP"@en,
+        "SwissGAP"@fr,
+        "SwissGAP"@it ;
+    schema:isPartOf :A07EF60442B92B978CCC3B546480A7C5 ;
+    rdfs:comment """
+        Diese Punkte gelten nur für SwissGAP-Betriebe und sind privatrechtlich geregelt.
+        Nicht alle der nachfolgenden Checklisten-Punkte werden bei Ihnen zwingend abgefragt.
+        Zudem sind nicht alle Ihrer Kontrollpunkte kritisch für die Anerkennung.
+        Es sind alle Kontrollpunkte für Produktions-und Vermarktungsbetriebe aufgelistet.
+        Wir empfehlen Ihnen, auf <a href="https://agrosolution.ch" target="_blank">agrosolution.ch</a> eine betriebsindividuelle Checkliste erstellen.
+        Wenn Sie dort bestimmte Pauschaldeklarationen angeben (z.B. ÖLN erfüllt, Angaben zur betrieblichen Ausgangslage etc.), werden bestimmte Kapitel und Fragen ausgeblendet oder vorausgefüllt.
+        So profitieren Sie von erheblichen administrativen Vereinfachungen, welche SwissGAP für Sie erarbeitet hat.
+        Massgeblich sind letztlich die auf <a href="https://agrosolution.ch" target="_blank">agrosolution.ch</a> veröffentlichten Dokumente (einschliesslich der normativen Unterlagen).
+        Die Angaben auf Agricheck erfolgen ohne Gewähr.
+        """@de,
+        """
+        Ces points s'appliquent uniquement aux exploitations SwissGAP et sont régis par le droit privé.
+        Tous les points de la liste de contrôle suivante ne vous seront pas obligatoirement demandés.
+        De plus, tous vos points de contrôle ne sont pas critiques pour la reconnaissance.
+        Tous les points de contrôle pour les exploitations de production et de commercialisation sont listés.
+        Nous vous recommandons de créer une liste de contrôle spécifique à votre exploitation sur <a href="https://agrosolution.ch" target="_blank">agrosolution.ch</a>.
+        Si vous y indiquez certaines déclarations forfaitaires (par ex. PER remplies, informations sur la situation initiale de l'exploitation, etc.), certains chapitres et questions seront masqués ou pré-remplis.
+        Vous profitez ainsi de simplifications administratives considérables que SwissGAP a élaborées pour vous.
+        En fin de compte, les documents publiés sur <a href="https://agrosolution.ch" target="_blank">agrosolution.ch</a> (y compris les documents normatifs) font foi.
+        Les informations sur Agricheck sont fournies sans garantie.
+        """@fr,
+        """
+        Questi punti si applicano solo alle aziende SwissGAP e sono regolati dal diritto privato.
+        Non tutti i seguenti punti della lista di controllo vi saranno obbligatoriamente richiesti.
+        Inoltre, non tutti i vostri punti di controllo sono critici per il riconoscimento.
+        Sono elencati tutti i punti di controllo per le aziende di produzione e commercializzazione.
+        Vi consigliamo di creare una lista di controllo specifica per l'azienda su <a href="https://agrosolution.ch" target="_blank">agrosolution.ch</a>.
+        Se vi inserite determinate dichiarazioni forfettarie (ad es. PER soddisfatta, informazioni sulla situazione di partenza dell'azienda, ecc.), alcuni capitoli e domande verranno nascosti o precompilati.
+        In questo modo beneficiate di notevoli semplificazioni amministrative che SwissGAP ha elaborato per voi.
+        In ultima analisi, fanno stato i documenti pubblicati su <a href="https://agrosolution.ch" target="_blank">agrosolution.ch</a> (compresi i documenti normativi).
+        Le informazioni su Agricheck sono fornite senza garanzia.
+        """@it .
+
+:B3A2CF324826FC66839483546480AE23 a dcterms:Collection ;
+    rdfs:label "Suisse Garantie"@de,
+        "Suisse Garantie"@fr,
+        "Suisse Garantie"@it ;
+    schema:isPartOf :A07EF60442B92B978CCC3B546480A7C5 ;
+    rdfs:comment """
+        <p>
+            Die Kontrollpunkte für Suisse Garantie basieren auf den Anforderungen anerkannter Qualitätssicherungsprogramme der jeweiligen landwirtschaftlichen Branchen.
+            <ul>
+                <li>Milch: Es gibt keine spezifischen Kontrollpunkte für Landwirtschaftsbetriebe; es wird auf anerkannte QS-Programme und die ÖLN-Kontrollen des Bundes abgestellt.</li>
+                <li>Fleisch: Es gelten die Kontrollpunkte von QM-Schweizer Fleisch.</li>
+                <li>Früchte, Gemüse, Kartoffeln: Die Kontrollpunkte werden zusammen mit SwissGAP in einer Checkliste geführt. Diese unterliegt Anpassungen und ist nicht final. Die Anforderungen sind nicht alle gleichwertig; es wird zwischen kritischen (100% Erfüllung) und nicht-kritischen (95% Erfüllung) Punkten unterschieden. Zudem gelten nicht alle Punkte für jeden Betrieb, da zwischen Produktion und Vermarktung differenziert wird.</li>
+            </ul>
+            Für eine betriebsindividuelle und administrativ vereinfachte Checkliste wird dringend empfohlen, das Portal agrosolution.ch zu nutzen.
+        </p>
+        """@de,
+        """
+        <p>
+            Les points de contrôle pour Suisse Garantie se basent sur les exigences des programmes d'assurance qualité reconnus des branches agricoles respectives.
+            <ul>
+                <li>Lait: Il n'existe pas de points de contrôle spécifiques pour les exploitations agricoles; on se base sur des programmes de QS reconnus et sur les contrôles PER de la Confédération.</li>
+                <li>Viande: Les points de contrôle de QM-Viande Suisse s'appliquent.</li>
+                <li>Fruits, légumes, pommes de terre: Les points de contrôle sont gérés dans une check-liste commune avec SwissGAP. Celle-ci est sujette à des adaptations et n'est pas définitive. Les exigences ne sont pas toutes équivalentes; une distinction est faite entre les points critiques (100% de conformité) et non critiques (95% de conformité). De plus, tous les points ne s'appliquent pas à chaque exploitation, car une différenciation est faite entre la production et la commercialisation.</li>
+            </ul>
+            Pour une check-liste individualisée et administrativement simplifiée, il est vivement recommandé d'utiliser le portail agrosolution.ch.
+        </p>
+        """@fr,
+        """
+        <p>
+            I punti di controllo per Suisse Garantie si basano sui requisiti dei programmi di garanzia della qualità riconosciuti dei rispettivi settori agricoli.
+            <ul>
+                <li>Latte: Non esistono punti di controllo specifici per le aziende agricole; ci si basa su programmi di GQ riconosciuti e sui controlli della Confederazione relativi alla PER.</li>
+                <li>Carne: Si applicano i punti di controllo di QM-Carne Svizzera.</li>
+                <li>Frutta, verdura, patate: I punti di controllo sono gestiti in una lista di controllo insieme a SwissGAP. Questa è soggetta a modifiche e non è definitiva. I requisiti non sono tutti equivalenti; si distingue tra punti critici (soddisfazione al 100%) e non critici (soddisfazione al 95%). Inoltre, non tutti i punti si applicano a ogni azienda, poiché si distingue tra produzione e commercializzazione.</li>
+            </ul>
+            Per una lista di controllo personalizzata e semplificata dal punto di vista amministrativo, si raccomanda vivamente di utilizzare il portale agrosolution.ch.
+        </p>
+        """@it .
+
+:B3A2CF324826FC66839483546480AE24 a dcterms:Collection ;
+    rdfs:label "Gemüse, Kartoffel, Obst"@de,
+        "Légumes, pommes de terre, fruits"@fr,
+        "Verdura, patate, frutta"@it ;
+    schema:isPartOf :B3A2CF324826FC66839483546480AE23 .
+
+:B3A2CF324826FC66839483546480AE25 a dcterms:Collection ;
+    rdfs:label "Getreide und Ölsaaten"@de,
+        "Céréales et oléagineux"@fr,
+        "Cereali e semi oleaginosi"@it ;
+    schema:isPartOf :B3A2CF324826FC66839483546480AE23 .
+
+:B3A2CF324826FC66839483546480AE26 a dcterms:Collection ;
+    rdfs:label "Eier (nur Produktion)"@de,
+        "Œufs (production uniquement)"@fr,
+        "Uova (solo produzione)"@it ;
+    schema:isPartOf :B3A2CF324826FC66839483546480AE23 .
+
+:BC2A4CD9A00500553AE03B546480AF5B a dcterms:Collection ;
+    rdfs:label "in-situ"@de,
+        "in-situ"@fr,
+        "in-situ"@it ;
+    schema:hasPart :620C05912BA845DE9289F9C2F1F4CF42 ;
+    schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:CD483976909F09F029E03B446480A754 a dcterms:Collection ;
+    rdfs:label "BTS"@de,
+        "SST"@fr,
+        "SSRA"@it ;
+    schema:hasPart :57A74BCEBDC31D05E0532D0E870A0EAF,
+        :57A74BCEBE681D05E0532D0E870A0EAF,
+        :57A74BCEBF251D05E0532D0E870A0EAF,
+        :57A74BCEC0D11D05E0532D0E870A0EAF,
+        :57A74BCEC1A71D05E0532D0E870A0EAF,
+        :57A74BCEC2421D05E0532D0E870A0EAF ;
+    schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:CD48397690A00A0029E03B446480A754 a dcterms:Collection ;
+    rdfs:label "RAUS"@de,
+        "SRPA"@fr,
+        "URA"@it ;
+    schema:hasPart :57A74BCEBF2C1D05E0532D0E870A0EAF,
+        :57A74BCEC3B11D05E0532D0E870A0EAF,
+        :5DC18C61EA4041BB9ED77DA045C42BD0,
+        :72E3C035DA944D22A3A8612824602E3A,
+        :A8249C889C964BA1B97B0633AD25B9B8,
+        :A8D4945497524A4A9871B2BF6FECFA06,
+        :B30B90DFC2CE4DA9B6B2E9CBEC8BA383 ;
+    schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:CD4C74B78680680174E03B546480A6E4 a dcterms:Collection ;
+    rdfs:label "Pflanzliche Primärproduktion"@de,
+        "Plant primary production"@en,
+        "Production primaire végétale"@fr,
+        "Produzione primaria vegetale"@it ;
+    schema:hasPart :856F1ACB7CD14DFC9911D2A31FAAEBFB,
+        :B76AEEB28B54425DB79A3FC4193501E5 ;
+    schema:isPartOf :A07EF60442B92B978AAA3B546480A7C5 .
+
+:CD4C74B78681681174E03B546480A6E4 a dcterms:Collection ;
+    rdfs:label "Tierische Primärproduktion"@de,
+        "Animal primary production"@en,
+        "Production primaire animale"@fr,
+        "Produzione primaria animale"@it ;
+    schema:hasPart :57A74BCEAFDE1D05E0532D0E870A0EAF,
+        :57A74BCEC4121D05E0532D0E870A0EAF ;
+    schema:isPartOf :A07EF60442B92B978AAA3B546480A7C5 .
+
+:ED616BC429539533A9E03B446480AB1A a dcterms:Collection ;
+    rdfs:label "Produktionssystembeiträge"@de,
+        "Production system contributions"@en,
+        "Contributions aux systèmes de production"@fr,
+        "Contributi ai sistemi di produzione"@it ;
+    schema:hasPart :1F44218E7A46479B8A982149FD01B279,
+        :5DA9BCDCEA7A4445A9C0C66132ACCEE9,
+        :AC65422D5D9143E3B974E4782451FE70,
+        :B1B0ED7A3BCE4EF4A49E90BDE3CDEB69,
+        :B58ACD9163A64A3C8ABD18580BFFE780,
+        :B8752E0F955A4D979A3DA906C5F346A4,
+        :D14116474BB345F5A176DB200E40A8DD,
+        :D1B396D806B14F5BBF8B23AF22ED13BF ;
+    schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:F3F3FF20CFC6FC66824039A46480AE10 a dcterms:Collection ;
+    rdfs:label "IP-Suisse"@de,
+        "IP-Suisse"@en,
+        "IP-Suisse"@fr,
+        "IP-Suisse"@it ;
+    schema:isPartOf :A07EF60442B92B978CCC3B546480A7C5 .
+
+:F3F3FF20CFC6FC66824039A46480AE11 a dcterms:Collection ;
+    rdfs:label "IPS Label"@de,
+        "IPS Label"@en,
+        "Label IPS"@fr,
+        "Label IPS"@it ;
+    schema:isPartOf :F3F3FF20CFC6FC66824039A46480AE10 .
+
+:F3F3FF20CFC6FC66824039A46480AE12 a dcterms:Collection ;
+    rdfs:label "IPS WM (Wiesenmilch)"@de,
+        "IPS WM (Meadow Milk)"@en,
+        "IPS PL (Lait de prairie)"@fr,
+        "IPS LP (Latte di prato)"@it ;
+    schema:isPartOf :F3F3FF20CFC6FC66824039A46480AE10 .
+
+:F3F3FF20CFC6FC66824039A46480AE13 a dcterms:Collection ;
+    rdfs:label "IPS BD (Biodiversität)"@de,
+        "IPS BD (Biodiversity)"@en,
+        "IPS BD (Biodiversité)"@fr,
+        "IPS BD (Biodiversità)"@it ;
+    schema:isPartOf :F3F3FF20CFC6FC66824039A46480AE10 .
+
+:42322B5300474C3D944CC1033F7653B6 schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:57A74BCEC0C61D05E0532D0E870A0EAF schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:ABF667644332451BA425C81187877E8C schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+
+:C3AC1DC7CB4A4CBCA428AB4C0446C4B5 schema:isPartOf :A07EF60442B92B978AAA3B546480A7C5 .
+
+:C6EB9867709F4C64BD1F07E716804FAA schema:isPartOf :A07EF60442B92B978BBB3B546480A7C5 .
+

@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm sticky-top">
+  <div class="container-fluid">
+
+    <!-- Brand -->
+    <a class="navbar-brand d-flex align-items-center fw-bold ps-3" href="index.html">
+      <svg class="me-2" width="28" height="28" role="img" aria-label="Agricheck logo">
+        <use href="resources/icon.svg"></use>
+      </svg>
+      Agricheck
+    </a>
+
+    <!-- Right‑hand side -->
+    <ul class="navbar-nav ms-auto align-items-center">
+
+      <!-- About -->
+      <li class="nav-item">
+        <a class="nav-link d-flex align-items-center" href="about.html" aria-label="About Agricheck">
+          <i class="bi bi-question-circle fs-4"></i>
+        </a>
+      </li>
+
+      <!-- Language selector -->
+      <li class="nav-item dropdown">
+        <button class="btn btn-link nav-link dropdown-toggle" id="langMenu"
+                data-bs-toggle="dropdown" aria-expanded="false">
+          <span id="currentLangLabel">DE</span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langMenu">
+          <li><a class="dropdown-item lang-option" data-lang="de" href="#">Deutsch</a></li>
+          <li><a class="dropdown-item lang-option" data-lang="fr" href="#">Français</a></li>
+          <li><a class="dropdown-item lang-option" data-lang="it" href="#">Italiano</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>

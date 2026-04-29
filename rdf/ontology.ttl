@@ -1,0 +1,130 @@
+@prefix : <https://agriculture.ld.admin.ch/inspection/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dcterms:Collection a owl:Class ;
+    rdfs:label "Kontrollpunkt-Gruppe"@de ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:onProperty rdfs:label ;
+            owl:someValuesFrom xsd:string ],
+        [ a owl:Restriction ;
+            owl:onProperty schema:identifier ;
+            owl:someValuesFrom xsd:string ],
+        [ a owl:Restriction ;
+            owl:onProperty :conjunctIdentifier ;
+            owl:someValuesFrom xsd:string ] .
+
+:Defect a owl:Class ;
+    rdfs:label "Mangel"@de,
+        "Defect"@en .
+
+:InspectionPoint a owl:Class ;
+    rdfs:label "Kontrollpunkt"@de,
+        "Inspection Point"@en ;
+    rdfs:subClassOf [ a owl:Restriction ;
+            owl:onProperty rdfs:label ;
+            owl:someValuesFrom xsd:string ],
+        [ a owl:Restriction ;
+            owl:onProperty rdfs:comment ;
+            owl:someValuesFrom xsd:string ],
+        [ a owl:Restriction ;
+            owl:onProperty schema:identifier ;
+            owl:someValuesFrom xsd:string ],
+        [ a owl:Restriction ;
+            owl:onProperty :conjunctIdentifier ;
+            owl:someValuesFrom xsd:string ] .
+
+:PossibleOutcome a owl:Class ;
+    rdfs:label "Mögliches Ergebnis"@de .
+
+:Sanction a owl:Class ;
+    rdfs:label "Konsequenz"@de,
+        "Consequence"@en .
+
+:conjunctIdentifier a owl:DatatypeProperty ;
+    rdfs:label "Zusammengesetzter Acontrol-Identifikator"@de,
+        "Conjunct Acontrol-Identifier"@en ;
+    rdfs:comment """
+        This human-readably identifier is used for Acontrol-internal identification and referencing of inspection points.
+        """@en ;
+    rdfs:range xsd:string .
+
+:hierarchyLevel a owl:DatatypeProperty ;
+    rdfs:label "Hierarchieebene"@de,
+        "Hierarchy level"@en ;
+    rdfs:domain dcterms:Collection .
+
+schema:hasPart a owl:ObjectProperty ;
+    rdfs:label "hat Teil"@de,
+        "has part"@en ;
+    rdfs:domain dcterms:Collection ;
+    rdfs:range dcterms:Collection ;
+    owl:inverseOf schema:isPartOf .
+
+schema:isPartOf a owl:ObjectProperty ;
+    rdfs:label "ist Teil von"@de,
+        "is part of"@en ;
+    rdfs:domain dcterms:Collection ;
+    rdfs:range dcterms:Collection ;
+    owl:inverseOf schema:hasPart .
+
+:belongsToGroup a owl:ObjectProperty ;
+    rdfs:label "Inspection point group",
+        "Kontrollpunkte-Gruppe"@de ;
+    rdfs:domain :InspectionPoint ;
+    rdfs:range dcterms:Collection ;
+    owl:inverseOf :includesInspectionPoints .
+
+:defect a owl:ObjectProperty ;
+    rdfs:label "Mangel"@de,
+        "Defect"@en ;
+    rdfs:range :Defect .
+
+:includesInspectionPoints a owl:ObjectProperty ;
+    rdfs:label "beinhaltet Kontrollpunkte"@de,
+        "includes inspection points"@en ;
+    rdfs:domain dcterms:Collection ;
+    rdfs:inverseOf :belongsToGroup ;
+    rdfs:range :InspectionPoint .
+
+:inspectionPoint a owl:ObjectProperty ;
+    rdfs:label "Kontrollpunkt"@de,
+        "Inspection point"@en ;
+    rdfs:comment "The inspection point that something relates to."@en ;
+    rdfs:range :InspectionPoint .
+
+:possibleOutcome a owl:ObjectProperty ;
+    rdfs:label "Mögliches Ergebnis"@de,
+        "Possible outcome"@en .
+
+:suggestedSanction a owl:ObjectProperty ;
+    rdfs:label "Vorgeschlagene Konsequenz"@de,
+        "Suggested consequence"@en ;
+    rdfs:range :Sanction .
+
+: a owl:Ontology ;
+    dcterms:title "Kontrollpunkte-Liste"@de ;
+    owl:versionInfo "0.1.1" .
+
+schema:description rdfs:label "Beschreibung"@de,
+        "Description"@en .
+
+schema:name rdfs:label "Name"@de,
+        "Name"@en .
+
+rdf:type rdfs:label "Typ"@de,
+        "Type"@en .
+
+rdfs:comment rdfs:label "Kommentar"@de,
+        "Comment"@en .
+
+schema:identifier rdfs:label "Identifikator"@de,
+        "Identifier"@en .
+
+rdfs:label rdfs:label "Bezeichnung"@de,
+        "Label"@en .
+
