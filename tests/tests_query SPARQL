@@ -127,3 +127,27 @@ WHERE {
 }
 ```
 
+### lister tous les enfants de l'élément SRPA
+
+```
+PREFIX schema: <http://schema.org/>
+PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+
+SELECT ?enfantURI ?nomEnfant ?type
+WHERE {
+  # On cible l'URI spécifique du parent SRPA que vous avez identifié
+  VALUES ?parent { <https://agriculture.ld.admin.ch/inspection/CD48397690A00A0029E03B446480A754> }
+  
+  # On cherche ce qui est "à l'intérieur" (soit via belongsToGroup, soit via isPartOf)
+  ?enfantURI (:belongsToGroup|schema:isPartOf) ?parent .
+  
+  # On récupère le nom
+  ?enfantURI schema:name ?nomEnfant .
+  
+  # Optionnel : récupérer le type pour savoir si c'est un sous-groupe ou un point final
+  OPTIONAL { ?enfantURI a ?type . }
+
+  FILTER(LANG(?nomEnfant) = "fr")
+}
+ORDER BY ?nomEnfant
+```
