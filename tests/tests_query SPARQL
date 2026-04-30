@@ -218,3 +218,77 @@ WHERE {
 }
 ORDER BY ?nomEnfant
 ```
+### lister tous les points d'un élément
+
+```
+PREFIX schema: <http://schema.org/>
+PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+
+SELECT ?enfantURI ?nomDE ?nomFR
+WHERE {
+  # On cible le parent "Hunde"
+  BIND(<https://agriculture.ld.admin.ch/inspection/57A74BCEA8D01D05E0532D0E870A0EAF> AS ?parent)
+
+  # On cherche tout ce qui est inclus (on utilise la propriété vue dans votre JSON)
+  ?parent :includesInspectionPoints ?enfantURI .
+
+  # On récupère les noms s'ils existent
+  OPTIONAL { ?enfantURI schema:name ?nomDE . FILTER(LANG(?nomDE) = "de") }
+  OPTIONAL { ?enfantURI schema:name ?nomFR . FILTER(LANG(?nomFR) = "fr") }
+}
+``` 
+
+
+### récupérer l'ID parent
+
+``` 
+PREFIX schema: <http://schema.org/>
+
+SELECT ?parentID
+WHERE {
+  # On cible votre élément "Hunde"
+  <https://agriculture.ld.admin.ch/inspection/57A74BCEA8D01D05E0532D0E870A0EAF> schema:isPartOf ?parentURI .
+
+  # On extrait tout ce qui se trouve après le dernier '/'
+  BIND(STRAFTER(STR(?parentURI), "https://agriculture.ld.admin.ch/inspection/") AS ?parentID)
+}
+``` 
+
+
+### afficher les informations sur le noeud lui-même et ses descendants
+
+```
+PREFIX schema: <http://schema.org/>
+PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+
+SELECT ?uri ?relation ?nomDE ?nomFR
+WHERE {
+  BIND(<https://agriculture.ld.admin.ch/inspection/57A74BCEA8CF1D05E0532D0E870A0EAF> AS ?cible)
+
+  {
+    # 1. LE NOEUD LUI-MÊME
+    BIND(?cible AS ?uri)
+    BIND("MOI-MEME" AS ?relation)
+  }
+  UNION
+  {
+    # 2. LES ENFANTS (Sous-groupes)
+    ?uri schema:isPartOf ?cible .
+    BIND("ENFANT (Groupe)" AS ?relation)
+  }
+  UNION
+  {
+    # 3. LES POINTS DE CONTROLE
+    ?cible :includesInspectionPoints ?uri .
+    BIND("ENFANT (Point)" AS ?relation)
+  }
+
+  # Récupération des noms
+  OPTIONAL { ?uri schema:name ?nomDE . FILTER(LANG(?nomDE) = "de") }
+  OPTIONAL { ?uri schema:name ?nomFR . FILTER(LANG(?nomFR) = "fr") }
+}
+ORDER BY DESC(?relation) # Pour avoir le "MOI-MEME" en haut
+```
+
+
+
