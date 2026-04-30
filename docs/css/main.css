@@ -2,9 +2,9 @@
   margin-right: 0.5rem;
 }
 :root {
-  --primary: #3db85d;
-  --secondary: #6fe28e;
-  --secondary-light: #c8f7d4;
+  --primary: #FF0000;          /* Rouge Valais */
+  --secondary: #ff4d4d;        /* Rouge plus clair pour le survol */
+  --secondary-light: #ffe6e6;  /* Fond rouge très léger */
   --light: #f8f9fa;
   --white: #ffffff;
   --muted: #6c757d;
