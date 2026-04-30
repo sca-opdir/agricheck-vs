@@ -33,49 +33,30 @@ function addDescendantsAndSelf(uri, set) {
   (node?.subGroups ?? []).forEach(subUri => addDescendantsAndSelf(subUri, set));
 }
 
-// Petite fonction utilitaire à placer avant window.rebuildPage
-function toggleAll(checked) {
-  const checkboxes = document.getElementById('content').querySelectorAll('input[type="checkbox"]');
-  checkboxes.forEach(cb => cb.checked = checked);
-}
-
 window.rebuildPage = function(lang) {
   content.innerHTML = '';
 
-
-// --- AJOUT DES BOUTONS ---
+  // --- AJOUT DES BOUTONS SELECT ALL / UNSELECT ALL ---
   const controls = document.createElement('div');
-  controls.className = 'mb-4 d-print-none text-end'; // text-end pour aligner à droite
+  controls.className = 'mb-4 d-print-none text-end';
   controls.innerHTML = `
     <button type="button" class="btn btn-sm btn-outline-primary me-2" id="btnCheckAll">
-      <i class="bi bi-check2-all"></i> Tout cocher
+      <i class="bi bi-check2-all"></i> ${t('checklist.checkAll') || 'Tout cocher'}
     </button>
     <button type="button" class="btn btn-sm btn-outline-secondary" id="btnUncheckAll">
-      <i class="bi bi-square"></i> Tout décocher
+      <i class="bi bi-square"></i> ${t('checklist.uncheckAll') || 'Tout décocher'}
     </button>
   `;
   content.appendChild(controls);
 
-  // Écouteurs d'événements pour les boutons
-  controls.querySelector('#btnCheckAll').addEventListener('click', () => toggleAll(true));
-  controls.querySelector('#btnUncheckAll').addEventListener('click', () => toggleAll(false));
-  // -------------------------
+  controls.querySelector('#btnCheckAll').onclick = () => {
+    content.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = true);
+  };
+  controls.querySelector('#btnUncheckAll').onclick = () => {
+    content.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+  };
+  // ---------------------------------------------------
 
-  metaDateEl.textContent = new Date().toLocaleDateString(lang, {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
-
-  const params    = new URLSearchParams(location.search);
-  const slugParam = params.get('groups');
-
-  if (!slugParam) {
-    content.innerHTML = `<p class="text-danger">${t('noGroups')}</p>`;
-    return;
-  }
-
-  // ... (le reste
-  
-  
   metaDateEl.textContent = new Date().toLocaleDateString(lang, {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   });
