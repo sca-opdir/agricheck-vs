@@ -150,6 +150,50 @@ WHERE {
 }
 ```
 
+### lister les enfants directs de "Tierschutz (Nutztiere)"
+
+```
+PREFIX schema: <http://schema.org/>
+PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?enfantURI ?nomEnfant ?typeEnfant
+WHERE {
+  # L'URI de votre élément "Tierschutz (Nutztiere)"
+  BIND(<https://agriculture.ld.admin.ch/inspection/A07EF60442B92B978FFF3B546480A7C5> AS ?parent)
+
+  # On cherche les enfants via les différentes propriétés de lien possibles
+  ?enfantURI (:belongsToGroup|schema:isPartOf|^dcterms:hasPart) ?parent .
+
+  # On récupère les informations de l'enfant
+  ?enfantURI schema:name ?nomEnfant .
+  OPTIONAL { ?enfantURI a ?typeEnfant . }
+
+  # On filtre pour le français (ou allemand selon votre besoin)
+  FILTER(LANG(?nomEnfant) = "fr")
+}
+ORDER BY ?nomEnfant
+``` 
+
+### lister tous les enfants de "Tierschutz (Nutztiere)"
+
+``` 
+PREFIX schema: <http://schema.org/>
+PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+PREFIX dcterms: <http://purl.org/dc/terms/>
+
+SELECT ?descendantURI ?nomDescendant
+WHERE {
+  BIND(<https://agriculture.ld.admin.ch/inspection/A07EF60442B92B978FFF3B546480A7C5> AS ?root)
+
+  # Remonte ou descend via les propriétés de hiérarchie
+  ?descendantURI (:belongsToGroup|schema:isPartOf|^dcterms:hasPart)+ ?root .
+
+  ?descendantURI schema:name ?nomDescendant .
+  FILTER(LANG(?nomDescendant) = "fr")
+}
+``` 
+
 ### lister tous les enfants de l'élément SRPA
 
 ```
