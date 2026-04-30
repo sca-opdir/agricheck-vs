@@ -24,6 +24,8 @@ de:
     copied: Kopiert!
     excelSoon: Excel-Export wird demnächst unterstützt.
     noGroups: Keine Gruppen angegeben.
+    checkAll: Alle auswählen
+    uncheckAll: Alle abwählen
   
   footerText: © Bundesamt für Landwirtschaft und beteiligte Labelorganisationen, Stand Februar 2026
   
@@ -86,6 +88,8 @@ fr:
     copied: Copié !
     excelSoon: L’exportation Excel sera bientôt prise en charge.
     noGroups: Aucun groupe fourni.
+    checkAll: Tout sélectionner
+    uncheckAll: Tout désélectionner
   
   footerText: © Office fédéral de l'agriculture et organisations de labels participantes, état en février 2026
   
@@ -148,6 +152,8 @@ it:
     copied: Copiato!
     excelSoon: L’esportazione in Excel sarà disponibile a breve.
     noGroups: Nessun gruppo specificato.
+    checkAll: Alle auswählen
+    uncheckAll: Alle abwählen
   
   footerText: © Ufficio federale dell'agricoltura e organizzazioni di label partecipanti, stato febbraio 2026
   
