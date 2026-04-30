@@ -177,3 +177,8 @@ ul.checklist label .text-muted {
   font-size: inherit; 
   font-family: inherit;
 }
+
+
+.navbar-headVS {
+    background-color: #A61616 !important; /* Rouge foncé type Valais */
+}
