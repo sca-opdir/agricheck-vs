@@ -127,6 +127,29 @@ WHERE {
 }
 ```
 
+### trouver tous les éléments qui ont exactement value="Tierschutz (Nutztiere)" seulement dans agriculture.ld.admin.ch
+
+PREFIX schema: <http://schema.org/>
+
+SELECT ?element ?type ?nom ?lang
+WHERE {
+  # On cherche les noms
+  ?element schema:name ?nom .
+  
+  # 1. On restreint uniquement au domaine de l'agriculture
+  FILTER (STRSTARTS(STR(?element), "https://agriculture.ld.admin.ch/"))
+
+  # 2. On filtre pour avoir exactement "Tierschutz (Nutztiere)"
+  FILTER (STR(?nom) = "Tierschutz (Nutztiere)")
+  
+  # 3. On récupère le type s'il existe
+  OPTIONAL { ?element a ?type . }
+  
+  # 4. On identifie la langue
+  BIND(LANG(?nom) AS ?lang)
+}
+```
+
 ### lister tous les enfants de l'élément SRPA
 
 ```
