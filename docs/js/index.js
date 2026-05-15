@@ -5,6 +5,8 @@ const treeEl        = $('#tree');
 const searchInput   = $('#search');
 const searchBtn     = $('#searchBtn');
 const generateBtn   = $('#generate');
+const btnCheckAll  = $('#btnCheckAll');
+const btnUncheckAll = $('#btnUncheckAll');
 
 let nodeMap;
 let selectedSet = new Set();
@@ -210,6 +212,16 @@ generateBtn.on('click', () => {
   url.searchParams.set('groups', qs);
   url.searchParams.set('lang', window.__APP_LANG);
   location.href = url.pathname + url.search;
+});
+
+
+// Logique pour les boutons de sélection globale
+btnCheckAll.on('click', () => {
+  treeEl.jstree(true).check_all();
+});
+
+btnUncheckAll.on('click', () => {
+  treeEl.jstree(true).uncheck_all();
 });
 
 export function resetTree() {
