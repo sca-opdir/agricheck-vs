@@ -23,6 +23,10 @@ let searchActive = false;
       searchInput.val(searchTerms.join(' '));
       performSearch();
     }
+    // On cache le spinner une fois que l'arbre est prêt
+    if (typeof window.hideLoader === 'function') {
+      window.hideLoader();
+    }
   });
 
   rebuildPage(window.__APP_LANG);
