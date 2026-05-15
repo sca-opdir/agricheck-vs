@@ -16,6 +16,7 @@ let searchActive = false;
   const bindings = await fetchBindings();
   nodeMap = buildNodeMap(bindings);
 
+  // On garde ceci pour la recherche automatique au chargement
   treeEl.one('ready.jstree', function () {
     const urlParams = new URLSearchParams(location.search);
     const searchTerms = urlParams.getAll('search');
@@ -23,14 +24,16 @@ let searchActive = false;
       searchInput.val(searchTerms.join(' '));
       performSearch();
     }
-    // On cache le spinner une fois que l'arbre est prêt
-    if (typeof window.hideLoader === 'function') {
-      window.hideLoader();
-    }
   });
 
   rebuildPage(window.__APP_LANG);
+  
+  // FORCE LE MASQUAGE SI PAS DE RECHERCHE (Sécurité)
+  setTimeout(() => {
+    if (typeof window.hideLoader === 'function') window.hideLoader();
+  }, 800); 
 })();
+
 
 window.rebuildPage = function(lang) {
   if (treeEl.jstree(true)) {
@@ -97,6 +100,10 @@ window.rebuildPage = function(lang) {
         }
       }
     })
+    // Juste après l'initialisation du jstree, on s'assure que le spinner part
+  treeEl.on('ready.jstree', () => {
+     if (typeof window.hideLoader === 'function') window.hideLoader();
+  });
     .on('changed.jstree', (_, data) => {
       selectedSet = new Set(data.selected);
       const empty = selectedSet.size === 0;
