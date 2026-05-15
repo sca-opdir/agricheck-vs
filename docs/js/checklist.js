@@ -41,6 +41,12 @@ btnUncheckAll.addEventListener('click', () => {
   const bindings = await fetchBindings();
   nodeMap  = buildNodeMap(bindings);
   rebuildPage(window.__APP_LANG);
+
+// AJOUTE CETTE LIGNE ICI :
+  if (typeof window.hideLoader === 'function') {
+    window.hideLoader();
+  }
+  
 })();
 
 function addDescendantsAndSelf(uri, set) {
