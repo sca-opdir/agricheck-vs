@@ -37,3 +37,25 @@ async function loadAllPoints() {
 }
 
 loadAllPoints();
+
+
+document.querySelectorAll('.column-filter').forEach(input => {
+    input.addEventListener('keyup', function() {
+        const table = document.getElementById('resultsTable');
+        const rows = table.querySelector('tbody').rows;
+        const filterValues = Array.from(document.querySelectorAll('.column-filter')).map(i => i.value.toLowerCase());
+
+        for (const row of rows) {
+            let isVisible = true;
+            
+            // On vérifie chaque colonne pour laquelle il y a un filtre
+            filterValues.forEach((val, index) => {
+                if (val && !row.cells[index].innerText.toLowerCase().includes(val)) {
+                    isVisible = false;
+                }
+            });
+
+            row.style.display = isVisible ? '' : 'none';
+        }
+    });
+});
