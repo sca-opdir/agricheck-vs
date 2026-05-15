@@ -1,19 +1,38 @@
 <!DOCTYPE html>
-<html lang="fr">
-<head>
+<html lang="fr" data-bs-theme="light"> <head>
   <meta charset="utf-8">
-  <title>Tous les points d'inspection</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agricheck - Tous les points</title>
   <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/main.css">
 </head>
-<body class="p-4">
-  <div class="container-fluid">
-    <h1>Tous les points d'inspection (Valais)</h1>
+<body class="d-flex flex-column min-vh-100">
+
+  <header class="bg-light border-bottom py-5 mb-4" data-aos="fade-down">
+    <div class="container-lg">
+      <h1 class="display-5 fw-bold mb-3" data-i18n="header.title">
+        Schweizer Kontrollpunkte? Einfach gefunden mit Agricheck! >>> Version WALLIS
+      </h1>
+      <div class="lead mb-0" data-i18n="header.lead"></div>
+    </div>
+  </header>
+
+  <main class="container-fluid px-4 flex-grow-1" data-aos="fade-up">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Tous les points d'inspection (Valais)</h2>
+        <a href="index.html" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+    </div>
+    
     <hr>
-    <div class="table-responsive">
-      <table class="table table-striped table-hover" id="resultsTable">
-        <thead>
-          <tr>
+
+    <div class="table-responsive shadow-sm card">
+      <table class="table table-striped table-hover mb-0" id="resultsTable">
+        <thead class="table-dark"> <tr>
             <th>Hiérarchie</th>
             <th>Code Full</th>
             <th>Code</th>
@@ -24,7 +43,14 @@
           </tbody>
       </table>
     </div>
-  </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>AOS.init({ once: true });</script>
+
+  <script src="js/layout.js"></script> 
   <script type="module" src="js/all-points.js"></script>
 </body>
 </html>
