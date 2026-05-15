@@ -6,6 +6,9 @@ const content      = document.getElementById('content');
 const metaDateEl   = document.getElementById('metaDate');
 const printBtn     = document.getElementById('printBtn');
 const copyLinkBtn  = document.getElementById('copyLinkBtn');
+const btnCheckAll = document.getElementById('btnCheckAll');
+const btnUncheckAll = document.getElementById('btnUncheckAll');
+
 let nodeMap;
 
 printBtn.addEventListener('click', () => window.print());
@@ -17,6 +20,20 @@ copyLinkBtn.addEventListener('click', () => {
       copyLinkBtn.classList.replace('btn-success', 'btn-outline-secondary');
       copyLinkBtn.innerHTML = `<i class="bi bi-clipboard"></i> ${t('copyLink')}`;
     }, 2000);
+  });
+});
+
+// Logique pour tout cocher
+btnCheckAll.addEventListener('click', () => {
+  document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb => {
+    cb.checked = true;
+  });
+});
+
+// Logique pour tout décocher
+btnUncheckAll.addEventListener('click', () => {
+  document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb => {
+    cb.checked = false;
   });
 });
 
@@ -34,51 +51,16 @@ function addDescendantsAndSelf(uri, set) {
 }
 
 window.rebuildPage = function(lang) {
-  // 1. On vide tout le contenu
   content.innerHTML = '';
-
-  // 2. --- CRÉATION DU CONTENEUR DE BOUTONS ---
-  const controls = document.createElement('div');
-  controls.className = 'mb-4 d-print-none text-end';
-  
-  // Utilisation de variables pour les textes si t() n'est pas prêt
-  const txtCheckAll = (typeof t !== 'undefined' && t('checklist.checkAll')) || 'Tout cocher';
-  const txtUncheckAll = (typeof t !== 'undefined' && t('checklist.uncheckAll')) || 'Tout décocher';
-
-  controls.innerHTML = `
-    <button type="button" class="btn btn-sm btn-outline-primary me-2" id="btnCheckAll">
-      <i class="bi bi-check2-all"></i> ${txtCheckAll}
-    </button>
-    <button type="button" class="btn btn-sm btn-outline-secondary" id="btnUncheckAll">
-      <i class="bi bi-square"></i> ${txtUncheckAll}
-    </button>
-  `;
-  
-  // On ajoute les contrôles en premier dans le DOM
-  content.appendChild(controls);
-
-  // 3. --- GESTION DES ÉVÉNEMENTS ---
-  // On utilise un petit délai ou on s'assure que le DOM est prêt pour attacher les clics
-  controls.querySelector('#btnCheckAll').onclick = () => {
-    document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb => cb.checked = true);
-  };
-  controls.querySelector('#btnUncheckAll').onclick = () => {
-    document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb => cb.checked = false);
-  };
-
-  // 4. --- RESTE DU CODE DE GÉNÉRATION ---
   metaDateEl.textContent = new Date().toLocaleDateString(lang, {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   });
 
-  const params = new URLSearchParams(location.search);
+  const params    = new URLSearchParams(location.search);
   const slugParam = params.get('groups');
 
   if (!slugParam) {
-    const errorMsg = document.createElement('p');
-    errorMsg.className = 'text-danger';
-    errorMsg.textContent = (typeof t !== 'undefined' && t('noGroups')) || 'Aucun groupe sélectionné';
-    content.appendChild(errorMsg);
+    content.innerHTML = `<p class="text-danger">${t('noGroups')}</p>`;
     return;
   }
   const groupUris = slugParam.split(',')
