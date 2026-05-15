@@ -125,13 +125,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Fonction pour cacher le spinner
 window.hideLoader = function() {
     const loader = document.getElementById('loading-overlay');
-    if (loader) {
+    if (loader && !loader.classList.contains('loader-hidden')) {
         loader.classList.add('loader-hidden');
+        // On retire complètement l'élément après l'animation (0.5s) pour libérer les clics
+        setTimeout(() => {
+            loader.style.display = 'none';
+        }, 500);
     }
 };
 
-// Par sécurité, on le cache si le chargement prend trop de temps (ex: 5s)
+// Sécurité : On cache le loader après 4 secondes quoi qu'il arrive
 window.addEventListener('load', () => {
-    // Si tes scripts de données (index.js, all-points.js) ne l'ont pas encore caché
-    setTimeout(window.hideLoader, 500); 
+    setTimeout(window.hideLoader, 4000); 
 });
