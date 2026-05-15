@@ -110,40 +110,46 @@ function renderCollection(uri, numbers, lang, displayableUris) {
     content.appendChild(p);
   }
 
-  if (node.inspectionPoints?.length) {
+if (node.inspectionPoints?.length) {
     const ul = document.createElement('ul');
-    ul.className = 'checklist';
+    ul.className = 'checklist list-unstyled'; // list-unstyled pour un look plus propre
     node.inspectionPoints.forEach(ipUri => {
-      const ip = nodeMap.get(ipUri);
-      if (!ip) return;
+        const ip = nodeMap.get(ipUri);
+        if (!ip) return;
 
-      const li = document.createElement('li');
-      const label = document.createElement('label');
-      label.className = 'd-block';
-      const cb = document.createElement('input');
-      cb.type = 'checkbox';
-      cb.className = 'form-check-input';
-      label.appendChild(cb);
+        const li = document.createElement('li');
+        li.className = 'mb-3 p-2 border-bottom'; // On espace un peu les points
+        
+        const ipId = ipUri.split('/').pop(); // On récupère l'ID pour SPARQL
 
-      const ipCommentText = window.getLocalizedText(ip.comment, lang);
-      const nameEl = document.createElement(ipCommentText ? 'strong' : 'span');
-      nameEl.innerHTML = window.getLocalizedText(ip.label, lang);
-      label.appendChild(nameEl);
+        // Template du point de contrôle
+        li.innerHTML = `
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="check-${ipId}">
+                <label class="form-check-label fw-bold" for="check-${ipId}">
+                    ${window.getLocalizedText(ip.label, lang)}
+                </label>
+            </div>
+            ${ip.comment ? `<div class="text-muted small ms-4">${window.getLocalizedText(ip.comment, lang)}</div>` : ''}
+            
+            <div class="ms-4 mt-2 d-print-none">
+                <button class="btn btn-sm btn-link p-0 text-decoration-none btn-details" data-id="${ipId}">
+                    <i class="bi bi-plus-circle"></i> Détails techniques
+                </button>
+                <div id="details-${ipId}" class="sparql-details mt-2" style="display:none;">
+                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+                </div>
+            </div>
+        `;
 
-      if (ipCommentText) {
-        label.appendChild(document.createElement('br'));
-        const span = document.createElement('span');
-        span.className = 'text-muted';
-        span.innerHTML = ipCommentText;
-        label.appendChild(span);
-      }
-
-      li.appendChild(label);
-      ul.appendChild(li);
+        ul.appendChild(li);
     });
     content.appendChild(ul);
-  }
+}
 
+// ... (fin de la fonction renderCollection)
+
+  
   (node.subGroups ?? []).forEach((subUri, i) =>
     renderCollection(subUri, numbers.concat(i + 1), lang, displayableUris)
   );
@@ -175,3 +181,45 @@ async function fetchPointDetails(pointId) {
         return [];
     }
 }
+
+
+
+// AJOUTER CECI À LA FIN DE TON FICHIER pour gérer le clic sur "Détails"
+document.addEventListener('click', async (e) => {
+    if (e.target.closest('.btn-details')) {
+        const btn = e.target.closest('.btn-details');
+        const ipId = btn.dataset.id;
+        const detailsDiv = document.getElementById(`details-${ipId}`);
+
+        // Toggle l'affichage
+        if (detailsDiv.style.display === 'block') {
+            detailsDiv.style.display = 'none';
+            btn.innerHTML = '<i class="bi bi-plus-circle"></i> Détails techniques';
+            return;
+        }
+
+        detailsDiv.style.display = 'block';
+        btn.innerHTML = '<i class="bi bi-dash-circle"></i> Masquer les détails';
+
+        // Charger les données si pas encore fait
+        if (detailsDiv.innerHTML.includes('spinner-border')) {
+            const bindings = await fetchPointDetails(ipId);
+            if (bindings.length === 0) {
+                detailsDiv.innerHTML = '<span class="text-warning">Aucune donnée trouvée.</span>';
+                return;
+            }
+
+            let table = '<table class="table table-sm table-bordered small bg-light"><tbody>';
+            bindings.forEach(b => {
+                const prop = b.propriete.value.split('/').pop().split('#').pop();
+                const val = b.valeur.value;
+                // On n'affiche que les valeurs un peu lisibles
+                if (!val.startsWith('http') || val.includes('inspection')) {
+                    table += `<tr><td class="fw-bold">${prop}</td><td>${val}</td></tr>`;
+                }
+            });
+            table += '</tbody></table>';
+            detailsDiv.innerHTML = table;
+        }
+    }
+});
