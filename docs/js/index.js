@@ -81,6 +81,9 @@ window.rebuildPage = function(lang) {
     .filter(n => n.type === 'Collection' && !n.superGroup && !n.parentGroup)
     .map(n => buildNode(n.uri));
 
+
+  
+  // Initialisation de jsTree
   treeEl
     .jstree({
       plugins: ['search', 'checkbox'],
@@ -100,10 +103,10 @@ window.rebuildPage = function(lang) {
         }
       }
     })
-    // Juste après l'initialisation du jstree, on s'assure que le spinner part
-  treeEl.on('ready.jstree', () => {
-     if (typeof window.hideLoader === 'function') window.hideLoader();
-  });
+    .on('ready.jstree', () => {
+        // C'est ici que l'on cache le loader
+        if (typeof window.hideLoader === 'function') window.hideLoader();
+    })
     .on('changed.jstree', (_, data) => {
       selectedSet = new Set(data.selected);
       const empty = selectedSet.size === 0;
@@ -114,6 +117,7 @@ window.rebuildPage = function(lang) {
     .on('select_node.jstree', (_, data) => {
       treeEl.jstree(true).open_node(data.node);
     });
+  
   new bootstrap.Tooltip(treeEl[0], {
     selector: '[data-bs-toggle="tooltip"]',
     trigger: 'hover',
