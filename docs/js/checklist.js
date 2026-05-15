@@ -148,3 +148,30 @@ function renderCollection(uri, numbers, lang, displayableUris) {
     renderCollection(subUri, numbers.concat(i + 1), lang, displayableUris)
   );
 }
+
+// ajouté pour mettre tous les détails long-format
+
+async function fetchPointDetails(pointId) {
+    // On construit l'URI complète à partir de l'ID
+    const pointUri = `https://agriculture.ld.admin.ch/inspection/${pointId}`;
+    
+    const sparqlQuery = `
+        PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+        SELECT ?propriete ?valeur
+        WHERE {
+            <${pointUri}> ?propriete ?valeur .
+        }
+        ORDER BY ?propriete
+    `;
+
+    const url = `https://agriculture.ld.admin.ch/query?query=${encodeURIComponent(sparqlQuery)}`;
+
+    try {
+        const response = await fetch(url, { headers: { 'Accept': 'application/sparql-results+json' } });
+        const data = await response.json();
+        return data.results.bindings;
+    } catch (error) {
+        console.error("Erreur SPARQL:", error);
+        return [];
+    }
+}
