@@ -34,10 +34,15 @@ async function loadAllPoints() {
     `;
     tbody.appendChild(tr);
   });
+
+  // --- C'EST ICI QU'IL FAUT LE METTRE ---
+  // Une fois que la boucle est finie et le tableau rempli
+  if (typeof window.hideLoader === 'function') {
+      window.hideLoader();
+  }
 }
 
 loadAllPoints();
-
 
 document.querySelectorAll('.column-filter').forEach(input => {
     input.addEventListener('keyup', function() {
