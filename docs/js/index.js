@@ -27,6 +27,12 @@ let searchActive = false;
   });
 
   rebuildPage(window.__APP_LANG);
+
+  // --- MODIFICATION ICI ---
+  // L'arbre est reconstruit, on vire le spinner IMMÉDIATEMENT
+  if (typeof window.hideLoader === 'function') {
+    window.hideLoader();
+  }
   
   // FORCE LE MASQUAGE SI PAS DE RECHERCHE (Sécurité)
   setTimeout(() => {
