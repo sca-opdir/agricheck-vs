@@ -101,9 +101,8 @@ function renderCollection(uri, numbers, lang, displayableUris) {
   const node = nodeMap.get(uri);
   if (!node) return;
 
-  // --- LOGIQUE D'IDENTIFIANT POUR LES TITRES (COLLECTIONS) ---
-  // On récupère le conjunctIdentifier (ex: 12.20_2026) s'il existe
-  // S'il n'y en a pas, on prend l'identifier standard.
+  // --- LOGIQUE DE PRIORITÉ POUR LES TITRES (COLLECTIONS) ---
+  // On prend le conjunctIdentifier s'il existe, sinon l'identifier classique
   const collectionId = node.conjunctIdentifier || node.identifier;
   const idBadge = collectionId ? ` (${collectionId})` : '';
 
@@ -114,7 +113,6 @@ function renderCollection(uri, numbers, lang, displayableUris) {
   numSpan.textContent = numbers.join('.');
   
   heading.appendChild(numSpan);
-  // On injecte le texte localisé de la catégorie suivi de son identifiant entre parenthèses
   heading.innerHTML += window.getLocalizedText(node.label, lang) + idBadge;
   content.appendChild(heading);
 
@@ -127,28 +125,23 @@ function renderCollection(uri, numbers, lang, displayableUris) {
 
   if (node.inspectionPoints?.length) {
     const ul = document.createElement('ul');
-    ul.className = 'checklist list-unstyled'; // list-unstyled pour un look plus propre
+    ul.className = 'checklist list-unstyled';
     
     node.inspectionPoints.forEach(ipUri => {
         const ip = nodeMap.get(ipUri);
         if (!ip) return;
 
         const li = document.createElement('li');
-        li.className = 'mb-3 p-2 border-bottom'; // On espace un peu les points
+        li.className = 'mb-3 p-2 border-bottom';
         
-        const ipId = ipUri.split('/').pop(); // On récupère l'ID pour SPARQL
+        const ipId = ipUri.split('/').pop();
 
-        // --- LOGIQUE D'IDENTIFIANT POUR LES POINTS DE CONTRÔLE ---
-        // Si le point possède à la fois un conjunctIdentifier ET un identifier, on affiche les deux combinés 
-        // comme demandé dans ton exemple (ex: "12.20_2026, A1"). Sinon, on affiche ce qui est dispo.
-        let ipIdString = '';
-        if (ip.conjunctIdentifier && ip.identifier) {
-            ipIdString = ` (${ip.conjunctIdentifier}, ${ip.identifier})`;
-        } else if (ip.conjunctIdentifier || ip.identifier) {
-            ipIdString = ` (${ip.conjunctIdentifier || ip.identifier})`;
-        }
+        // --- LOGIQUE DE PRIORITÉ POUR LES POINTS DE CONTRÔLE ---
+        // Même logique : priorité au conjunctIdentifier de l'inspection point, sinon identifier
+        const ipIdValue = ip.conjunctIdentifier || ip.identifier;
+        const ipIdString = ipIdValue ? ` (${ipIdValue})` : '';
 
-        // Template du point de contrôle mis à jour avec ${ipIdString}
+        // Template du point de contrôle avec l'identifiant prioritaire
         li.innerHTML = `
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="check-${ipId}">
