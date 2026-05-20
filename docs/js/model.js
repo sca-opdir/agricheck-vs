@@ -5,7 +5,9 @@ function buildQuery() {
     PREFIX : <https://agriculture.ld.admin.ch/inspection/>
     PREFIX schema: <http://schema.org/>
     PREFIX dct: <http://purl.org/dc/terms/>
-    SELECT DISTINCT ?item ?class ?name ?description ?parent ?identifier
+    
+    # AJOUT : On sélectionne la variable ?conjunctIdentifier
+    SELECT DISTINCT ?item ?class ?name ?description ?parent ?identifier ?conjunctIdentifier
     FROM <https://lindas.admin.ch/foag/inspections>
     WHERE
     {
@@ -14,13 +16,16 @@ function buildQuery() {
       VALUES ?class { dct:Collection :InspectionPoint }
       OPTIONAL { ?item schema:name ?name }
       OPTIONAL { ?item schema:description ?description }
-      # FILTER: Ensure name and description use the same language (if both exist)
+      
       FILTER ( !BOUND(?name) || !BOUND(?description) || lang(?name) = lang(?description) )
       OPTIONAL {
         ?item ?link ?parent .
         VALUES ?link { schema:isPartOf :belongsToGroup }
       }
       OPTIONAL { ?item schema:identifier ?identifier }
+      
+      # AJOUT : Extraction du conjunctIdentifier s'il existe pour cet item
+      OPTIONAL { ?item :conjunctIdentifier ?conjunctIdentifier }
     }
     ORDER BY ?identifier ?item
     `;
@@ -31,7 +36,7 @@ export async function fetchBindings() {
     method:  'POST',
     headers: {
       'Content-Type': 'application/sparql-query',
-      'Accept':       'application/sparql-results+json'
+      'Accept':        'application/sparql-results+json'
     },
     body: buildQuery()
   });
@@ -53,9 +58,13 @@ export function buildNodeMap(bindingsJson) {
       map.set(uri, {
         uri,
         type: v(row, 'class').includes('Collection') ? 'Collection' : 'InspectionPoint',
-        label:      {},
-        comment:    {},
+        label:    {},
+        comment:  {},
         identifier: v(row, 'identifier') || null,
+        
+        // AJOUT : Stockage du conjunctIdentifier dans la carte de l'application
+        conjunctIdentifier: v(row, 'conjunctIdentifier') || null,
+        
         subGroups:        [],
         inspectionPoints: [],
         superGroup:  null,
