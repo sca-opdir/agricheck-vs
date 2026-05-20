@@ -257,24 +257,19 @@ document.addEventListener('click', async (e) => {
 async function fetchPossibleOutcomes(pointId) {
     const pointUri = `https://agriculture.ld.admin.ch/inspection/${pointId}`;
     
-    // Requête qui traverse le point -> possibleOutcome -> defect -> son texte en français
+    // Requête élargie : on prend tout sans filtrer sur la langue pour voir la structure brute
     const sparqlQuery = `
         PREFIX : <https://agriculture.ld.admin.ch/inspection/>
         PREFIX schema: <http://schema.org/>
         
-        SELECT DISTINCT ?defectLabel
+        SELECT ?outcome ?defect ?defectLabel
         WHERE {
             <${pointUri}> :possibleOutcome ?outcome .
-            ?outcome :defect ?defect .
-            
-            # Si le defect est une ressource avec un nom, ou directement du texte
+            OPTIONAL { ?outcome :defect ?defect . }
             OPTIONAL { 
-                ?defect schema:name ?nameLabel . 
-                FILTER(LANG(?nameLabel) = "${window.__APP_LANG || 'fr'}")
+                ?defect schema:name ?defectLabel . 
+                FILTER(LANG(?defectLabel) = "${window.__APP_LANG || 'fr'}")
             }
-            
-            BIND(IF(BOUND(?nameLabel), ?nameLabel, ?defect) AS ?defectLabel)
-            FILTER(LANG(?defectLabel) = "${window.__APP_LANG || 'fr'}")
         }
     `;
 
@@ -291,6 +286,7 @@ async function fetchPossibleOutcomes(pointId) {
 }
 
 // Gérer le clic sur "Manquements possibles"
+// Gérer le clic sur "Manquements possibles" - Version Diagnostic Brute
 document.addEventListener('click', async (e) => {
     if (e.target.closest('.btn-outcomes')) {
         const btn = e.target.closest('.btn-outcomes');
@@ -307,19 +303,21 @@ document.addEventListener('click', async (e) => {
         outcomesDiv.style.display = 'block';
         btn.innerHTML = '<i class="bi bi-dash-circle"></i> Masquer les manquements';
 
-        // Si le spinner est là, on charge les données
+        // Si le spinner est là, on charge les données de test
         if (outcomesDiv.innerHTML.includes('spinner-border')) {
             const bindings = await fetchPossibleOutcomes(ipId);
             
             if (bindings.length === 0) {
-                outcomesDiv.innerHTML = '<span class="text-muted small">Aucun manquement spécifique répertorié.</span>';
+                outcomesDiv.innerHTML = '<span class="text-muted small">Aucun manquement renvoyé par le SPARQL.</span>';
                 return;
             }
 
-            // Génération d'une jolie liste rouge pour les manquements
-            let html = '<div class="alert alert-danger py-2 px-3 small"><ul class="mb-0 ps-3">';
+            // Génération d'une liste jaune de diagnostic pour observer les données brutes
+            let html = '<div class="alert alert-warning py-2 px-3 small"><strong>Diagnostic des données brutes :</strong><ul class="mb-0 mt-1">';
             bindings.forEach(b => {
-                html += `<li class="mb-1">${b.defectLabel.value}</li>`;
+                // Priorité au label, sinon à l'URI du defect, sinon au code unique genid
+                const displayVal = b.defectLabel?.value || b.defect?.value || b.outcome?.value;
+                html += `<li class="text-monospace">${displayVal}</li>`;
             });
             html += '</ul></div>';
             
@@ -327,3 +325,4 @@ document.addEventListener('click', async (e) => {
         }
     }
 });
+   
