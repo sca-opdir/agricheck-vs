@@ -100,13 +100,22 @@ function renderCollection(uri, numbers, lang, displayableUris) {
   }
   const node = nodeMap.get(uri);
   if (!node) return;
+
+  // --- LOGIQUE D'IDENTIFIANT POUR LES TITRES (COLLECTIONS) ---
+  // On récupère le conjunctIdentifier (ex: 12.20_2026) s'il existe
+  // S'il n'y en a pas, on prend l'identifier standard.
+  const collectionId = node.conjunctIdentifier || node.identifier;
+  const idBadge = collectionId ? ` (${collectionId})` : '';
+
   const hLevel  = Math.min(numbers.length, 6);
   const heading = document.createElement('h' + hLevel);
   const numSpan = document.createElement('span');
   numSpan.className = 'section-number';
   numSpan.textContent = numbers.join('.');
+  
   heading.appendChild(numSpan);
-  heading.innerHTML += window.getLocalizedText(node.label, lang);
+  // On injecte le texte localisé de la catégorie suivi de son identifiant entre parenthèses
+  heading.innerHTML += window.getLocalizedText(node.label, lang) + idBadge;
   content.appendChild(heading);
 
   const commentText = window.getLocalizedText(node.comment, lang);
@@ -116,9 +125,10 @@ function renderCollection(uri, numbers, lang, displayableUris) {
     content.appendChild(p);
   }
 
-if (node.inspectionPoints?.length) {
+  if (node.inspectionPoints?.length) {
     const ul = document.createElement('ul');
     ul.className = 'checklist list-unstyled'; // list-unstyled pour un look plus propre
+    
     node.inspectionPoints.forEach(ipUri => {
         const ip = nodeMap.get(ipUri);
         if (!ip) return;
@@ -128,12 +138,22 @@ if (node.inspectionPoints?.length) {
         
         const ipId = ipUri.split('/').pop(); // On récupère l'ID pour SPARQL
 
-        // Template du point de contrôle
+        // --- LOGIQUE D'IDENTIFIANT POUR LES POINTS DE CONTRÔLE ---
+        // Si le point possède à la fois un conjunctIdentifier ET un identifier, on affiche les deux combinés 
+        // comme demandé dans ton exemple (ex: "12.20_2026, A1"). Sinon, on affiche ce qui est dispo.
+        let ipIdString = '';
+        if (ip.conjunctIdentifier && ip.identifier) {
+            ipIdString = ` (${ip.conjunctIdentifier}, ${ip.identifier})`;
+        } else if (ip.conjunctIdentifier || ip.identifier) {
+            ipIdString = ` (${ip.conjunctIdentifier || ip.identifier})`;
+        }
+
+        // Template du point de contrôle mis à jour avec ${ipIdString}
         li.innerHTML = `
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="check-${ipId}">
                 <label class="form-check-label fw-bold" for="check-${ipId}">
-                    ${window.getLocalizedText(ip.label, lang)}
+                    ${window.getLocalizedText(ip.label, lang)}${ipIdString}
                 </label>
             </div>
             ${ip.comment ? `<div class="text-muted small ms-4">${window.getLocalizedText(ip.comment, lang)}</div>` : ''}
@@ -151,11 +171,8 @@ if (node.inspectionPoints?.length) {
         ul.appendChild(li);
     });
     content.appendChild(ul);
-}
+  }
 
-// ... (fin de la fonction renderCollection)
-
-  
   (node.subGroups ?? []).forEach((subUri, i) =>
     renderCollection(subUri, numbers.concat(i + 1), lang, displayableUris)
   );
