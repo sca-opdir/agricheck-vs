@@ -127,42 +127,54 @@ function renderCollection(uri, numbers, lang, displayableUris) {
     const ul = document.createElement('ul');
     ul.className = 'checklist list-unstyled';
     
-    node.inspectionPoints.forEach(ipUri => {
-        const ip = nodeMap.get(ipUri);
-        if (!ip) return;
+node.inspectionPoints.forEach(ipUri => {
+    const ip = nodeMap.get(ipUri);
+    if (!ip) return;
 
-        const li = document.createElement('li');
-        li.className = 'mb-3 p-2 border-bottom';
+    const li = document.createElement('li');
+    li.className = 'mb-3 p-2 border-bottom';
+    
+    const ipId = ipUri.split('/').pop();
+
+    const ipIdValue = ip.conjunctIdentifier || ip.identifier;
+    const ipIdString = ipIdValue ? ` (${ipIdValue})` : '';
+
+    // Template mis à jour avec le DEUXIÈME accordéon
+    li.innerHTML = `
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="check-${ipId}">
+            <label class="form-check-label fw-bold" for="check-${ipId}">
+                ${window.getLocalizedText(ip.label, lang)}${ipIdString}
+            </label>
+        </div>
+        ${ip.comment ? `<div class="text-muted small ms-4">${window.getLocalizedText(ip.comment, lang)}</div>` : ''}
         
-        const ipId = ipUri.split('/').pop();
-
-        // --- LOGIQUE DE PRIORITÉ POUR LES POINTS DE CONTRÔLE ---
-        // Même logique : priorité au conjunctIdentifier de l'inspection point, sinon identifier
-        const ipIdValue = ip.conjunctIdentifier || ip.identifier;
-        const ipIdString = ipIdValue ? ` (${ipIdValue})` : '';
-
-        // Template du point de contrôle avec l'identifiant prioritaire
-        li.innerHTML = `
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input" id="check-${ipId}">
-                <label class="form-check-label fw-bold" for="check-${ipId}">
-                    ${window.getLocalizedText(ip.label, lang)}${ipIdString}
-                </label>
-            </div>
-            ${ip.comment ? `<div class="text-muted small ms-4">${window.getLocalizedText(ip.comment, lang)}</div>` : ''}
-            
-            <div class="ms-4 mt-2 d-print-none">
+        <div class="ms-4 mt-2 d-print-none d-flex gap-3">
+            <div>
                 <button class="btn btn-sm btn-link p-0 text-decoration-none btn-details" data-id="${ipId}">
                     <i class="bi bi-plus-circle"></i> Détails techniques
                 </button>
-                <div id="details-${ipId}" class="sparql-details mt-2" style="display:none;">
-                    <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-                </div>
             </div>
-        `;
+            <div>
+                <button class="btn btn-sm btn-link p-0 text-decoration-none text-danger btn-outcomes" data-id="${ipId}">
+                    <i class="bi bi-exclamation-triangle"></i> Manquements possibles
+                </button>
+            </div>
+        </div>
 
-        ul.appendChild(li);
-    });
+        <div id="details-${ipId}" class="sparql-details mt-2 ms-4" style="display:none;">
+            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+        </div>
+        <div id="outcomes-${ipId}" class="sparql-outcomes mt-2 ms-4" style="display:none;">
+            <div class="spinner-border spinner-border-sm text-danger" role="status"></div>
+        </div>
+    `;
+
+    ul.appendChild(li);
+});
+    
+    
+    
     content.appendChild(ul);
   }
 
@@ -236,6 +248,82 @@ document.addEventListener('click', async (e) => {
             });
             table += '</tbody></table>';
             detailsDiv.innerHTML = table;
+        }
+    }
+});
+
+//ajout pour le bouton Manquements possibles
+
+async function fetchPossibleOutcomes(pointId) {
+    const pointUri = `https://agriculture.ld.admin.ch/inspection/${pointId}`;
+    
+    // Requête qui traverse le point -> possibleOutcome -> defect -> son texte en français
+    const sparqlQuery = `
+        PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+        PREFIX schema: <http://schema.org/>
+        
+        SELECT DISTINCT ?defectLabel
+        WHERE {
+            <${pointUri}> :possibleOutcome ?outcome .
+            ?outcome :defect ?defect .
+            
+            # Si le defect est une ressource avec un nom, ou directement du texte
+            OPTIONAL { 
+                ?defect schema:name ?nameLabel . 
+                FILTER(LANG(?nameLabel) = "${window.__APP_LANG || 'fr'}")
+            }
+            
+            BIND(IF(BOUND(?nameLabel), ?nameLabel, ?defect) AS ?defectLabel)
+            FILTER(LANG(?defectLabel) = "${window.__APP_LANG || 'fr'}")
+        }
+    `;
+
+    const url = `https://agriculture.ld.admin.ch/query?query=${encodeURIComponent(sparqlQuery)}`;
+
+    try {
+        const response = await fetch(url, { headers: { 'Accept': 'application/sparql-results+json' } });
+        const data = await response.json();
+        return data.results.bindings;
+    } catch (error) {
+        console.error("Erreur SPARQL Outcomes:", error);
+        return [];
+    }
+}
+
+// Gérer le clic sur "Manquements possibles"
+document.addEventListener('click', async (e) => {
+    if (e.target.closest('.btn-outcomes')) {
+        const btn = e.target.closest('.btn-outcomes');
+        const ipId = btn.dataset.id;
+        const outcomesDiv = document.getElementById(`outcomes-${ipId}`);
+
+        // Toggle l'affichage
+        if (outcomesDiv.style.display === 'block') {
+            outcomesDiv.style.display = 'none';
+            btn.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Manquements possibles';
+            return;
+        }
+
+        outcomesDiv.style.display = 'block';
+        btn.innerHTML = '<i class="bi bi-dash-circle"></i> Masquer les manquements';
+
+        // Si le spinner est là, on charge les données
+        if (outcomesDiv.innerHTML.includes('spinner-border')) {
+            const bindings = await fetchPossibleOutcomes(ipId);
+            
+            if (bindings.length === 0) {
+                outcomesDiv.innerHTML = '<span class="text-muted small">Aucun manquement spécifique répertorié.</span>';
+                return;
+            }
+
+            // Génération d'une jolie liste rouge pour les manquements
+            let html = '<div class="alert alert-danger py-2 px-3 small"><ul class="mb-0 ps-3">';
+            bindings.forEach(b => {
+                html += `<li class="mb-1">${b.defectLabel.value}</li>`;
+            });
+            html += '</ul></div>';
+            
+            outcomesDiv.innerHTML = html;
         }
     }
 });
