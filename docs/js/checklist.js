@@ -332,7 +332,7 @@ document.addEventListener('click', async (e) => {
             }
 
             // Génération d'une liste jaune de diagnostic pour observer les données brutes
-            let html = '<div class="alert alert-warning py-2 px-3 small"><strong>Diagnostic des données brutes :</strong><ul class="mb-0 mt-1">';
+            let html = '<div class="alert alert-warning py-2 px-3 small"><strong>Liens vers les manquements :</strong><ul class="mb-0 mt-1">';
             bindings.forEach(b => {
                 // Priorité au label, sinon à l'URI du defect, sinon au code unique genid
                 const displayVal = b.defectLabel?.value || b.defect?.value || b.outcome?.value;
