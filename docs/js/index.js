@@ -63,7 +63,22 @@ window.rebuildPage = function(lang) {
             weakHaystack.push(...Object.values(ip.comment));
         }
     });
+    // --- ENRICHISSEMENT DU TEXTE AVEC LE BOUTON LIEN ---
+    // On extrait l'ID unique de la collection à la fin de son URI
+    const itemId = uri.split('/').pop();
+    const externalUrl = `https://agriculture.ld.admin.ch/inspection/${itemId}`;
     
+    // On injecte l'icône de lien externe à côté du texte de l'item.
+    // L'arrêt de propagation (onclick="event.stopPropagation();") évite de cocher la case par erreur lors du clic sur le lien.
+    const textWithIcon = `
+      <span class="jstree-item-wrapper">
+        ${labelText}
+        <a href="${externalUrl}" target="_blank" class="ms-2 text-decoration-none text-muted link-icon-hover" onclick="event.stopPropagation();" title="Ouvrir dans LINDAS">
+          <i class="bi bi-box-arrow-up-right" style="font-size: 0.85em;"></i>
+        </a>
+      </span>
+    `;
+    /// fin ajotu
     const nodeData = {
       id: uri,
       text: labelText,
