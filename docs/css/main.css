@@ -181,6 +181,7 @@ ul.checklist label .text-muted {
 
 .navbar-headVS {
     background-color: #A61616 !important; /* Rouge foncé type Valais */
+  color: #FFFFFF !important;            /* Texte blanc */
 }
 
 
