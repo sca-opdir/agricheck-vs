@@ -183,7 +183,17 @@ ul.checklist label .text-muted {
     background-color: #A61616 !important; /* Rouge foncé type Valais */
   color: #FFFFFF !important;            /* Texte blanc */
 }
+/* Force tout texte ou élément brut dans la navbar à devenir blanc */
+.navbar-headVS, 
+.navbar-headVS * {
+    color: #FFFFFF !important;
+}
 
+/* Si tu as des liens ou des boutons de navigation spécifiques de Bootstrap */
+.navbar-headVS .nav-link,
+.navbar-headVS .navbar-brand {
+    color: #FFFFFF !important;
+}
 
 .column-filter {
     font-size: 0.75rem;
