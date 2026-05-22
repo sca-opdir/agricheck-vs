@@ -116,6 +116,17 @@ function renderCollection(uri, numbers, lang, displayableUris) {
   heading.innerHTML += window.getLocalizedText(node.label, lang) + idBadge;
   content.appendChild(heading);
 
+// AJOUT : Lien cliquable de la collection juste en-dessous du titre
+const collectionUrlDiv = document.createElement('div');
+collectionUrlDiv.className = 'collection-url mb-2 mt-n1';
+collectionUrlDiv.innerHTML = `
+    <a href="${uri}" target="_blank" class="text-decoration-none small" style="color: #6c757d; font-size: 0.8em;">
+        <i class="bi bi-link-45deg"></i> ${uri}
+    </a>
+`;
+  
+content.appendChild(collectionUrlDiv);
+  
   const commentText = window.getLocalizedText(node.comment, lang);
   if (commentText) {
     const p = document.createElement('p');
@@ -140,6 +151,7 @@ node.inspectionPoints.forEach(ipUri => {
     const ipIdString = ipIdValue ? ` (${ipIdValue})` : '';
 
     // Template mis à jour avec le DEUXIÈME accordéon
+// Template mis à jour avec l'URL cliquable du point sous le titre
     li.innerHTML = `
         <div class="form-check">
             <input type="checkbox" class="form-check-input" id="check-${ipId}">
@@ -147,6 +159,13 @@ node.inspectionPoints.forEach(ipUri => {
                 ${window.getLocalizedText(ip.label, lang)}${ipIdString}
             </label>
         </div>
+        
+        <div class="ms-4 my-1">
+            <a href="${ipUri}" target="_blank" class="text-decoration-none" style="color: #2b75a0; font-size: 12px;">
+                <i class="bi bi-box-arrow-up-right"></i> ${ipUri}
+            </a>
+        </div>
+
         ${ip.comment ? `<div class="text-muted small ms-4">${window.getLocalizedText(ip.comment, lang)}</div>` : ''}
         
         <div class="ms-4 mt-2 d-print-none d-flex gap-3">
