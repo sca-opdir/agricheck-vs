@@ -81,7 +81,7 @@ window.rebuildPage = function(lang) {
     /// fin ajotu
     const nodeData = {
       id: uri,
-      text: labelText,
+      text: textWithIcon,
       a_attr: {
         'data-search':        [...strongHaystack, ...weakHaystack].join(' ').toLowerCase(),
         'data-search-strong': strongHaystack.join(' ').toLowerCase(),
