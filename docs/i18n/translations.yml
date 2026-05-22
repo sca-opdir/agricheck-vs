@@ -15,6 +15,7 @@ de:
   actions:
     title: Aktionen
     generate: Liste erstellen
+    openLink: In LINDAS öffnen
   
   checklist:
     title: Meine Agricheck-Liste
@@ -79,6 +80,7 @@ fr:
   actions:
     title: Actions
     generate: Créer la liste
+    openLink: Ouvrir dans LINDAS
   
   checklist:
     title: Ma liste Agricheck
@@ -143,6 +145,7 @@ it:
   actions:
     title: Azioni
     generate: Crea elenco
+    openLink: Apri in LINDAS
   
   checklist:
     title: La mia lista di Agricheck
