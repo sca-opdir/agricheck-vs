@@ -221,3 +221,14 @@ ul.checklist label .text-muted {
     opacity: 0;
     visibility: hidden;
 }
+
+/* On redonne une couleur sombre (gris foncé/noir) aux éléments du menu déroulant */
+.navbar-headVS .dropdown-menu * {
+    color: var(--bs-body-color) !important; 
+}
+
+/* Optionnel : Si tu veux aussi t'assurer que le survol reste propre */
+.navbar-headVS .dropdown-item:hover {
+    background-color: var(--bs-dropdown-link-hover-bg) !important;
+    color: var(--bs-dropdown-link-hover-color) !important;
+}
