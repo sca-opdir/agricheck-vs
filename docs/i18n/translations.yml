@@ -17,6 +17,7 @@ de:
     generate: Liste erstellen
     openLink: In LINDAS öffnen
     showAll: Alle Punkte anzeigen
+    advancedSearch: Erweiterte SPARQL-Suche
   
   checklist:
     title: Meine Agricheck-Liste
@@ -28,6 +29,16 @@ de:
     noGroups: Keine Gruppen angegeben.
     checkAll: Alle auswählen
     uncheckAll: Alle abwählen
+
+  searchPage:
+      back: "Zurück zur Startseite"
+      title: "Direktsuche in LINDAS"
+      help: "Geben Sie ein Stichwort in der aktiven Sprache der Website ein. Die Suche scannt Titel und Beschreibungen."
+      button: "Suchen"
+      loading: "Abfrage der Bundes-Server läuft..."
+      results: "Gefundene Ergebnisse"
+      thHierarchy: "Hierarchie (Ordner)"
+      thPoint: "Kontrollpunkt"
   
   footerText: © Bundesamt für Landwirtschaft und beteiligte Labelorganisationen, Stand Februar 2026
   
@@ -83,6 +94,7 @@ fr:
     generate: Créer la liste
     openLink: Ouvrir dans LINDAS
     showAll: Afficher tous les points
+    advancedSearch: Recherche directe LINDAS
   
   checklist:
     title: Ma liste Agricheck
@@ -94,6 +106,16 @@ fr:
     noGroups: Aucun groupe fourni.
     checkAll: Tout sélectionner
     uncheckAll: Tout désélectionner
+  
+  searchPage:
+      back: Retour à l'accueil
+      title: Recherche directe dans LINDAS
+      help: Saisissez un mot-clé dans la langue active du site. La recherche scanne les titres et descriptions."
+      button: Rechercher
+      loading: Interrogation des serveurs fédéraux en cours...
+      results: Résultats trouvés
+      thHierarchy: Hiérarchie (Dossiers)
+      thPoint: Point de contrôle
   
   footerText: © Office fédéral de l'agriculture et organisations de labels participantes, état en février 2026
   
@@ -149,6 +171,7 @@ it:
     generate: Crea elenco
     openLink: Apri in LINDAS
     showAll: Mostra tutti i punti
+    advancedSearch: Ricerca diretta in LINDAS
   
   checklist:
     title: La mia lista di Agricheck
@@ -160,6 +183,16 @@ it:
     noGroups: Nessun gruppo specificato.
     checkAll: Alle auswählen
     uncheckAll: Alle abwählen
+  
+  searchPage:
+      back: Torna alla home
+      title: Ricerca diretta in LINDAS
+      help: Inserisci una parola chiave nella lingua attiva del sito. La ricerca scansiona titoli e descrizioni.
+      button: Cerca
+      loading: Interrogazione dei server federali in corso...
+      results: Risultati trovati
+      thHierarchy: Gerarchia (Cartelle)
+      thPoint: Punto di controllo
   
   footerText: © Ufficio federale dell'agricoltura e organizzazioni di label partecipanti, stato febbraio 2026
   
