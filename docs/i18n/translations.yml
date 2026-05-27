@@ -17,6 +17,7 @@ de:
     generate: Liste erstellen
     openLink: In LINDAS öffnen
     showAll: Alle Punkte anzeigen
+    tsne: t-SNE Kartierung
     advancedSearch: Erweiterte SPARQL-Suche
   
   checklist:
@@ -94,6 +95,7 @@ fr:
     generate: Créer la liste
     openLink: Ouvrir dans LINDAS
     showAll: Afficher tous les points
+    tsne: Cartographie t-SNE
     advancedSearch: Recherche directe LINDAS
   
   checklist:
@@ -171,6 +173,7 @@ it:
     generate: Crea elenco
     openLink: Apri in LINDAS
     showAll: Mostra tutti i punti
+    tsne: Mappatura t-SNE
     advancedSearch: Ricerca diretta in LINDAS
   
   checklist:
