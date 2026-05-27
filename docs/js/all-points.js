@@ -1,129 +1,65 @@
-// Fonction pour générer la requête SPARQL avec la langue active
-function getQuery(lang) {
-  return `
-PREFIX schema: <http://schema.org/>
-PREFIX : <https://agriculture.ld.admin.ch/inspection/>
-SELECT (GROUP_CONCAT(?parentName; separator=" / ") AS ?hierarchy) ?code_full ?code ?label
-WHERE {
-  VALUES ?lang { "${lang}" }
-  ?point a :InspectionPoint ; schema:name ?label .
-  FILTER(LANG(?label) = ?lang)
-  OPTIONAL { ?point schema:identifier ?code }
-  OPTIONAL { ?point :conjunctIdentifier ?code_full }
-  ?point (:belongsToGroup|schema:isPartOf)+ ?parent .
-  ?parent schema:name ?parentName .
-  FILTER(LANG(?parentName) = ?lang)
-  FILTER(?parent != ?point && STR(?parentName) != "BFCen" && STR(?parentName) != "BFC")
-}
-GROUP BY ?point ?label ?code ?code_full
-ORDER BY ?hierarchy`;
-}
+// Remplacez tout le contenu de votre fichier JS par ceci
+import { parse } from 'https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js';
 
-// Initialisation globale synchronisée avec le framework i18n de layout.js
-(async function init() {
-  try {
-    // 1. On attend que le dictionnaire i18n soit prêt
-    await window.__i18nReady;
+const csvUrl = '../data/points_de_contrôle_2026-05-20_addedKeywords_embeddings_tsneviz.csv';
 
-    // 2. On lance la construction initiale de la page
-    rebuildPage(window.__APP_LANG || 'fr');
-
-  } catch (error) {
-    console.error("Erreur lors de l'initialisation de la page all-points :", error);
-    if (typeof window.hideLoader === 'function') {
-      window.hideLoader();
-    }
-  }
-})();
-
-// Fonction appelée au démarrage ET à chaque changement de langue à chaud
 window.rebuildPage = async function(lang) {
-  const tbody = document.getElementById('resultsBody');
-  if (!tbody) return;
-  
-  // On vide le tableau et on affiche le loader
-  tbody.innerHTML = '';
-  
-  const url = "https://lindas.admin.ch/query";
-  const sparqlQuery = getQuery(lang);
-
-  try {
-    const response = await fetch(`${url}?query=${encodeURIComponent(sparqlQuery)}`, {
-      headers: { "Accept": "application/sparql-results+json" }
-    });
+    const bodyQuery = document.getElementById('resultsBodyQuery');
+    const bodyCSV = document.getElementById('resultsBodyCSV');
     
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const data = await response.json();
+    // Reset
+    bodyQuery.innerHTML = '<tr><td colspan="4">Chargement SPARQL...</td></tr>';
+    bodyCSV.innerHTML = '<tr><td colspan="4">Chargement CSV...</td></tr>';
 
-    // Remplissage du tableau
-    data.results.bindings.forEach(row => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td class="small text-muted">${row.hierarchy.value}</td>
-        <td><strong>${row.code_full?.value || ''}</strong></td>
-        <td>${row.code?.value || ''}</td>
-        <td>${row.label.value}</td>
-      `;
-      tbody.appendChild(tr);
-    });
+    try {
+        // 1. Chargement SPARQL
+        const sparqlQuery = getQuery(lang);
+        const response = await fetch("https://lindas.admin.ch/query?query=" + encodeURIComponent(sparqlQuery), {
+            headers: { "Accept": "application/sparql-results+json" }
+        });
+        const data = await response.json();
+        
+        bodyQuery.innerHTML = '';
+        data.results.bindings.forEach(row => {
+            bodyQuery.innerHTML += `<tr>
+                <td>${row.hierarchy.value}</td>
+                <td>${row.code_full?.value || ''}</td>
+                <td>${row.code?.value || ''}</td>
+                <td>${row.label.value}</td>
+            </tr>`;
+        });
 
-    // Si des filtres étaient déjà saisis, on les réapplique sur les nouvelles lignes
-    applyFilters();
-
-  } catch (error) {
-    console.error("Erreur lors de la récupération SPARQL :", error);
-    tbody.innerHTML = `<tr><td colspan="4" class="text-danger text-center">Erreur de chargement des points d'inspection.</td></tr>`;
-  } finally {
-    // Une fois fini, on masque le loader
-    if (typeof window.hideLoader === 'function') {
-      window.hideLoader();
+        // 2. Chargement CSV (Frozen)
+        parse(csvUrl, {
+            download: true,
+            header: true,
+            delimiter: ";",
+            complete: function(results) {
+                bodyCSV.innerHTML = '';
+                results.data.forEach(item => {
+                    bodyCSV.innerHTML += `<tr>
+                        <td>${item.hierarchy || ''}</td>
+                        <td>${item.code || ''}</td>
+                        <td>${item.label || ''}</td>
+                        <td><span class="badge bg-info">${item.Tags || item.tags || '-'}</span></td>
+                    </tr>`;
+                });
+                if (typeof window.hideLoader === 'function') window.hideLoader();
+            }
+        });
+    } catch (e) {
+        console.error(e);
+        bodyQuery.innerHTML = '<tr><td colspan="4" class="text-danger">Erreur de chargement</td></tr>';
     }
-  }
 };
 
-// Logique de filtrage isolée pour pouvoir la réappeler facilement
-function applyFilters() {
-  const table = document.getElementById('resultsTable');
-  if (!table) return;
-  
-  const rows = table.querySelector('tbody').rows;
-  const filterValues = Array.from(document.querySelectorAll('.column-filter')).map(i => i.value.toLowerCase());
-
-  for (const row of rows) {
-    let isVisible = true;
-    
-    filterValues.forEach((val, index) => {
-      if (val && !row.cells[index].innerText.toLowerCase().includes(val)) {
-        isVisible = false;
-      }
-    });
-
-    row.style.display = isVisible ? '' : 'none';
-  }
+// Fonction helper (gardée ici pour que le module y accède)
+function getQuery(lang) {
+  return `PREFIX schema: <http://schema.org/> PREFIX : <https://agriculture.ld.admin.ch/inspection/> 
+  SELECT (GROUP_CONCAT(?parentName; separator=" / ") AS ?hierarchy) ?code_full ?code ?label
+  WHERE { VALUES ?lang { "${lang}" } ?point a :InspectionPoint ; schema:name ?label . FILTER(LANG(?label) = ?lang)
+  OPTIONAL { ?point schema:identifier ?code } OPTIONAL { ?point :conjunctIdentifier ?code_full }
+  ?point (:belongsToGroup|schema:isPartOf)+ ?parent . ?parent schema:name ?parentName . FILTER(LANG(?parentName) = ?lang)
+  FILTER(?parent != ?point && STR(?parentName) != "BFCen" && STR(?parentName) != "BFC") } 
+  GROUP BY ?point ?label ?code ?code_full ORDER BY ?hierarchy`;
 }
-
-
-// Exemple de logique à intégrer dans votre script de chargement
-function displayData(queryData, csvRawData) {
-    // 1. Remplir le tableau de la query (votre logique actuelle)
-    const bodyQuery = document.getElementById('resultsBodyQuery');
-    queryData.forEach(item => {
-        bodyQuery.innerHTML += `<tr><td>${item.hierarchy}</td><td>${item.code}</td><td>${item.label}</td></tr>`;
-    });
-
-    // 2. Remplir le tableau CSV (Frozen)
-    const bodyCSV = document.getElementById('resultsBodyCSV');
-    csvRawData.forEach(item => {
-        bodyCSV.innerHTML += `<tr>
-            <td>${item.hierarchy || ''}</td>
-            <td>${item.code || ''}</td>
-            <td>${item.label || ''}</td>
-            <td><span class="badge bg-info">${item.Tags || item.tags || '-'}</span></td>
-        </tr>`;
-    });
-}
-
-// Écouteur sur les champs de filtrage de colonnes
-document.querySelectorAll('.column-filter').forEach(input => {
-  input.addEventListener('keyup', applyFilters);
-});
