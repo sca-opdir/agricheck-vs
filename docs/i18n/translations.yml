@@ -30,6 +30,10 @@ de:
     noGroups: Keine Gruppen angegeben.
     checkAll: Alle auswählen
     uncheckAll: Alle abwählen
+    techDetails: "Technische Details"
+    possibleOutcomes: "Mögliche Mängel"
+    hideDetails: "Details ausblenden"
+    hideOutcomes: "Mängel ausblenden"
 
   searchPage:
       back: "Zurück zur Startseite"
@@ -109,6 +113,10 @@ fr:
     noGroups: Aucun groupe fourni.
     checkAll: Tout sélectionner
     uncheckAll: Tout désélectionner
+    techDetails: "Détails techniques"
+    possibleOutcomes: "Manquements possibles"
+    hideDetails: "Masquer les détails"
+    hideOutcomes: "Masquer les manquements"
   
   searchPage:
       back: Retour à l'accueil
@@ -186,8 +194,12 @@ it:
     copied: Copiato!
     excelSoon: L’esportazione in Excel sarà disponibile a breve.
     noGroups: Nessun gruppo specificato.
-    checkAll: Alle auswählen
-    uncheckAll: Alle abwählen
+    checkAll: "Seleziona tutto"
+    uncheckAll: "Deseleziona tutto"
+    techDetails: "Dettagli tecnici"
+    possibleOutcomes: "Inosservanze possibili"
+    hideDetails: "Nascondi dettagli"
+    hideOutcomes: "Nascondi inosservanze"
   
   searchPage:
       back: Torna alla home
