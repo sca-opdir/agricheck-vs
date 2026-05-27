@@ -11,6 +11,17 @@ const btnUncheckAll = document.getElementById('btnUncheckAll');
 let nodeMap;
 let similarityMatrix = null; // Stockera les données du JSON matriciel
 
+// Raccourci sécurisé pour la traduction
+function safeT(key) {
+  if (typeof window.t === 'function') {
+    return window.t(key);
+  }
+  if (typeof globalThis.t === 'function') {
+    return globalThis.t(key);
+  }
+  return key; // Retourne la clé par défaut si i18n n'est pas encore prêt
+}
+
 // Écouteurs d'événements pour les boutons de contrôle de la page
 if (printBtn) printBtn.addEventListener('click', () => window.print());
 
@@ -18,10 +29,10 @@ if (copyLinkBtn) {
   copyLinkBtn.addEventListener('click', () => {
     navigator.clipboard.writeText(location.href).then(() => {
       copyLinkBtn.classList.replace('btn-outline-secondary', 'btn-success');
-      copyLinkBtn.innerHTML = `<i class="bi bi-clipboard-check"></i> ${t('copied')}`;
+      copyLinkBtn.innerHTML = `<i class="bi bi-clipboard-check"></i> ${safeT('copied')}`;
       setTimeout(() => {
         copyLinkBtn.classList.replace('btn-success', 'btn-outline-secondary');
-        copyLinkBtn.innerHTML = `<i class="bi bi-clipboard"></i> ${t('copyLink')}`;
+        copyLinkBtn.innerHTML = `<i class="bi bi-clipboard"></i> ${safeT('copyLink')}`;
       }, 2000);
     });
   });
@@ -43,7 +54,7 @@ if (btnUncheckAll) {
   });
 }
 
-// Initialisation globale avec capture d'erreur isolée pour le JSON
+// Initialisation globale avec capture d'erreur isolée et URL RAW corrigée
 (async function init() {
   try {
     // 1. On attend d'abord que le framework d'i18n de layout.js soit complètement chargé
@@ -53,14 +64,13 @@ if (btnUncheckAll) {
     const bindings = await fetchBindings();
     nodeMap = buildNodeMap(bindings);
 
-    // 3. On tente de charger la matrice de similarité de manière indépendante
+    // 3. On tente de charger la matrice de similarité via l'URL RAW de GitHub correcte
     try {
       const res = await fetch('https://raw.githubusercontent.com/sca-opdir/agricheck-vs/main/data/points_de_contr%C3%B4le_2026-05-20_addedKeywords_embeddings_matrixsim.json');
       if (!res.ok) throw new Error(`Statut HTTP: ${res.status}`);
       similarityMatrix = await res.json();
     } catch (jsonError) {
-      // Si le JSON distant plante (SyntaxError, erreur réseau...), on capture l'erreur ici sans bloquer l'application
-      console.error("⚠️ Impossible de charger la matrice sémantique (Fichier JSON corrompu ou inaccessible) :", jsonError);
+      console.error("⚠️ Impossible de charger la matrice sémantique :", jsonError);
       similarityMatrix = "ERROR"; // Marqueur spécial transmis à la logique du clic
     }
 
@@ -100,7 +110,7 @@ window.rebuildPage = function(lang) {
   const slugParam = params.get('groups');
 
   if (!slugParam) {
-    content.innerHTML = `<p class="text-danger">${t('noGroups')}</p>`;
+    content.innerHTML = `<p class="text-danger">${safeT('noGroups')}</p>`;
     return;
   }
   
@@ -201,17 +211,17 @@ function renderCollection(uri, numbers, lang, displayableUris) {
             <div class="ms-4 mt-2 d-print-none d-flex gap-3">
                 <div>
                     <button class="btn btn-sm btn-link p-0 text-decoration-none btn-details" data-id="${ipId}">
-                        <i class="bi bi-plus-circle"></i> ${t('techDetails')}
+                        <i class="bi bi-plus-circle"></i> ${safeT('techDetails')}
                     </button>
                 </div>
                 <div>
                     <button class="btn btn-sm btn-link p-0 text-decoration-none text-danger btn-outcomes" data-id="${ipId}">
-                        <i class="bi bi-exclamation-triangle"></i> ${t('possibleOutcomes')}
+                        <i class="bi bi-exclamation-triangle"></i> ${safeT('possibleOutcomes')}
                     </button>
                 </div>
                 <div>
                     <button class="btn btn-sm btn-link p-0 text-decoration-none text-success btn-similar" data-id="${ipId}">
-                        <i class="bi bi-diagram-2"></i> ${t('similarPoints')}
+                        <i class="bi bi-diagram-2"></i> ${safeT('similarPoints')}
                     </button>
                 </div>
             </div>
@@ -284,7 +294,7 @@ async function fetchPossibleOutcomes(pointId) {
     }
 }
 
-// ÉCOUTEURS D'ÉVÉNEMENTS GÉNÉRIQUES (GESTION DU TOGGLE DES ACCORDÉONS)
+// ÉCOUTEURS D'ÉVÉNEMENTS GÉNÉRIQUES
 document.addEventListener('click', async (e) => {
     const lang = window.__APP_LANG || 'fr';
 
@@ -296,17 +306,17 @@ document.addEventListener('click', async (e) => {
 
         if (detailsDiv.style.display === 'block') {
             detailsDiv.style.display = 'none';
-            btn.innerHTML = `<i class="bi bi-plus-circle"></i> ${t('techDetails')}`;
+            btn.innerHTML = `<i class="bi bi-plus-circle"></i> ${safeT('techDetails')}`;
             return;
         }
 
         detailsDiv.style.display = 'block';
-        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${t('hideDetails')}`;
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${safeT('hideDetails')}`;
 
         if (detailsDiv.innerHTML.includes('spinner-border')) {
             const bindings = await fetchPointDetails(ipId);
             if (bindings.length === 0) {
-                detailsDiv.innerHTML = `<span class="text-warning">${t('noDetails')}</span>`;
+                detailsDiv.innerHTML = `<span class="text-warning">${safeT('noDetails')}</span>`;
                 return;
             }
 
@@ -331,12 +341,12 @@ document.addEventListener('click', async (e) => {
 
         if (outcomesDiv.style.display === 'block') {
             outcomesDiv.style.display = 'none';
-            btn.innerHTML = `<i class="bi bi-exclamation-triangle"></i> ${t('possibleOutcomes')}`;
+            btn.innerHTML = `<i class="bi bi-exclamation-triangle"></i> ${safeT('possibleOutcomes')}`;
             return;
         }
 
         outcomesDiv.style.display = 'block';
-        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${t('hideOutcomes')}`;
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${safeT('hideOutcomes')}`;
 
         if (outcomesDiv.innerHTML.includes('spinner-border')) {
             const bindings = await fetchPossibleOutcomes(ipId);
@@ -355,7 +365,7 @@ document.addEventListener('click', async (e) => {
         }
     }
 
-    // C. CLIC : Points Similaires (LOGIQUE MATRICIELLE SÉMANTIQUE CORRIGÉE)
+    // C. CLIC : Points Similaires
     if (e.target.closest('.btn-similar')) {
         const btn = e.target.closest('.btn-similar');
         const ipId = btn.dataset.id;
@@ -363,36 +373,32 @@ document.addEventListener('click', async (e) => {
 
         if (similarDiv.style.display === 'block') {
             similarDiv.style.display = 'none';
-            btn.innerHTML = `<i class="bi bi-diagram-2"></i> ${t('similarPoints')}`;
+            btn.innerHTML = `<i class="bi bi-diagram-2"></i> ${safeT('similarPoints')}`;
             return;
         }
 
         similarDiv.style.display = 'block';
-        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${t('hideSimilar')}`;
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${safeT('hideSimilar')}`;
 
         if (similarDiv.innerHTML.includes('spinner-border')) {
-            // Cas 1 : Le JSON a rencontré un problème d'encodage/syntaxe lors du init()
             if (similarityMatrix === "ERROR") {
                 similarDiv.innerHTML = `<div class="alert alert-danger py-2 px-3 small">
-                    <i class="bi bi-exclamation-octagon"></i> Échec du chargement des données de similarité (Erreur syntaxique JSON ou fichier distant introuvable).
+                    <i class="bi bi-exclamation-octagon"></i> Échec du chargement des données de similarité.
                 </div>`;
                 return;
             }
 
-            // Cas 2 : L'identifiant demandé n'existe pas ou ne possède pas le sous-tableau 'similars'
             if (!similarityMatrix || !similarityMatrix[ipId] || !similarityMatrix[ipId].similars) {
-                similarDiv.innerHTML = `<span class="text-muted small">${t('noSimilar')}</span>`;
+                similarDiv.innerHTML = `<span class="text-muted small">${safeT('noSimilar')}</span>`;
                 return;
             }
 
-            // Cas 3 : Tout est OK, on extrait le tableau imbriqué depuis la clé .similars
             const topSimilars = similarityMatrix[ipId].similars;
             
             let html = '<div class="alert alert-success py-2 px-3 small">';
             html += '<ol class="mb-0 ps-3">';
 
             topSimilars.forEach(item => {
-                // Dans ton JSON, la clé est .id (pas .point_id)
                 const targetUri = `${BASE_URI}${item.id}`;
                 const targetNode = nodeMap.get(targetUri);
                 
