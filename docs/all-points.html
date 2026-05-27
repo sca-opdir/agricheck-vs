@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Agricheck - ...</title>
+  <title>Agricheck Valais</title>
+  <link rel="icon" href="resources/icon.svg" type="image/svg+xml">
   <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
@@ -12,24 +13,27 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-<div id="loading-overlay" class="d-flex justify-content-center align-items-center">
-  <div class="text-center">
-    <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
-    <div class="mt-2 fw-bold text-primary" data-i18n="allPoints.loading">Chargement...</div>
+  <div id="loading-overlay" class="d-flex justify-content-center align-items-center">
+    <div class="text-center">
+      <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status"></div>
+      <div class="mt-2 fw-bold text-primary" data-i18n="allPoints.loading">Chargement...</div>
+    </div>
   </div>
-</div>
   
   <header class="bg-light border-bottom py-5 mb-4" data-aos="fade-down">
     <div class="container-lg">
-      <div class="lead mb-0"></div>
+      <h1 class="display-5 fw-bold mb-3" data-i18n="header.title">
+        Schweizer Kontrollpunkte? Einfach gefunden mit Agricheck! >>> Version WALLIS
+      </h1>
+      <div class="lead mb-0" data-i18n="header.lead"></div>
     </div>
   </header>
 
   <main class="container-fluid px-4 flex-grow-1" data-aos="fade-up">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2 data-i18n="allPoints.title">...</h2>
+        <h2 data-i18n="allPoints.title">Tous les points de contrôle</h2>
         <a href="index.html" class="btn btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left"></i> <span data-i18n="allPoints.back">...</span>
+            <i class="bi bi-arrow-left"></i> <span data-i18n="allPoints.back">Retour</span>
         </a>
     </div>
     
@@ -39,19 +43,20 @@
       <table class="table table-striped table-hover mb-0" id="resultsTable">
         <thead class="table-dark">
           <tr>
-            <th data-i18n="allPoints.thHierarchy">...</th>
-            <th>Code Full</th>
-            <th>Code</th>
-            <th data-i18n="allPoints.thLabel">...</th>
+            <th data-i18n="allPoints.thHierarchy">Hiérarchie</th>
+            <th data-i18n="allPoints.thCodeFull">Code complet</th>
+            <th data-i18n="allPoints.thCode">Code</th>
+            <th data-i18n="allPoints.thLabel">Libellé</th>
           </tr>
           <tr class="bg-secondary">
-            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="allPoints.filter" data-col="0"></th>
-            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="allPoints.filter" data-col="1"></th>
-            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="allPoints.filter" data-col="2"></th>
-            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="allPoints.filter" data-col="3"></th>
+            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="search.placeholder" data-col="0"></th>
+            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="search.placeholder" data-col="1"></th>
+            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="search.placeholder" data-col="2"></th>
+            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="search.placeholder" data-col="3"></th>
           </tr>
         </thead>
-        <tbody id="resultsBody"></tbody>
+        <tbody id="resultsBody">
+          </tbody>
       </table>
     </div>
   </main>
