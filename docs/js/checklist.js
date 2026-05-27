@@ -326,7 +326,7 @@ document.addEventListener('click', async (e) => {
         }
 
         detailsDiv.style.display = 'block';
-        btn.innerHTML = `<i class="bi bi-dash-circle"></i> <span data-i18n="checklist.hideDetails">${safeT('hideDetails')}</span>`;
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> <span data-i18n="checklist.hideDetails">${safeT('checklist.hideDetails')}</span>`;
 
         if (detailsDiv.innerHTML.includes('spinner-border')) {
             const bindings = await fetchPointDetails(ipId);
