@@ -1,3 +1,5 @@
+avec ce code, le chargement du tableau fonctionne, mais pas le graphe
+
 <!DOCTYPE html>
 <html lang="fr" data-bs-theme="light">
 <head>
@@ -79,105 +81,172 @@
   <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js"></script>
   <script src="js/layout.js"></script> 
 
-<script>
-    const csvUrl = '../data/points_de_contrôle_2026-05-20_addedKeywords_embeddings_tsneviz.csv';
-    let rawData = [];
+  <script>
+    // Note : Ajustement du chemin relatif selon la structure de vos dossiers de déploiement
+    const csvUrl = '../data/points_de_contrôle_2026-05-20_addedKeywords_embeddings_tsneviz.csv';
+    let rawData = [];
 
-    // Nettoyage des clés pour être sûr que 'Niveau 1' marche même s'il y a des espaces dans le CSV
-    const getSafeValue = (row, key) => {
-        // Cherche la clé exacte ou avec des espaces potentiels
-        return row[key] || row[key.trim()] || Object.keys(row).find(k => k.trim() === key.trim()) ? row[Object.keys(row).find(k => k.trim() === key.trim())] : null;
-    };
+    // Fonction de synchronisation linguistique des labels natifs au script
+    function updateInterfaceLabels() {
+      const activeLang = window.__APP_LANG || 'fr';
+      const labels = {
+        fr: { color: "Niveau de couleur :", lvl1: "Niveau 1 (Global)", lvl2: "Niveau 2 (Intermédiaire)", lvl3: "Niveau 3 (Détaillé)", unclassified: "Non classifié" },
+        de: { color: "Farbebene:", lvl1: "Ebene 1 (Global)", lvl2: "Ebene 2 (Zwischenebene)", lvl3: "Ebene 3 (Detailliert)", unclassified: "Nicht klassifiziert" },
+        it: { color: "Livello di colore:", lvl1: "Livello 1 (Globale)", lvl2: "Livello 2 (Intermedio)", lvl3: "Livello 3 (Dettagliato)", unclassified: "Non classificato" }
+      };
+      
+      const currentLabels = labels[activeLang] || labels.fr;
+      document.getElementById('labelColorDimension').textContent = currentLabels.color;
+      
+      const select = document.getElementById('colorDimension');
+      select.options[0].text = currentLabels.lvl1;
+      select.options[1].text = currentLabels.lvl2;
+      select.options[2].text = currentLabels.lvl3;
+      
+      return currentLabels.unclassified;
+    }
 
-    // 1. Charger et parser le CSV
-    Papa.parse(csvUrl, {
-      download: true,
-      header: true,
-      delimiter: ";",
-      skipEmptyLines: true,
-      transformHeader: function(h) { return h.trim(); }, // FIX : Supprime les espaces des en-têtes
-      complete: function(results) {
-        // Filtrage : on ne garde que les lignes avec x et y valides
-        rawData = results.data.filter(row => {
-          const x = parseFloat(row.x);
-          const y = parseFloat(row.y);
-          return !isNaN(x) && !isNaN(y);
-        });
+    // Écouteur synchronisé sur le changement de langue global de layout.js
+    window.rebuildPage = function(lang) {
+      updateInterfaceLabels();
+      if (rawData.length > 0) {
+        updateGraph(document.getElementById('colorDimension').value);
+      }
+    };
 
-        if (rawData.length === 0) {
-          document.getElementById('csv-status').textContent = "Erreur de format";
-          document.getElementById('csv-status').className = "badge bg-danger";
-        } else {
-          document.getElementById('csv-status').textContent = `${rawData.length} lignes chargées`;
-          document.getElementById('csv-status').className = "badge bg-success";
-          generateDebugTable(results.data);
-          updateGraph("Niveau 2");
-        }
-      }
-    });
+    // 1. Charger et parser le CSV automatiquement
+    Papa.parse(csvUrl, {
+      download: true,
+      header: true,
+      delimiter: ";",
+      skipEmptyLines: true,
+      beforeFirstChunk: function(chunk) {
+        let lines = chunk.split(/\r\n|\n/);
+        if (lines.length > 0) {
+          lines[0] = lines[0].replace(/;\s+/g, ';').replace(/\s+;/g, ';').trim();
+        }
+        return lines.join('\n');
+      },
+      complete: function(results) {
+        rawData = results.data.filter(row => {
+          return row.x !== undefined && row.x !== null && row.x !== '' &&
+                 row.y !== undefined && row.y !== null && row.y !== '';
+        });
 
-    // 2. Écouter les changements du menu
-    document.getElementById('colorDimension').addEventListener('change', function(e) {
-      updateGraph(e.target.value);
-    });
+        const statusBadge = document.getElementById('csv-status');
 
-    // 3. Mise à jour du graphique
-    function updateGraph(dimension) {
-      const groups = {};
-      const unclassified = "Non classifié";
+        if (rawData.length === 0) {
+          console.error("Aucune donnée valide trouvée. Vérifie les en-têtes 'x' et 'y'.");
+          statusBadge.textContent = "Erreur de format";
+          statusBadge.className = "badge bg-danger";
+          document.getElementById('debugBody').innerHTML = `<tr><td class="text-danger fw-bold">Échec : Les coordonnées 'x' ou 'y' manquent ou ne sont pas parsées correctement. Vérifiez les séparateurs (actuel: p point-virgule) ou s'il y a des valeurs NaN.</td></tr>`;
+        } else {
+          statusBadge.textContent = `${rawData.length} lignes chargées`;
+          statusBadge.className = "badge bg-success";
+          
+          // Remplissage du tableau de Debug
+          generateDebugTable(results.data);
+          
+          // Initialisation graphique
+          updateInterfaceLabels();
+          updateGraph("Niveau 2");
+        }
+      },
+      error: function(err) {
+        console.error("Erreur PapaParse critique :", err);
+        const statusBadge = document.getElementById('csv-status');
+        statusBadge.textContent = "Erreur HTTP/Fichier";
+        statusBadge.className = "badge bg-danger";
+        document.getElementById('debugBody').innerHTML = `<tr><td class="text-danger fw-bold">Impossible d'accéder au fichier CSV. Vérifiez que le chemin cible existe : <br><code>${csvUrl}</code></td></tr>`;
+      }
+    });
 
-      rawData.forEach(row => {
-        let groupKey = row[dimension] ? row[dimension].trim() : unclassified;
-        if (groupKey === "" || groupKey === "nan") groupKey = unclassified;
+    // 2. Écouter les changements du menu déroulant
+    document.getElementById('colorDimension').addEventListener('change', function(e) {
+      updateGraph(e.target.value);
+    });
 
-        if (!groups[groupKey]) {
-          groups[groupKey] = { x: [], y: [], text: [], hierarchy: [], tags: [] };
-        }
-        
-        groups[groupKey].x.push(parseFloat(row.x));
-        groups[groupKey].y.push(parseFloat(row.y));
-        groups[groupKey].text.push(row.label || row.point || '');
-        groups[groupKey].hierarchy.push(row.hierarchy || '');
-        groups[groupKey].tags.push(row.tags || row.Tags || '-');
-      });
+    // 3. Fonction de mise à jour dynamique du graphique (avec variable renommée !)
+    function updateGraph(dimension) {
+      const unclassifiedText = updateInterfaceLabels();
+      const groups = {};
 
-      const traces = Object.keys(groups).map(key => ({
-        x: groups[key].x,
-        y: groups[key].y,
-        mode: 'markers',
-        type: 'scatter',
-        name: key,
-        text: groups[key].text,
-        customdata: groups[key].hierarchy.map((h, idx) => [h, groups[key].tags[idx]]),
-        hovertemplate: '<b>%{text}</b><br>Hiérarchie: %{customdata[0]}<br>Tags: %{customdata[1]}<extra></extra>',
-        marker: { size: 6, opacity: 0.7 }
-      }));
+      rawData.forEach(row => {
+        let groupKey = row[dimension] ? row[dimension].trim() : unclassifiedText;
+        if (groupKey === "" || groupKey === "nan") groupKey = unclassifiedText;
 
-      Plotly.newPlot('tsne-div', traces, {
-        plot_bgcolor: 'white',
-        margin: { l: 40, r: 40, b: 40, t: 40 },
-        xaxis: { showgrid: true, gridcolor: '#f0f0f0' },
-        yaxis: { showgrid: true, gridcolor: '#f0f0f0' }
-      }, { responsive: true });
-    }
+        if (!groups[groupKey]) {
+          groups[groupKey] = { x: [], y: [], text: [], hierarchy: [], tags: [] };
+        }
+        
+        groups[groupKey].x.push(parseFloat(row.x));
+        groups[groupKey].y.push(parseFloat(row.y));
+        groups[groupKey].text.push(row.label || row.point || ''); 
+        groups[groupKey].hierarchy.push(row.hierarchy || '');
+        groups[groupKey].tags.push(row.tags || row.Tags || '-');
+      });
 
-    // 4. Générateur de tableau Debug
-    function generateDebugTable(allRows) {
-      const tbody = document.getElementById('debugBody');
-      tbody.innerHTML = '';
-      allRows.slice(0, 5).forEach(row => {
-        const tr = document.createElement('tr');
-        Object.values(row).forEach(val => {
-          tr.innerHTML += `<td>${val}</td>`;
-        });
-        tbody.appendChild(tr);
-      });
-    }
+      const traces = Object.keys(groups).map(key => {
+        return {
+          x: groups[key].x,
+          y: groups[key].y,
+          mode: 'markers',
+          type: 'scatter',
+          name: key,
+          text: groups[key].text,
+          customdata: groups[key].hierarchy.map((h, idx) => [h, groups[key].tags[idx]]),
+          hovertemplate: '<b>%{text}</b><br><br><b>Hiérarchie :</b> %{customdata[0]}<br><b>Tags :</b> %{customdata[1]}<extra></extra>',
+          marker: { size: 6, opacity: 0.7 }
+        };
+      });
 
-    // Gestion traduction
-    window.rebuildPage = function() {
-        if(rawData.length > 0) updateGraph(document.getElementById('colorDimension').value);
-    };
-  </script>
+      // Variable locale renommée de 'layout' à 'plotlyLayout' pour éliminer les interférences JSON globales
+      const plotlyLayout = {
+        plot_bgcolor: 'white',
+        margin: { l: 20, r: 20, b: 20, t: 20 },
+        xaxis: { showgrid: true, gridcolor: '#f0f0f0', zeroline: false },
+        yaxis: { showgrid: true, gridcolor: '#f0f0f0', zeroline: false },
+        hovermode: 'closest',
+        legend: { font: { size: 10 } }
+      };
+
+      Plotly.newPlot('tsne-div', traces, plotlyLayout, { responsive: true });
+    }
+
+    // 4. Générateur de tableau d'inspection (Debug)
+    function generateDebugTable(allRows) {
+      if (!allRows || allRows.length === 0) return;
+      
+      const headers = Object.keys(allRows[0]);
+      
+      // Génération des en-têtes de colonnes
+      const headerRow = document.getElementById('debugHeader');
+      headerRow.innerHTML = '';
+      headers.forEach(h => {
+        const th = document.createElement('th');
+        th.textContent = h;
+        headerRow.appendChild(th);
+      });
+      
+      // Extraction et affichage des 5 premières lignes
+      const tbody = document.getElementById('debugBody');
+      tbody.innerHTML = '';
+      const samples = allRows.slice(0, 5);
+      
+      samples.forEach(row => {
+        const tr = document.createElement('tr');
+        headers.forEach(h => {
+          const td = document.createElement('td');
+          td.textContent = row[h] !== undefined ? row[h] : '';
+          // Highlight léger sur les coordonnées cruciales
+          if(h === 'x' || h === 'y') {
+            td.className = "table-info fw-bold";
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
 </body>
 </html>
