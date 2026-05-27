@@ -4,12 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agricheck Valais - t-SNE</title>
+  <link rel="icon" href="resources/icon.svg" type="image/svg+xml">
   <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="css/main.css">
   <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.24.1/plotly.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
+
+  <div id="header-container"></div>
 
   <main class="container-lg flex-grow-1 py-5">
     <div class="mb-4"><a href="index.html" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Retour</a></div>
@@ -53,9 +57,20 @@
     </div>
   </main>
 
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js"></script>
+  <script src="js/layout.js"></script>
+
   <script>
     const csvUrl = 'https://raw.githubusercontent.com/sca-opdir/agricheck-vs/main/data/points_de_contr%C3%B4le_2026-05-20_addedKeywords_embeddings_tsneviz.csv';
     let rawData = [];
+
+    // Initialisation du graphique quand la langue change
+    window.rebuildPage = function(lang) {
+      if (rawData.length > 0) updateGraph(document.getElementById('colorDimension').value);
+    };
 
     Papa.parse(csvUrl, {
       download: true,
@@ -67,7 +82,6 @@
         rawData = results.data.filter(row => row.x && row.y);
         document.getElementById('csv-status').textContent = rawData.length + " lignes";
         document.getElementById('csv-status').className = "badge bg-success";
-        
         generateDebugTable(results.data);
         updateGraph("Niveau 2");
       }
@@ -78,11 +92,8 @@
       const headers = Object.keys(allRows[0]);
       const headerRow = document.getElementById('debugHeader');
       const tbody = document.getElementById('debugBody');
-      
       headerRow.innerHTML = headers.map(h => `<th>${h}</th>`).join('');
-      tbody.innerHTML = allRows.slice(0, 5).map(row => 
-        `<tr>${headers.map(h => `<td>${row[h] || ''}</td>`).join('')}</tr>`
-      ).join('');
+      tbody.innerHTML = allRows.slice(0, 5).map(row => `<tr>${headers.map(h => `<td>${row[h] || ''}</td>`).join('')}</tr>`).join('');
     }
 
     function updateGraph(dimension) {
