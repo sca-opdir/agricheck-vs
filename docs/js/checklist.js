@@ -10,6 +10,7 @@ const btnCheckAll = document.getElementById('btnCheckAll');
 const btnUncheckAll = document.getElementById('btnUncheckAll');
 
 let nodeMap;
+let similarityMatrix = null; // Stockera les données du JSON matriciel
 
 printBtn.addEventListener('click', () => window.print());
 copyLinkBtn.addEventListener('click', () => {
@@ -37,16 +38,26 @@ btnUncheckAll.addEventListener('click', () => {
   });
 });
 
+// Initialisation globale avec chargement parallèle de la matrice sémantique
 (async function init() {
-  const bindings = await fetchBindings();
-  nodeMap  = buildNodeMap(bindings);
-  rebuildPage(window.__APP_LANG);
+  try {
+    // On lance les deux téléchargements en même temps pour gagner du temps
+    const [bindings, similarityData] = await Promise.all([
+      fetchBindings(),
+      fetch('https://raw.githubusercontent.com/sca-opdir/agricheck-vs/main/data/points_de_contr%C3%B4le_2026-05-20_addedKeywords_embeddings_matrixsim.json').then(res => res.json())
+    ]);
 
-// AJOUTE CETTE LIGNE ICI :
+    nodeMap = buildNodeMap(bindings);
+    similarityMatrix = similarityData;
+
+    rebuildPage(window.__APP_LANG);
+  } catch (error) {
+    console.error("Erreur lors de l'initialisation d'Agricheck:", error);
+  }
+
   if (typeof window.hideLoader === 'function') {
     window.hideLoader();
   }
-  
 })();
 
 function addDescendantsAndSelf(uri, set) {
@@ -101,8 +112,6 @@ function renderCollection(uri, numbers, lang, displayableUris) {
   const node = nodeMap.get(uri);
   if (!node) return;
 
-  // --- LOGIQUE DE PRIORITÉ POUR LES TITRES (COLLECTIONS) ---
-  // On prend le conjunctIdentifier s'il existe, sinon l'identifier classique
   const collectionId = node.conjunctIdentifier || node.identifier;
   const idBadge = collectionId ? ` (${collectionId})` : '';
 
@@ -116,16 +125,14 @@ function renderCollection(uri, numbers, lang, displayableUris) {
   heading.innerHTML += window.getLocalizedText(node.label, lang) + idBadge;
   content.appendChild(heading);
 
-// AJOUT : Lien cliquable de la collection juste en-dessous du titre
-const collectionUrlDiv = document.createElement('div');
-collectionUrlDiv.className = 'collection-url mb-2 mt-n1';
-collectionUrlDiv.innerHTML = `
-    <a href="${uri}" target="_blank" class="text-decoration-none small" style="color: #6c757d; font-size: 0.8em;">
-        <i class="bi bi-link-45deg"></i> ${uri}
-    </a>
-`;
-  
-content.appendChild(collectionUrlDiv);
+  const collectionUrlDiv = document.createElement('div');
+  collectionUrlDiv.className = 'collection-url mb-2 mt-n1';
+  collectionUrlDiv.innerHTML = `
+      <a href="${uri}" target="_blank" class="text-decoration-none small" style="color: #6c757d; font-size: 0.8em;">
+          <i class="bi bi-link-45deg"></i> ${uri}
+      </a>
+  `;
+  content.appendChild(collectionUrlDiv);
   
   const commentText = window.getLocalizedText(node.comment, lang);
   if (commentText) {
@@ -138,62 +145,65 @@ content.appendChild(collectionUrlDiv);
     const ul = document.createElement('ul');
     ul.className = 'checklist list-unstyled';
     
-node.inspectionPoints.forEach(ipUri => {
-    const ip = nodeMap.get(ipUri);
-    if (!ip) return;
+    node.inspectionPoints.forEach(ipUri => {
+        const ip = nodeMap.get(ipUri);
+        if (!ip) return;
 
-    const li = document.createElement('li');
-    li.className = 'mb-3 p-2 border-bottom';
-    
-    const ipId = ipUri.split('/').pop();
-
-    const ipIdValue = ip.conjunctIdentifier || ip.identifier;
-    const ipIdString = ipIdValue ? ` (${ipIdValue})` : '';
-
-    // Template mis à jour avec le DEUXIÈME accordéon
-// Template mis à jour avec l'URL cliquable du point sous le titre
-    li.innerHTML = `
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="check-${ipId}">
-            <label class="form-check-label fw-bold" for="check-${ipId}">
-                ${window.getLocalizedText(ip.label, lang)}${ipIdString}
-            </label>
-        </div>
+        const li = document.createElement('li');
+        li.className = 'mb-3 p-2 border-bottom';
         
-        <div class="ms-4 my-1">
-            <a href="${ipUri}" target="_blank" class="text-decoration-none" style="color: #2b75a0; font-size: 12px;">
-                <i class="bi bi-box-arrow-up-right"></i> ${ipUri}
-            </a>
-        </div>
+        const ipId = ipUri.split('/').pop();
+        const ipIdValue = ip.conjunctIdentifier || ip.identifier;
+        const ipIdString = ipIdValue ? ` (${ipIdValue})` : '';
 
-        ${ip.comment ? `<div class="text-muted small ms-4">${window.getLocalizedText(ip.comment, lang)}</div>` : ''}
-        
-        <div class="ms-4 mt-2 d-print-none d-flex gap-3">
-            <div>
-              <button class="btn btn-sm btn-link p-0 text-decoration-none btn-details" data-id="${ipId}">
-                    <i class="bi bi-plus-circle"></i> ${t('techDetails')}
-                </button>
+        // AJOUT du 3ème bouton "Points similaires" et de sa div de réception
+        li.innerHTML = `
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="check-${ipId}">
+                <label class="form-check-label fw-bold" for="check-${ipId}">
+                    ${window.getLocalizedText(ip.label, lang)}${ipIdString}
+                </label>
             </div>
-            <div>
-              <button class="btn btn-sm btn-link p-0 text-decoration-none text-danger btn-outcomes" data-id="${ipId}">
-                    <i class="bi bi-exclamation-triangle"></i> ${t('possibleOutcomes')}
-                </button>
+            
+            <div class="ms-4 my-1">
+                <a href="${ipUri}" target="_blank" class="text-decoration-none" style="color: #2b75a0; font-size: 12px;">
+                    <i class="bi bi-box-arrow-up-right"></i> ${ipUri}
+                </a>
             </div>
-        </div>
 
-        <div id="details-${ipId}" class="sparql-details mt-2 ms-4" style="display:none;">
-            <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
-        </div>
-        <div id="outcomes-${ipId}" class="sparql-outcomes mt-2 ms-4" style="display:none;">
-            <div class="spinner-border spinner-border-sm text-danger" role="status"></div>
-        </div>
-    `;
+            ${ip.comment ? `<div class="text-muted small ms-4">${window.getLocalizedText(ip.comment, lang)}</div>` : ''}
+            
+            <div class="ms-4 mt-2 d-print-none d-flex gap-3">
+                <div>
+                    <button class="btn btn-sm btn-link p-0 text-decoration-none btn-details" data-id="${ipId}">
+                        <i class="bi bi-plus-circle"></i> ${t('techDetails')}
+                    </button>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-link p-0 text-decoration-none text-danger btn-outcomes" data-id="${ipId}">
+                        <i class="bi bi-exclamation-triangle"></i> ${t('possibleOutcomes')}
+                    </button>
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-link p-0 text-decoration-none text-success btn-similar" data-id="${ipId}">
+                        <i class="bi bi-diagram-2"></i> ${t('similarPoints')}
+                    </button>
+                </div>
+            </div>
 
-    ul.appendChild(li);
-});
-    
-    
-    
+            <div id="details-${ipId}" class="sparql-details mt-2 ms-4" style="display:none;">
+                <div class="spinner-border spinner-border-sm text-primary" role="status"></div>
+            </div>
+            <div id="outcomes-${ipId}" class="sparql-outcomes mt-2 ms-4" style="display:none;">
+                <div class="spinner-border spinner-border-sm text-danger" role="status"></div>
+            </div>
+            <div id="similar-${ipId}" class="matrix-similar mt-2 ms-4" style="display:none;">
+                <div class="spinner-border spinner-border-sm text-success" role="status"></div>
+            </div>
+        `;
+
+        ul.appendChild(li);
+    });
     content.appendChild(ul);
   }
 
@@ -202,85 +212,32 @@ node.inspectionPoints.forEach(ipUri => {
   );
 }
 
-// ajouté pour mettre tous les détails long-format
-
+// Extraction des métadonnées SPARQL d'un point
 async function fetchPointDetails(pointId) {
-    // On construit l'URI complète à partir de l'ID
-    const pointUri = `https://agriculture.ld.admin.ch/inspection/${pointId}`;
-    
+    const pointUri = `${BASE_URI}${pointId}`;
     const sparqlQuery = `
         PREFIX : <https://agriculture.ld.admin.ch/inspection/>
         SELECT ?propriete ?valeur
-        WHERE {
-            <${pointUri}> ?propriete ?valeur .
-        }
+        WHERE { <${pointUri}> ?propriete ?valeur . }
         ORDER BY ?propriete
     `;
-
     const url = `https://agriculture.ld.admin.ch/query?query=${encodeURIComponent(sparqlQuery)}`;
-
     try {
         const response = await fetch(url, { headers: { 'Accept': 'application/sparql-results+json' } });
         const data = await response.json();
         return data.results.bindings;
     } catch (error) {
-        console.error("Erreur SPARQL:", error);
+        console.error("Erreur SPARQL Details:", error);
         return [];
     }
 }
 
-
-
-// AJOUTER CECI À LA FIN DE TON FICHIER pour gérer le clic sur "Détails"
-document.addEventListener('click', async (e) => {
-    if (e.target.closest('.btn-details')) {
-        const btn = e.target.closest('.btn-details');
-        const ipId = btn.dataset.id;
-        const detailsDiv = document.getElementById(`details-${ipId}`);
-
-        // Toggle l'affichage
-        if (detailsDiv.style.display === 'block') {
-            detailsDiv.style.display = 'none';
-            btn.innerHTML = '<i class="bi bi-plus-circle"></i> Détails techniques';
-            return;
-        }
-
-        detailsDiv.style.display = 'block';
-        btn.innerHTML = '<i class="bi bi-dash-circle"></i> Masquer les détails';
-
-        // Charger les données si pas encore fait
-        if (detailsDiv.innerHTML.includes('spinner-border')) {
-            const bindings = await fetchPointDetails(ipId);
-            if (bindings.length === 0) {
-                detailsDiv.innerHTML = '<span class="text-warning">Aucune donnée trouvée.</span>';
-                return;
-            }
-
-            let table = '<table class="table table-sm table-bordered small bg-light"><tbody>';
-            bindings.forEach(b => {
-                const prop = b.propriete.value.split('/').pop().split('#').pop();
-                const val = b.valeur.value;
-                // On n'affiche que les valeurs un peu lisibles
-                if (!val.startsWith('http') || val.includes('inspection')) {
-                    table += `<tr><td class="fw-bold">${prop}</td><td>${val}</td></tr>`;
-                }
-            });
-            table += '</tbody></table>';
-            detailsDiv.innerHTML = table;
-        }
-    }
-});
-
-//ajout pour le bouton Manquements possibles
-
+// Extraction des manquements potentiels
 async function fetchPossibleOutcomes(pointId) {
-    const pointUri = `https://agriculture.ld.admin.ch/inspection/${pointId}`;
-    
-    // Requête élargie : on prend tout sans filtrer sur la langue pour voir la structure brute
+    const pointUri = `${BASE_URI}${pointId}`;
     const sparqlQuery = `
         PREFIX : <https://agriculture.ld.admin.ch/inspection/>
         PREFIX schema: <http://schema.org/>
-        
         SELECT ?outcome ?defect ?defectLabel
         WHERE {
             <${pointUri}> :possibleOutcome ?outcome .
@@ -291,9 +248,7 @@ async function fetchPossibleOutcomes(pointId) {
             }
         }
     `;
-
     const url = `https://agriculture.ld.admin.ch/query?query=${encodeURIComponent(sparqlQuery)}`;
-
     try {
         const response = await fetch(url, { headers: { 'Accept': 'application/sparql-results+json' } });
         const data = await response.json();
@@ -304,15 +259,52 @@ async function fetchPossibleOutcomes(pointId) {
     }
 }
 
-// Gérer le clic sur "Manquements possibles"
-// Gérer le clic sur "Manquements possibles" - Version Diagnostic Brute
+// ÉCOUTEURS D'ÉVÉNEMENTS GENERIQUES (GESTION DU TOGGLE DES ACCORDEONS)
+
 document.addEventListener('click', async (e) => {
+    const lang = window.__APP_LANG || 'fr';
+
+    // A. CLIC : Détails Techniques
+    if (e.target.closest('.btn-details')) {
+        const btn = e.target.closest('.btn-details');
+        const ipId = btn.dataset.id;
+        const detailsDiv = document.getElementById(`details-${ipId}`);
+
+        if (detailsDiv.style.display === 'block') {
+            detailsDiv.style.display = 'none';
+            btn.innerHTML = `<i class="bi bi-plus-circle"></i> ${t('techDetails')}`;
+            return;
+        }
+
+        detailsDiv.style.display = 'block';
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${t('hideDetails')}`;
+
+        if (detailsDiv.innerHTML.includes('spinner-border')) {
+            const bindings = await fetchPointDetails(ipId);
+            if (bindings.length === 0) {
+                detailsDiv.innerHTML = `<span class="text-warning">${t('noDetails')}</span>`;
+                return;
+            }
+
+            let table = '<table class="table table-sm table-bordered small bg-light"><tbody>';
+            bindings.forEach(b => {
+                const prop = b.propriete.value.split('/').pop().split('#').pop();
+                const val = b.valeur.value;
+                if (!val.startsWith('http') || val.includes('inspection')) {
+                    table += `<tr><td class="fw-bold">${prop}</td><td>${val}</td></tr>`;
+                }
+            });
+            table += '</tbody></table>';
+            detailsDiv.innerHTML = table;
+        }
+    }
+
+    // B. CLIC : Manquements Possibles
     if (e.target.closest('.btn-outcomes')) {
         const btn = e.target.closest('.btn-outcomes');
         const ipId = btn.dataset.id;
         const outcomesDiv = document.getElementById(`outcomes-${ipId}`);
 
-        // Toggle l'affichage
         if (outcomesDiv.style.display === 'block') {
             outcomesDiv.style.display = 'none';
             btn.innerHTML = `<i class="bi bi-exclamation-triangle"></i> ${t('possibleOutcomes')}`;
@@ -322,26 +314,79 @@ document.addEventListener('click', async (e) => {
         outcomesDiv.style.display = 'block';
         btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${t('hideOutcomes')}`;
 
-        // Si le spinner est là, on charge les données de test
         if (outcomesDiv.innerHTML.includes('spinner-border')) {
             const bindings = await fetchPossibleOutcomes(ipId);
-            
             if (bindings.length === 0) {
-                outcomesDiv.innerHTML = '<span class="text-muted small">Aucun manquement renvoyé par le SPARQL.</span>';
+                outcomesDiv.innerHTML = `<span class="text-muted small">Aucun manquement renvoyé par le SPARQL.</span>`;
                 return;
             }
 
-            // Génération d'une liste jaune de diagnostic pour observer les données brutes
             let html = '<div class="alert alert-warning py-2 px-3 small"><strong>Liens vers les manquements :</strong><ul class="mb-0 mt-1">';
             bindings.forEach(b => {
-                // Priorité au label, sinon à l'URI du defect, sinon au code unique genid
                 const displayVal = b.defectLabel?.value || b.defect?.value || b.outcome?.value;
                 html += `<li class="text-monospace">${displayVal}</li>`;
             });
             html += '</ul></div>';
-            
             outcomesDiv.innerHTML = html;
         }
     }
+
+    // C. CLIC : Points Similaires (LOGIQUE MATRICIELLE SÉMANTIQUE)
+    if (e.target.closest('.btn-similar')) {
+        const btn = e.target.closest('.btn-similar');
+        const ipId = btn.dataset.id;
+        const similarDiv = document.getElementById(`similar-${ipId}`);
+
+        if (similarDiv.style.display === 'block') {
+            similarDiv.style.display = 'none';
+            btn.innerHTML = `<i class="bi bi-diagram-2"></i> ${t('similarPoints')}`;
+            return;
+        }
+
+        similarDiv.style.display = 'block';
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${t('hideSimilar')}`;
+
+        // Si le spinner est toujours actif, on calcule et injecte les points depuis la matrice globale
+        if (similarDiv.innerHTML.includes('spinner-border')) {
+            if (!similarityMatrix || !similarityMatrix[ipId]) {
+                similarDiv.innerHTML = `<span class="text-muted small">${t('noSimilar')}</span>`;
+                return;
+            }
+
+            // Récupérer le tableau des 10 meilleurs scores [{ point_id: "...", score: 0.98 }, ...]
+            const topSimilars = similarityMatrix[ipId];
+            
+            let html = '<div class="alert alert-success py-2 px-3 small">';
+            html += '<ol class="mb-0 ps-3">';
+
+            topSimilars.forEach(item => {
+                const targetUri = `${BASE_URI}${item.point_id}`;
+                // Recherche du nœud correspondant dans notre dictionnaire général pour avoir son texte traduit
+                const targetNode = nodeMap.get(targetUri);
+                
+                let labelText = "Point inconnu (Base fédérale)";
+                let idBadge = "";
+
+                if (targetNode) {
+                    labelText = window.getLocalizedText(targetNode.label, lang);
+                    const coreId = targetNode.conjunctIdentifier || targetNode.identifier;
+                    if (coreId) idBadge = ` <span class="badge bg-secondary font-monospace" style="font-size:10px;">${coreId}</span>`;
+                }
+
+                // Pourcentage de correspondance sémantique
+                const matchPercentage = Math.round(item.score * 100);
+
+                html += `
+                    <li class="mb-2">
+                        <strong>${matchPercentage}%</strong> - 
+                        <a href="${targetUri}" target="_blank" class="text-decoration-none fw-semibold" style="color: #1e4d2b;">
+                            ${labelText}
+                        </a>${idBadge}
+                    </li>`;
+            });
+
+            html += '</ol></div>';
+            similarDiv.innerHTML = html;
+        }
+    }
 });
-   
