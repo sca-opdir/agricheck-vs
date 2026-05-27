@@ -50,8 +50,16 @@ de:
     thPoint: "Kontrollpunkt"
     thDescription: "Beschreibung"
     thLink: "Link"
+
+allPoints:
+    title: "Alle Kontrollpunkte (Wallis)"
+    back: "Zurück"
+    loading: "Laden..."
+    thHierarchy: "Hierarchie"
+    thLabel: "Bezeichnung"
+    filter: "Filtern..."
   
-  footerText: © Bundesamt für Landwirtschaft und beteiligte Labelorganisationen, Stand Februar 2026
+  footerText: © Bundesamt für Landwirtschaft und beteiligte Labelorganisationen, Stand Februar 2026 - Anpassung OPDir-VS June 2026
   
   about: |
     # Agricheck – Ihr Schnellzugriff auf Schweizer Kontrollpunkte
@@ -138,8 +146,16 @@ fr:
     thPoint: "Point de contrôle"
     thDescription: "Description"
     thLink: "Lien"
+
+  allPoints:
+    title: "Tous les points d'inspection (Valais)"
+    back: "Retour"
+    loading: "Chargement..."
+    thHierarchy: "Hiérarchie"
+    thLabel: "Libellé"
+    filter: "Filtrer..."
   
-  footerText: © Office fédéral de l'agriculture et organisations de labels participantes, état en février 2026
+  footerText: © Office fédéral de l'agriculture et organisations de labels participantes, état en février 2026 - Adaptation OPDir-VS Juin 2026
   
   about: |
     # Agricheck – Votre accès rapide aux points de contrôle suisses
@@ -226,8 +242,16 @@ it:
     thPoint: "Punto di controllo"
     thDescription: "Descrizione"
     thLink: "Link"
+
+  allPoints:
+    title: "Tutti i punti di controllo (Vallese)"
+    back: "Torna"
+    loading: "Caricamento..."
+    thHierarchy: "Gerarchia"
+    thLabel: "Etichetta"
+    filter: "Filtra..."
   
-  footerText: © Ufficio federale dell'agricoltura e organizzazioni di label partecipanti, stato febbraio 2026
+  footerText: © Ufficio federale dell'agricoltura e organizzazioni di label partecipanti, stato febbraio 2026 - Adattamento OPDir-VS giugno 2026
   
   about: |
     # Agricheck – Il tuo accesso rapido ai punti di controllo svizzeri
