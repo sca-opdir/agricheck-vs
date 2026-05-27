@@ -12,6 +12,12 @@ let nodeMap;
 let selectedSet = new Set();
 let searchActive = false;
 
+// Fonction de traduction sécurisée pour éviter l'erreur "t is not defined"
+function safeT(key) {
+  if (typeof window.t === 'function') return window.t(key);
+  return key;
+}
+
 (async function init() {
   const bindings = await fetchBindings();
   nodeMap = buildNodeMap(bindings);
@@ -28,7 +34,6 @@ let searchActive = false;
 
   rebuildPage(window.__APP_LANG);
 
-  // --- MODIFICATION ICI ---
   // L'arbre est reconstruit, on vire le spinner IMMÉDIATEMENT
   if (typeof window.hideLoader === 'function') {
     window.hideLoader();
@@ -63,16 +68,14 @@ window.rebuildPage = function(lang) {
             weakHaystack.push(...Object.values(ip.comment));
         }
     });
+    
     // --- ENRICHISSEMENT DU TEXTE AVEC LE BOUTON LIEN ---
-    // On extrait l'ID unique de la collection à la fin de son URI
     const itemId = uri.split('/').pop();
     const externalUrl = `https://agriculture.ld.admin.ch/inspection/${itemId}`;
 
-    // On récupère dynamiquement la traduction de l'infobulle
-    const tooltipText = t('actions.openLink');
+    // CORRECTION ICI : Utilisation de la fonction safeT au lieu de t() direct
+    const tooltipText = safeT('actions.openLink');
     
-    // On injecte l'icône de lien externe à côté du texte de l'item.
-    // L'arrêt de propagation (onclick="event.stopPropagation();") évite de cocher la case par erreur lors du clic sur le lien.
     const textWithIcon = `
       <span class="jstree-item-wrapper">
         ${labelText}
@@ -81,7 +84,7 @@ window.rebuildPage = function(lang) {
         </a>
       </span>
     `;
-    /// fin ajotu
+    
     const nodeData = {
       id: uri,
       text: textWithIcon,
@@ -105,8 +108,6 @@ window.rebuildPage = function(lang) {
     .filter(n => n.type === 'Collection' && !n.superGroup && !n.parentGroup)
     .map(n => buildNode(n.uri));
 
-
-  
   // Initialisation de jsTree
   treeEl
     .jstree({
@@ -128,7 +129,6 @@ window.rebuildPage = function(lang) {
       }
     })
     .on('ready.jstree', () => {
-        // C'est ici que l'on cache le loader
         if (typeof window.hideLoader === 'function') window.hideLoader();
     })
     .on('changed.jstree', (_, data) => {
@@ -149,19 +149,22 @@ window.rebuildPage = function(lang) {
     customClass: 'wide-tooltip',
     delay: { show: 500, hide: 50 }
   });
+  
   updateSearchBtn();
-  searchInput.attr('placeholder', t('search.placeholder'));
+  
+  // CORRECTION ICI AUSSI : Utilisation de safeT
+  searchInput.attr('placeholder', safeT('search.placeholder'));
 };
 
 function updateSearchBtn() {
   if (searchActive) {
     searchBtn
-      .html(`<i class="bi bi-x-lg me-2"></i><span data-i18n="search.reset">${t('search.reset')}</span>`)
+      .html(`<i class="bi bi-x-lg me-2"></i><span data-i18n="search.reset">${safeT('search.reset')}</span>`)
       .removeClass('btn-outline-primary')
       .addClass('btn-outline-secondary');
   } else {
     searchBtn
-      .html(`<span data-i18n="search.button">${t('search.button')}</span>`)
+      .html(`<span data-i18n="search.button">${safeT('search.button')}</span>`)
       .removeClass('btn-outline-secondary')
       .addClass('btn-outline-primary');
   }
@@ -253,8 +256,6 @@ generateBtn.on('click', () => {
   location.href = url.pathname + url.search;
 });
 
-
-// Logique pour les boutons de sélection globale
 btnCheckAll.on('click', () => {
   treeEl.jstree(true).check_all();
 });
