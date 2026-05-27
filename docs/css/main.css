@@ -232,3 +232,16 @@ ul.checklist label .text-muted {
     background-color: var(--bs-dropdown-link-hover-bg) !important;
     color: var(--bs-dropdown-link-hover-color) !important;
 }
+/* Force l'apparence des inputs de filtre */
+.column-filter {
+    background-color: #ffffff !important;
+    border: 1px solid #ced4da !important;
+    color: #495057 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Optionnel : Améliore le contraste si le fond du header est gris */
+.table-secondary .column-filter {
+    background-color: #f8f9fa !important;
+}
