@@ -30,27 +30,38 @@
         </a>
     </div>
     
-    <hr>
+   <hr>
 
-    <div class="table-responsive shadow-sm card">
-      <table class="table table-striped table-hover mb-0" id="resultsTable">
-        <thead class="table-dark">
-          <tr>
-            <th data-i18n="allPoints.thHierarchy">Hiérarchie</th>
-            <th data-i18n="allPoints.thCodeFull">Code complet</th>
-            <th data-i18n="allPoints.thCode">Code</th>
-            <th data-i18n="allPoints.thLabel">Libellé</th>
-          </tr>
-          <tr class="bg-secondary">
-            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="search.placeholder" data-col="0"></th>
-            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="search.placeholder" data-col="1"></th>
-            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="search.placeholder" data-col="2"></th>
-            <th><input type="text" class="form-control form-control-sm column-filter" data-i18n-placeholder="search.placeholder" data-col="3"></th>
-          </tr>
-        </thead>
-        <tbody id="resultsBody">
-          </tbody>
-      </table>
+    <ul class="nav nav-tabs mb-3" id="myTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="query-tab" data-bs-toggle="tab" data-bs-target="#query-pane" type="button" role="tab">Sans tag / Up-to-date</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="csv-tab" data-bs-toggle="tab" data-bs-target="#csv-pane" type="button" role="tab">Avec tag / Frozen</button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="query-pane" role="tabpanel">
+        <div class="table-responsive shadow-sm card">
+          <table class="table table-striped table-hover mb-0" id="resultsTableQuery">
+             <tbody id="resultsBodyQuery"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-pane fade" id="csv-pane" role="tabpanel">
+        <div class="table-responsive shadow-sm card">
+          <table class="table table-striped table-hover mb-0" id="resultsTableCSV">
+            <thead class="table-secondary">
+              <tr>
+                <th>Hiérarchie</th><th>Code</th><th>Libellé</th><th>Tags</th>
+              </tr>
+            </thead>
+            <tbody id="resultsBodyCSV"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </main>
 
