@@ -52,19 +52,37 @@
   
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
   <script src="js/layout.js"></script> 
-
-  <script>
+<script>
     const csvUrl = '../data/points_de_contrôle_2026-05-20_addedKeywords_embeddings_tsneviz.csv';
     let rawData = [];
 
-    // 1. Charger et parser le CSV automatiquement
+    // 1. Charger et parser le CSV automatiquement avec nettoyage des en-têtes
     Papa.parse(csvUrl, {
       download: true,
       header: true,
       delimiter: ";",
+      skipEmptyLines: true,
+      // Supprime les espaces invisibles dans les noms de colonnes (ex: "x " devient "x")
+      beforeFirstChunk: function(chunk) {
+        let lines = chunk.split(/\r\n|\n/);
+        if (lines.length > 0) {
+          lines[0] = lines[0].replace(/;\s+/g, ';').replace(/\s+;/g, ';').trim();
+        }
+        return lines.join('\n');
+      },
       complete: function(results) {
-        rawData = results.data.filter(row => row.x && row.y);
-        updateGraph("Niveau 2");
+        // Validation et filtrage tolérant des coordonnées x et y
+        rawData = results.data.filter(row => {
+          return row.x !== undefined && row.x !== null && row.x !== '' &&
+                 row.y !== undefined && row.y !== null && row.y !== '';
+        });
+
+        if (rawData.length === 0) {
+          console.error("Aucune donnée valide trouvée. Vérifie les en-têtes de colonnes 'x' et 'y' dans le CSV.");
+        } else {
+          // Affichage initial au Niveau 2
+          updateGraph("Niveau 2");
+        }
       }
     });
 
@@ -89,7 +107,8 @@
         groups[groupKey].y.push(parseFloat(row.y));
         groups[groupKey].text.push(row.label || row.point); 
         groups[groupKey].hierarchy.push(row.hierarchy || '');
-        groups[groupKey].tags.push(row.Tags || '-');
+        // Correction ici : row.tags au lieu de row.Tags (minuscule dans ton CSV)
+        groups[groupKey].tags.push(row.tags || row.Tags || '-');
       });
 
       const traces = Object.keys(groups).map(key => {
