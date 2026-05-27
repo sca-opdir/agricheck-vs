@@ -13,13 +13,20 @@ let similarityMatrix = null; // Stockera les données du JSON matriciel
 
 // Raccourci sécurisé pour la traduction
 function safeT(key) {
-  if (typeof window.t === 'function') {
-    return window.t(key);
+  if (typeof window.t === 'function') return window.t(key);
+  if (typeof globalThis.t === 'function') return globalThis.t(key);
+  return key; 
+}
+
+// Fonction sécurisée pour le texte localisé (évite le crash si layout.js n'a pas fini)
+function safeGetLocalizedText(obj, lang, fallbackToFirst = true) {
+  if (typeof window.getLocalizedText === 'function') {
+    return window.getLocalizedText(obj, lang, fallbackToFirst);
   }
-  if (typeof globalThis.t === 'function') {
-    return globalThis.t(key);
+  if (obj && typeof obj === 'object') {
+    return obj[lang] || Object.values(obj)[0] || '';
   }
-  return key; // Retourne la clé par défaut si i18n n'est pas encore prêt
+  return obj || '';
 }
 
 // Écouteurs d'événements pour les boutons de contrôle de la page
@@ -54,24 +61,24 @@ if (btnUncheckAll) {
   });
 }
 
-// Initialisation globale avec capture d'erreur isolée et URL RAW corrigée
+// Initialisation globale
 (async function init() {
   try {
-    // 1. On attend d'abord que le framework d'i18n de layout.js soit complètement chargé
+    // 1. On attend que layout.js signale qu'il est prêt
     await window.__i18nReady;
 
-    // 2. On lance le téléchargement des structures principales indispensables (bindings)
+    // 2. On lance le téléchargement des structures principales
     const bindings = await fetchBindings();
     nodeMap = buildNodeMap(bindings);
 
-    // 3. On tente de charger la matrice de similarité via l'URL RAW de GitHub correcte
+    // 3. On charge la matrice de similarité
     try {
       const res = await fetch('https://raw.githubusercontent.com/sca-opdir/agricheck-vs/main/data/points_de_contr%C3%B4le_2026-05-20_addedKeywords_embeddings_matrixsim.json');
       if (!res.ok) throw new Error(`Statut HTTP: ${res.status}`);
       similarityMatrix = await res.json();
     } catch (jsonError) {
       console.error("⚠️ Impossible de charger la matrice sémantique :", jsonError);
-      similarityMatrix = "ERROR"; // Marqueur spécial transmis à la logique du clic
+      similarityMatrix = "ERROR"; 
     }
 
     // 4. On génère la page avec la bonne langue
@@ -158,7 +165,8 @@ function renderCollection(uri, numbers, lang, displayableUris) {
   numSpan.textContent = numbers.join('.');
   
   heading.appendChild(numSpan);
-  heading.innerHTML += window.getLocalizedText(node.label, lang) + idBadge;
+  // CORRECTION ICI : Utilisation du wrapper sécurisé safeGetLocalizedText
+  heading.innerHTML += safeGetLocalizedText(node.label, lang) + idBadge;
   content.appendChild(heading);
 
   const collectionUrlDiv = document.createElement('div');
@@ -170,7 +178,7 @@ function renderCollection(uri, numbers, lang, displayableUris) {
   `;
   content.appendChild(collectionUrlDiv);
   
-  const commentText = window.getLocalizedText(node.comment, lang);
+  const commentText = safeGetLocalizedText(node.comment, lang);
   if (commentText) {
     const p = document.createElement('p');
     p.innerHTML = commentText;
@@ -196,7 +204,7 @@ function renderCollection(uri, numbers, lang, displayableUris) {
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="check-${ipId}">
                 <label class="form-check-label fw-bold" for="check-${ipId}">
-                    ${window.getLocalizedText(ip.label, lang)}${ipIdString}
+                    ${safeGetLocalizedText(ip.label, lang)}${ipIdString}
                 </label>
             </div>
             
@@ -206,7 +214,7 @@ function renderCollection(uri, numbers, lang, displayableUris) {
                 </a>
             </div>
 
-            ${ip.comment ? `<div class="text-muted small ms-4">${window.getLocalizedText(ip.comment, lang)}</div>` : ''}
+            ${ip.comment ? `<div class="text-muted small ms-4">${safeGetLocalizedText(ip.comment, lang)}</div>` : ''}
             
             <div class="ms-4 mt-2 d-print-none d-flex gap-3">
                 <div>
@@ -406,7 +414,7 @@ document.addEventListener('click', async (e) => {
                 let idBadge = "";
 
                 if (targetNode) {
-                    labelText = window.getLocalizedText(targetNode.label, lang);
+                    labelText = safeGetLocalizedText(targetNode.label, lang);
                     const coreId = targetNode.conjunctIdentifier || targetNode.identifier;
                     if (coreId) idBadge = ` <span class="badge bg-secondary font-monospace" style="font-size:10px;">${coreId}</span>`;
                 }
