@@ -170,13 +170,13 @@ node.inspectionPoints.forEach(ipUri => {
         
         <div class="ms-4 mt-2 d-print-none d-flex gap-3">
             <div>
-                <button class="btn btn-sm btn-link p-0 text-decoration-none btn-details" data-id="${ipId}">
-                    <i class="bi bi-plus-circle"></i> Détails techniques
+              <button class="btn btn-sm btn-link p-0 text-decoration-none btn-details" data-id="${ipId}">
+                    <i class="bi bi-plus-circle"></i> ${t('techDetails')}
                 </button>
             </div>
             <div>
-                <button class="btn btn-sm btn-link p-0 text-decoration-none text-danger btn-outcomes" data-id="${ipId}">
-                    <i class="bi bi-exclamation-triangle"></i> Manquements possibles
+              <button class="btn btn-sm btn-link p-0 text-decoration-none text-danger btn-outcomes" data-id="${ipId}">
+                    <i class="bi bi-exclamation-triangle"></i> ${t('possibleOutcomes')}
                 </button>
             </div>
         </div>
@@ -315,12 +315,12 @@ document.addEventListener('click', async (e) => {
         // Toggle l'affichage
         if (outcomesDiv.style.display === 'block') {
             outcomesDiv.style.display = 'none';
-            btn.innerHTML = '<i class="bi bi-exclamation-triangle"></i> Manquements possibles';
+            btn.innerHTML = `<i class="bi bi-exclamation-triangle"></i> ${t('possibleOutcomes')}`;
             return;
         }
 
         outcomesDiv.style.display = 'block';
-        btn.innerHTML = '<i class="bi bi-dash-circle"></i> Masquer les manquements';
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${t('hideOutcomes')}`;
 
         // Si le spinner est là, on charge les données de test
         if (outcomesDiv.innerHTML.includes('spinner-border')) {
