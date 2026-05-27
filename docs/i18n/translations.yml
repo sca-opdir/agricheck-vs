@@ -40,6 +40,7 @@ de:
       results: "Gefundene Ergebnisse"
       thHierarchy: "Hierarchie (Ordner)"
       thPoint: "Kontrollpunkt"
+      placeholder: Stichwort zu suchen
   
   footerText: © Bundesamt für Landwirtschaft und beteiligte Labelorganisationen, Stand Februar 2026
   
@@ -118,6 +119,7 @@ fr:
       results: Résultats trouvés
       thHierarchy: Hiérarchie (Dossiers)
       thPoint: Point de contrôle
+      placeholder: Mot-clé à chercher
   
   footerText: © Office fédéral de l'agriculture et organisations de labels participantes, état en février 2026
   
@@ -196,6 +198,7 @@ it:
       results: Risultati trovati
       thHierarchy: Gerarchia (Cartelle)
       thPoint: Punto di controllo
+      placeholder: Parola chiave
   
   footerText: © Ufficio federale dell'agricoltura e organizzazioni di label partecipanti, stato febbraio 2026
   
