@@ -43,26 +43,35 @@ if (btnUncheckAll) {
   });
 }
 
-// Initialisation globale corrigée
+// Initialisation globale avec capture d'erreur isolée pour le JSON
 (async function init() {
   try {
     // 1. On attend d'abord que le framework d'i18n de layout.js soit complètement chargé
     await window.__i18nReady;
 
-    // 2. On lance les deux téléchargements de données en parallèle
-    const [bindings, similarityData] = await Promise.all([
-      fetchBindings(),
-      fetch('https://raw.githubusercontent.com/sca-opdir/agricheck-vs/main/data/points_de_contr%C3%B4le_2026-05-20_addedKeywords_embeddings_matrixsim.json').then(res => res.json())
-    ]);
-
+    // 2. On lance le téléchargement des structures principales indispensables (bindings)
+    const bindings = await fetchBindings();
     nodeMap = buildNodeMap(bindings);
-    similarityMatrix = similarityData;
 
-    // 3. On génère la page avec la bonne langue
+    // 3. On tente de charger la matrice de similarité de manière indépendante
+    try {
+      const res = await fetch('https://raw.githubusercontent.com/sca-opdir/agricheck-vs/main/data/points_de_contr%C3%B4le_2026-05-20_addedKeywords_embeddings_matrixsim.json');
+      if (!res.ok) throw new Error(`Statut HTTP: ${res.status}`);
+      similarityMatrix = await res.json();
+    } catch (jsonError) {
+      // Si le JSON distant plante (SyntaxError, erreur réseau...), on capture l'erreur ici sans bloquer l'application
+      console.error("⚠️ Impossible de charger la matrice sémantique (Fichier JSON corrompu ou inaccessible) :", jsonError);
+      similarityMatrix = "ERROR"; // Marqueur spécial transmis à la logique du clic
+    }
+
+    // 4. On génère la page avec la bonne langue
     rebuildPage(window.__APP_LANG || 'fr');
 
   } catch (error) {
-    console.error("Erreur lors de l'initialisation d'Agricheck:", error);
+    console.error("❌ Erreur critique lors de l'initialisation d'Agricheck:", error);
+    if (content) {
+      content.innerHTML = `<p class="alert alert-danger">Une erreur critique est survenue lors du chargement des données principales.</p>`;
+    }
   }
 
   if (typeof window.hideLoader === 'function') {
@@ -346,7 +355,7 @@ document.addEventListener('click', async (e) => {
         }
     }
 
-    // C. CLIC : Points Similaires
+    // C. CLIC : Points Similaires (LOGIQUE MATRICIELLE SÉMANTIQUE CORRIGÉE)
     if (e.target.closest('.btn-similar')) {
         const btn = e.target.closest('.btn-similar');
         const ipId = btn.dataset.id;
@@ -362,18 +371,29 @@ document.addEventListener('click', async (e) => {
         btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${t('hideSimilar')}`;
 
         if (similarDiv.innerHTML.includes('spinner-border')) {
-            if (!similarityMatrix || !similarityMatrix[ipId]) {
+            // Cas 1 : Le JSON a rencontré un problème d'encodage/syntaxe lors du init()
+            if (similarityMatrix === "ERROR") {
+                similarDiv.innerHTML = `<div class="alert alert-danger py-2 px-3 small">
+                    <i class="bi bi-exclamation-octagon"></i> Échec du chargement des données de similarité (Erreur syntaxique JSON ou fichier distant introuvable).
+                </div>`;
+                return;
+            }
+
+            // Cas 2 : L'identifiant demandé n'existe pas ou ne possède pas le sous-tableau 'similars'
+            if (!similarityMatrix || !similarityMatrix[ipId] || !similarityMatrix[ipId].similars) {
                 similarDiv.innerHTML = `<span class="text-muted small">${t('noSimilar')}</span>`;
                 return;
             }
 
-            const topSimilars = similarityMatrix[ipId];
+            // Cas 3 : Tout est OK, on extrait le tableau imbriqué depuis la clé .similars
+            const topSimilars = similarityMatrix[ipId].similars;
             
             let html = '<div class="alert alert-success py-2 px-3 small">';
             html += '<ol class="mb-0 ps-3">';
 
             topSimilars.forEach(item => {
-                const targetUri = `${BASE_URI}${item.point_id}`;
+                // Dans ton JSON, la clé est .id (pas .point_id)
+                const targetUri = `${BASE_URI}${item.id}`;
                 const targetNode = nodeMap.get(targetUri);
                 
                 let labelText = "Point inconnu (Base fédérale)";
