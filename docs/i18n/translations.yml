@@ -30,10 +30,13 @@ de:
     noGroups: Keine Gruppen angegeben.
     checkAll: Alle auswählen
     uncheckAll: Alle abwählen
-    techDetails: "Technische Details"
-    possibleOutcomes: "Mögliche Mängel"
-    hideDetails: "Details ausblenden"
-    hideOutcomes: "Mängel ausblenden"
+    techDetails: Technische Details
+    possibleOutcomes: Mögliche Mängel
+    hideDetails: Details ausblenden
+    hideOutcomes: Mängel ausblenden
+    similarPoints: Ähnliche Kontrollpunkte
+    hideSimilar: Ähnlichkeiten ausblenden
+    noSimilar: Keine ähnlichen Kontrollpunkte gefunden
 
   searchPage:
       back: "Zurück zur Startseite"
@@ -113,10 +116,13 @@ fr:
     noGroups: Aucun groupe fourni.
     checkAll: Tout sélectionner
     uncheckAll: Tout désélectionner
-    techDetails: "Détails techniques"
-    possibleOutcomes: "Manquements possibles"
-    hideDetails: "Masquer les détails"
-    hideOutcomes: "Masquer les manquements"
+    techDetails: Détails techniques
+    possibleOutcomes: Manquements possibles
+    hideDetails: Masquer les détails
+    hideOutcomes: Masquer les manquements
+    similarPoints: Points similaires
+    hideSimilar: Masquer les similitudes
+    noSimilar: Aucun point similaire trouvé
   
   searchPage:
       back: Retour à l'accueil
@@ -200,6 +206,9 @@ it:
     possibleOutcomes: "Inosservanze possibili"
     hideDetails: "Nascondi dettagli"
     hideOutcomes: "Nascondi inosservanze"
+    similarPoints: "Punti simili"
+    hideSimilar: "Nascondi similitudini"
+    noSimilar: Nessun punto simile trovato
   
   searchPage:
       back: Torna alla home
