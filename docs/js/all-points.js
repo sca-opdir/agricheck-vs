@@ -102,6 +102,27 @@ function applyFilters() {
   }
 }
 
+
+// Exemple de logique à intégrer dans votre script de chargement
+function displayData(queryData, csvRawData) {
+    // 1. Remplir le tableau de la query (votre logique actuelle)
+    const bodyQuery = document.getElementById('resultsBodyQuery');
+    queryData.forEach(item => {
+        bodyQuery.innerHTML += `<tr><td>${item.hierarchy}</td><td>${item.code}</td><td>${item.label}</td></tr>`;
+    });
+
+    // 2. Remplir le tableau CSV (Frozen)
+    const bodyCSV = document.getElementById('resultsBodyCSV');
+    csvRawData.forEach(item => {
+        bodyCSV.innerHTML += `<tr>
+            <td>${item.hierarchy || ''}</td>
+            <td>${item.code || ''}</td>
+            <td>${item.label || ''}</td>
+            <td><span class="badge bg-info">${item.Tags || item.tags || '-'}</span></td>
+        </tr>`;
+    });
+}
+
 // Écouteur sur les champs de filtrage de colonnes
 document.querySelectorAll('.column-filter').forEach(input => {
   input.addEventListener('keyup', applyFilters);
