@@ -1,119 +1,108 @@
-const csvUrl = '../data/points_de_contrôle_2026-05-20_addedKeywords_embeddings_tsneviz.csv';
+<!DOCTYPE html>
+<html lang="fr" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agricheck Valais - t-SNE</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.24.1/plotly.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body class="d-flex flex-column min-vh-100">
 
-window.rebuildPage = async function(lang) {
-  const bodyQuery = document.getElementById('resultsBodyQuery');
-  const bodyCSV = document.getElementById('resultsBodyCSV');
+  <main class="container-lg flex-grow-1 py-5">
+    <div class="mb-4"><a href="index.html" class="btn btn-sm btn-outline-secondary"><i class="bi bi-arrow-left"></i> Retour</a></div>
 
-  bodyQuery.innerHTML = '<tr><td colspan="4">Chargement SPARQL...</td></tr>';
-  bodyCSV.innerHTML = '<tr><td colspan="4">Chargement CSV...</td></tr>';
+    <h1 class="mb-2">Cartographie Sémantique t-SNE</h1>
 
-  try {
-    const sparqlQuery = getQuery(lang);
+    <div class="card shadow-sm mb-4" style="max-width: 500px;">
+      <div class="card-body d-flex align-items-center gap-3 py-2">
+        <label id="labelColorDimension" for="colorDimension" class="fw-bold mb-0">Code couleur :</label>
+        <select id="colorDimension" class="form-select">
+          <option value="Niveau 1">Niveau 1</option>
+          <option value="Niveau 2" selected>Niveau 2</option>
+          <option value="Niveau 3">Niveau 3</option>
+        </select>
+      </div>
+    </div>
 
-    const response = await fetch(
-      "https://lindas.admin.ch/query?query=" + encodeURIComponent(sparqlQuery),
-      { headers: { "Accept": "application/sparql-results+json" } }
-    );
+    <div class="card shadow-sm mb-5">
+      <div class="card-body p-1">
+        <div id="tsne-div" style="width:100%; height:720px;"></div>
+      </div>
+    </div>
 
-    const data = await response.json();
+    <div class="card shadow-sm mb-5 border-warning">
+      <div class="card-header bg-warning text-dark fw-bold">
+        <i class="bi bi-bug"></i> Inspecteur de Données CSV (Debug) 
+        <span id="csv-status" class="badge bg-dark">Chargement...</span>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-sm table-striped table-bordered mb-0" id="debugTable">
+            <thead class="table-dark small">
+              <tr id="debugHeader"><th>Statut</th></tr>
+            </thead>
+            <tbody id="debugBody" class="small">
+              <tr><td class="text-muted text-center py-3">Chargement en cours...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
 
-    bodyQuery.innerHTML = '';
-
-    data.results.bindings.forEach(row => {
-      bodyQuery.innerHTML += `<tr>
-        <td>${row.hierarchy?.value || ''}</td>
-        <td>${row.code_full?.value || ''}</td>
-        <td>${row.code?.value || ''}</td>
-        <td>${row.label?.value || ''}</td>
-      </tr>`;
-    });
+  <script>
+    const csvUrl = 'https://raw.githubusercontent.com/sca-opdir/agricheck-vs/main/data/points_de_contr%C3%B4le_2026-05-20_addedKeywords_embeddings_tsneviz.csv';
+    let rawData = [];
 
     Papa.parse(csvUrl, {
       download: true,
       header: true,
       delimiter: ";",
       skipEmptyLines: true,
-
+      transformHeader: h => h.trim(),
       complete: function(results) {
-        bodyCSV.innerHTML = '';
-
-        results.data.forEach(item => {
-          bodyCSV.innerHTML += `<tr>
-            <td>${item.hierarchy || ''}</td>
-            <td>${item.code || item.code_full || ''}</td>
-            <td>${item.label || item.point || ''}</td>
-            <td><span class="badge bg-info">${item.Tags || item.tags || '-'}</span></td>
-          </tr>`;
-        });
-
-        if (typeof window.hideLoader === 'function') {
-          window.hideLoader();
-        }
-      },
-
-      error: function(error) {
-        console.error(error);
-        bodyCSV.innerHTML = '<tr><td colspan="4" class="text-danger">Erreur de chargement CSV</td></tr>';
-
-        if (typeof window.hideLoader === 'function') {
-          window.hideLoader();
-        }
+        rawData = results.data.filter(row => row.x && row.y);
+        document.getElementById('csv-status').textContent = rawData.length + " lignes";
+        document.getElementById('csv-status').className = "badge bg-success";
+        
+        generateDebugTable(results.data);
+        updateGraph("Niveau 2");
       }
     });
 
-  } catch (e) {
-    console.error(e);
-    bodyQuery.innerHTML = '<tr><td colspan="4" class="text-danger">Erreur de chargement SPARQL</td></tr>';
-
-    if (typeof window.hideLoader === 'function') {
-      window.hideLoader();
+    function generateDebugTable(allRows) {
+      if (!allRows.length) return;
+      const headers = Object.keys(allRows[0]);
+      const headerRow = document.getElementById('debugHeader');
+      const tbody = document.getElementById('debugBody');
+      
+      headerRow.innerHTML = headers.map(h => `<th>${h}</th>`).join('');
+      tbody.innerHTML = allRows.slice(0, 5).map(row => 
+        `<tr>${headers.map(h => `<td>${row[h] || ''}</td>`).join('')}</tr>`
+      ).join('');
     }
-  }
-};
 
-function getQuery(lang) {
-  return `
-PREFIX schema: <http://schema.org/>
-PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+    function updateGraph(dimension) {
+      const groups = {};
+      rawData.forEach(row => {
+        let key = (row[dimension] && row[dimension] !== "nan") ? row[dimension].trim() : "Non classifié";
+        if (!groups[key]) groups[key] = { x: [], y: [], text: [] };
+        groups[key].x.push(parseFloat(row.x));
+        groups[key].y.push(parseFloat(row.y));
+        groups[key].text.push(row.label || "");
+      });
 
-SELECT (GROUP_CONCAT(?parentName; separator=" / ") AS ?hierarchy)
-       ?code_full
-       ?code
-       ?label
-WHERE {
-  VALUES ?lang { "${lang}" }
+      const traces = Object.keys(groups).map(key => ({
+        x: groups[key].x, y: groups[key].y, mode: 'markers', name: key, type: 'scatter', text: groups[key].text
+      }));
 
-  ?point a :InspectionPoint ;
-         schema:name ?label .
-
-  FILTER(LANG(?label) = ?lang)
-
-  OPTIONAL { ?point schema:identifier ?code }
-  OPTIONAL { ?point :conjunctIdentifier ?code_full }
-
-  ?point (:belongsToGroup|schema:isPartOf)+ ?parent .
-
-  ?parent schema:name ?parentName .
-
-  FILTER(LANG(?parentName) = ?lang)
-  FILTER(?parent != ?point)
-  FILTER(STR(?parentName) != "BFCen")
-  FILTER(STR(?parentName) != "BFC")
-}
-GROUP BY ?point ?label ?code ?code_full
-ORDER BY ?hierarchy
-`;
-}
-
-(async function init() {
-  try {
-    await window.__i18nReady;
-    await window.rebuildPage(window.__APP_LANG || 'fr');
-  } catch (e) {
-    console.error(e);
-
-    if (typeof window.hideLoader === 'function') {
-      window.hideLoader();
+      Plotly.newPlot('tsne-div', traces, { margin: { t: 20, l: 20, r: 20, b: 20 }, hovermode: 'closest' }, { responsive: true });
     }
-  }
-})();
+
+    document.getElementById('colorDimension').addEventListener('change', (e) => updateGraph(e.target.value));
+  </script>
+</body>
+</html>
