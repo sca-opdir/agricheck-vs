@@ -18,19 +18,19 @@
     
     <div class="mb-4">
       <a href="index.html" class="btn btn-sm btn-outline-secondary">
-        <i class="bi bi-arrow-left"></i> <span data-i18n="searchPage.back">Retour à l'accueil</span>
+        <i class="bi bi-arrow-left"></i> <span data-i18n="searchPage.back">...</span>
       </a>
     </div>
 
-    <h1 class="mb-4" data-i18n="searchPage.title">Recherche directe dans LINDAS</h1>
-    <p class="text-muted" data-i18n="searchPage.help">Saisissez un mot-clé dans la langue active du site. La recherche scanne les titres et descriptions.</p>
+    <h1 class="mb-4" data-i18n="searchPage.title">...</h1>
+    <p class="text-muted" data-i18n="searchPage.help">...</p>
 
     <div class="card shadow-sm mb-4">
       <div class="card-body">
         <div class="input-group">
-          <input type="text" id="keywordInput" class="form-control form-control-lg" placeholder="..." autocomplete="off">
+          <input type="text" id="keywordInput" class="form-control form-control-lg" data-i18n-placeholder="searchPage.placeholder" autocomplete="off">
           <button id="submitSearchBtn" class="btn btn-primary btn-lg" type="button">
-            <i class="bi bi-search me-2"></i><span data-i18n="searchPage.button">Rechercher</span>
+            <i class="bi bi-search me-2"></i><span data-i18n="searchPage.button">...</span>
           </button>
         </div>
       </div>
@@ -38,24 +38,24 @@
 
     <div id="searchStatus" class="text-center d-none my-4">
       <div class="spinner-border text-primary" role="status"></div>
-      <div class="mt-2 text-muted" data-i18n="searchPage.loading">Interrogation des serveurs fédéraux...</div>
+      <div class="mt-2 text-muted" data-i18n="searchPage.loading">...</div>
     </div>
     <div id="errorMessage" class="alert alert-danger d-none" role="alert"></div>
 
     <div class="card shadow-sm d-none" id="resultsCard">
       <div class="card-header bg-white fw-bold">
-        <span data-i18n="searchPage.results">Résultats trouvés</span> (<span id="matchCount">0</span>)
+        <span data-i18n="searchPage.results">...</span> (<span id="matchCount">0</span>)
       </div>
       <div class="table-responsive">
         <table class="table table-hover table-striped mb-0">
           <thead class="table-dark">
             <tr>
-              <th data-i18n="searchPage.thHierarchy">Hiérarchie</th>
+              <th data-i18n="searchPage.thHierarchy">...</th>
               <th>Code full</th>
               <th>Code</th>
-              <th data-i18n="searchPage.thPoint">Point de contrôle</th>
-              <th>Description</th>
-              <th class="text-center">Lien</th>
+              <th data-i18n="searchPage.thPoint">...</th>
+              <th data-i18n="searchPage.thDescription">Description</th>
+              <th class="text-center" data-i18n="searchPage.thLink">Lien</th>
             </tr>
           </thead>
           <tbody id="resultsTableBody"></tbody>
@@ -72,5 +72,21 @@
   <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
   <script src="js/layout.js"></script> 
   <script src="js/search-inspectionpoint.js"></script>
+
+  <script>
+    if (window.__i18nReady) {
+      window.__i18nReady.then(() => {
+        if (typeof window.applyTranslations === 'function') {
+          window.applyTranslations();
+          
+          // Traduction spécifique du placeholder
+          const inputEl = document.getElementById('keywordInput');
+          if (inputEl && typeof window.t === 'function') {
+            inputEl.placeholder = window.t('searchPage.placeholder') || "Saisissez un mot-clé...";
+          }
+        }
+      });
+    }
+  </script>
 </body>
 </html>
