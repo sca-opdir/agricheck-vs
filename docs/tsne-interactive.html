@@ -1,99 +1,252 @@
+avec ce code, le chargement du tableau fonctionne, mais pas le graphe
+
 <!DOCTYPE html>
 <html lang="fr" data-bs-theme="light">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Agricheck Valais - t-SNE</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-  <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.24.1/plotly.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agricheck Valais - t-SNE</title>
+  <link rel="icon" href="resources/icon.svg" type="image/svg+xml">
+  <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  
+  <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.24.1/plotly.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
-  <main class="container-lg flex-grow-1 py-5">
-    <h1 data-i18n="tsne.title">Cartographie Sémantique t-SNE</h1>
-    
-    <div class="card shadow-sm mb-4" style="max-width: 500px;">
-      <div class="card-body d-flex align-items-center gap-3 py-2">
-        <label for="colorDimension" class="fw-bold mb-0" data-i18n="tsne.colormap">Code couleur :</label>
-        <select id="colorDimension" class="form-select">
-          <option value="Niveau 1" data-i18n="tsne.firstlevel">Niveau 1</option>
-          <option value="Niveau 2" selected data-i18n="tsne.secondlevel">Niveau 2</option>
-          <option value="Niveau 3" data-i18n="tsne.thirdlevel">Niveau 3</option>
-        </select>
-      </div>
-    </div>
+  <main class="container-lg flex-grow-1 py-5" data-aos="fade-up">
+    
+    <div class="mb-4">
+      <a href="index.html" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> <span data-i18n="searchPage.back">Retour à l'accueil</span>
+      </a>
+    </div>
 
-    <div id="tsne-div" style="width:100%; height:600px;" class="border rounded shadow-sm bg-white"></div>
+<h1 class="mb-2" data-i18n="tsne.title">Cartographie Sémantique t-SNE</h1>
+<p class="text-muted mb-4" data-i18n="tsne.subtitle">Visualisation en 2D...</p>
 
-    <div class="mt-4 border p-3 bg-light rounded">
-      <h5>Debug :</h5>
-      <div id="csv-status" class="badge bg-secondary">Chargement...</div>
-    </div>
-  </main>
+<div class="card shadow-sm mb-4" style="max-width: 500px;">
+  <div class="card-body d-flex align-items-center gap-3 py-2">
+    <label for="colorDimension" class="fw-bold mb-0" data-i18n="tsne.colormap" style="white-space: nowrap;">Code couleur :</label>
+    <select id="colorDimension" class="form-select">
+      <option value="Niveau 1" data-i18n="tsne.firstlevel">Niveau 1</option>
+      <option value="Niveau 2" selected data-i18n="tsne.secondlevel">Niveau 2</option>
+      <option value="Niveau 3" data-i18n="tsne.thirdlevel">Niveau 3</option>
+    </select>
+  </div>
+</div>
 
-  <script src="js/layout.js"></script> 
-  <script>
-    // URL directe vers votre fichier CSV à la racine du dépôt
-    const csvUrl = '../data/points_de_contrôle_2026-05-20_addedKeywords_embeddings_tsneviz.csv';
-    let rawData = [];
+    <div class="card shadow-sm mb-5">
+      <div class="card-body p-1">
+        <div id="tsne-div" style="width:100%; height:720px;"></div>
+      </div>
+    </div>
 
-    Papa.parse(csvUrl, {
-      download: true,
-      header: true,
-      delimiter: ";",
-      skipEmptyLines: true,
-      transformHeader: function(h) { return h.trim(); }, // Nettoie les espaces dans les titres
-      complete: function(results) {
-        // Filtrage strict : on garde uniquement les lignes avec x et y valides
-        rawData = results.data.filter(row => {
-          const x = parseFloat(row.x);
-          const y = parseFloat(row.y);
-          return !isNaN(x) && !isNaN(y);
-        });
+    <div class="card shadow-sm mb-5 border-warning">
+      <div class="card-header bg-warning text-dark fw-bold d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-bug"></i> Inspecteur de Données CSV (Debug)</span>
+        <span id="csv-status" class="badge bg-dark">Chargement...</span>
+      </div>
+      <div class="card-body">
+        <p class="small text-muted">Ce tableau affiche les 5 premières lignes valides extraites de votre fichier CSV pour valider la structure des en-têtes.</p>
+        <div class="table-responsive">
+          <table class="table table-sm table-striped table-bordered mb-0" id="debugTable">
+            <thead class="table-dark small">
+              <tr id="debugHeader">
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody id="debugBody" class="small">
+              <tr>
+                <td class="text-muted text-center py-3">En attente du traitement du fichier...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
-        if (rawData.length > 0) {
-          document.getElementById('csv-status').textContent = rawData.length + " points valides chargés.";
-          document.getElementById('csv-status').className = "badge bg-success";
-          updateGraph("Niveau 2");
-        } else {
-          document.getElementById('csv-status').textContent = "Erreur : Aucune donnée valide (x,y) trouvée.";
-          document.getElementById('csv-status').className = "badge bg-danger";
-        }
-      }
-    });
+  </main>
 
-    document.getElementById('colorDimension').addEventListener('change', (e) => updateGraph(e.target.value));
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>AOS.init({ once: true });</script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.1/marked.min.js"></script>
+  <script src="js/layout.js"></script> 
 
-    function updateGraph(dimension) {
-      const groups = {};
+  <script>
+    // Note : Ajustement du chemin relatif selon la structure de vos dossiers de déploiement
+    const csvUrl = '../data/points_de_contrôle_2026-05-20_addedKeywords_embeddings_tsneviz.csv';
+    let rawData = [];
 
-      rawData.forEach(row => {
-        let groupKey = (row[dimension] && row[dimension] !== "nan") ? row[dimension].trim() : "Non classifié";
+    // Fonction de synchronisation linguistique des labels natifs au script
+    function updateInterfaceLabels() {
+      const activeLang = window.__APP_LANG || 'fr';
+      const labels = {
+        fr: { color: "Niveau de couleur :", lvl1: "Niveau 1 (Global)", lvl2: "Niveau 2 (Intermédiaire)", lvl3: "Niveau 3 (Détaillé)", unclassified: "Non classifié" },
+        de: { color: "Farbebene:", lvl1: "Ebene 1 (Global)", lvl2: "Ebene 2 (Zwischenebene)", lvl3: "Ebene 3 (Detailliert)", unclassified: "Nicht klassifiziert" },
+        it: { color: "Livello di colore:", lvl1: "Livello 1 (Globale)", lvl2: "Livello 2 (Intermedio)", lvl3: "Livello 3 (Dettagliato)", unclassified: "Non classificato" }
+      };
+      
+      const currentLabels = labels[activeLang] || labels.fr;
+      document.getElementById('labelColorDimension').textContent = currentLabels.color;
+      
+      const select = document.getElementById('colorDimension');
+      select.options[0].text = currentLabels.lvl1;
+      select.options[1].text = currentLabels.lvl2;
+      select.options[2].text = currentLabels.lvl3;
+      
+      return currentLabels.unclassified;
+    }
 
-        if (!groups[groupKey]) groups[groupKey] = { x: [], y: [], text: [] };
-        
-        groups[groupKey].x.push(parseFloat(row.x));
-        groups[groupKey].y.push(parseFloat(row.y));
-        groups[groupKey].text.push(row.label || row.point || "");
-      });
+    // Écouteur synchronisé sur le changement de langue global de layout.js
+    window.rebuildPage = function(lang) {
+      updateInterfaceLabels();
+      if (rawData.length > 0) {
+        updateGraph(document.getElementById('colorDimension').value);
+      }
+    };
 
-      const traces = Object.keys(groups).map(key => ({
-        x: groups[key].x,
-        y: groups[key].y,
-        mode: 'markers',
-        type: 'scatter',
-        name: key,
-        text: groups[key].text,
-        marker: { size: 6 }
-      }));
+    // 1. Charger et parser le CSV automatiquement
+    Papa.parse(csvUrl, {
+      download: true,
+      header: true,
+      delimiter: ";",
+      skipEmptyLines: true,
+      beforeFirstChunk: function(chunk) {
+        let lines = chunk.split(/\r\n|\n/);
+        if (lines.length > 0) {
+          lines[0] = lines[0].replace(/;\s+/g, ';').replace(/\s+;/g, ';').trim();
+        }
+        return lines.join('\n');
+      },
+      complete: function(results) {
+        rawData = results.data.filter(row => {
+          return row.x !== undefined && row.x !== null && row.x !== '' &&
+                 row.y !== undefined && row.y !== null && row.y !== '';
+        });
 
-      Plotly.newPlot('tsne-div', traces, {
-        margin: { t: 0, r: 0, l: 0, b: 0 },
-        hovermode: 'closest'
-      });
-    }
-  </script>
+        const statusBadge = document.getElementById('csv-status');
+
+        if (rawData.length === 0) {
+          console.error("Aucune donnée valide trouvée. Vérifie les en-têtes 'x' et 'y'.");
+          statusBadge.textContent = "Erreur de format";
+          statusBadge.className = "badge bg-danger";
+          document.getElementById('debugBody').innerHTML = `<tr><td class="text-danger fw-bold">Échec : Les coordonnées 'x' ou 'y' manquent ou ne sont pas parsées correctement. Vérifiez les séparateurs (actuel: p point-virgule) ou s'il y a des valeurs NaN.</td></tr>`;
+        } else {
+          statusBadge.textContent = `${rawData.length} lignes chargées`;
+          statusBadge.className = "badge bg-success";
+          
+          // Remplissage du tableau de Debug
+          generateDebugTable(results.data);
+          
+          // Initialisation graphique
+          updateInterfaceLabels();
+          updateGraph("Niveau 2");
+        }
+      },
+      error: function(err) {
+        console.error("Erreur PapaParse critique :", err);
+        const statusBadge = document.getElementById('csv-status');
+        statusBadge.textContent = "Erreur HTTP/Fichier";
+        statusBadge.className = "badge bg-danger";
+        document.getElementById('debugBody').innerHTML = `<tr><td class="text-danger fw-bold">Impossible d'accéder au fichier CSV. Vérifiez que le chemin cible existe : <br><code>${csvUrl}</code></td></tr>`;
+      }
+    });
+
+    // 2. Écouter les changements du menu déroulant
+    document.getElementById('colorDimension').addEventListener('change', function(e) {
+      updateGraph(e.target.value);
+    });
+
+    // 3. Fonction de mise à jour dynamique du graphique (avec variable renommée !)
+    function updateGraph(dimension) {
+      const unclassifiedText = updateInterfaceLabels();
+      const groups = {};
+
+      rawData.forEach(row => {
+        let groupKey = row[dimension] ? row[dimension].trim() : unclassifiedText;
+        if (groupKey === "" || groupKey === "nan") groupKey = unclassifiedText;
+
+        if (!groups[groupKey]) {
+          groups[groupKey] = { x: [], y: [], text: [], hierarchy: [], tags: [] };
+        }
+        
+        groups[groupKey].x.push(parseFloat(row.x));
+        groups[groupKey].y.push(parseFloat(row.y));
+        groups[groupKey].text.push(row.label || row.point || ''); 
+        groups[groupKey].hierarchy.push(row.hierarchy || '');
+        groups[groupKey].tags.push(row.tags || row.Tags || '-');
+      });
+
+      const traces = Object.keys(groups).map(key => {
+        return {
+          x: groups[key].x,
+          y: groups[key].y,
+          mode: 'markers',
+          type: 'scatter',
+          name: key,
+          text: groups[key].text,
+          customdata: groups[key].hierarchy.map((h, idx) => [h, groups[key].tags[idx]]),
+          hovertemplate: '<b>%{text}</b><br><br><b>Hiérarchie :</b> %{customdata[0]}<br><b>Tags :</b> %{customdata[1]}<extra></extra>',
+          marker: { size: 6, opacity: 0.7 }
+        };
+      });
+
+      // Variable locale renommée de 'layout' à 'plotlyLayout' pour éliminer les interférences JSON globales
+      const plotlyLayout = {
+        plot_bgcolor: 'white',
+        margin: { l: 20, r: 20, b: 20, t: 20 },
+        xaxis: { showgrid: true, gridcolor: '#f0f0f0', zeroline: false },
+        yaxis: { showgrid: true, gridcolor: '#f0f0f0', zeroline: false },
+        hovermode: 'closest',
+        legend: { font: { size: 10 } }
+      };
+
+      Plotly.newPlot('tsne-div', traces, plotlyLayout, { responsive: true });
+    }
+
+    // 4. Générateur de tableau d'inspection (Debug)
+    function generateDebugTable(allRows) {
+      if (!allRows || allRows.length === 0) return;
+      
+      const headers = Object.keys(allRows[0]);
+      
+      // Génération des en-têtes de colonnes
+      const headerRow = document.getElementById('debugHeader');
+      headerRow.innerHTML = '';
+      headers.forEach(h => {
+        const th = document.createElement('th');
+        th.textContent = h;
+        headerRow.appendChild(th);
+      });
+      
+      // Extraction et affichage des 5 premières lignes
+      const tbody = document.getElementById('debugBody');
+      tbody.innerHTML = '';
+      const samples = allRows.slice(0, 5);
+      
+      samples.forEach(row => {
+        const tr = document.createElement('tr');
+        headers.forEach(h => {
+          const td = document.createElement('td');
+          td.textContent = row[h] !== undefined ? row[h] : '';
+          // Highlight léger sur les coordonnées cruciales
+          if(h === 'x' || h === 'y') {
+            td.className = "table-info fw-bold";
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+  </script>
 </body>
 </html>
