@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agricheck - Visualisation t-SNE</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.3/dist/lux/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.24.1/plotly.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body class="bg-light">
+
+  <div class="container-fluid px-4 py-4">
+    <h1 class="mb-1">Cartographie Sémantique t-SNE</h1>
+    <p class="text-muted mb-4">Visualisation en 2D de la proximité sémantique entre les points de contrôle.</p>
+
+    <div class="card shadow-sm mb-4" style="max-width: 500px;">
+      <div class="card-body d-flex align-items-center gap-3 py-2">
+        <label for="colorDimension" class="fw-bold mb-0" style="white-space: nowrap;">Niveau de couleur :</label>
+        <select id="colorDimension" class="form-select">
+          <option value="Niveau 1">Niveau 1 (Global)</option>
+          <option value="Niveau 2" selected>Niveau 2 (Intermédiaire)</option>
+          <option value="Niveau 3">Niveau 3 (Détaillé)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body p-1">
+        <div id="tsne-div" style="width:100%; height:720px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // /!\ REMPLACE AVEC TON PSEUDO ET TON NOM DE DÉPÔT GITHUB /!\
+    const csvUrl = 'https://raw.githubusercontent.com/TON-PSEUDO/TON-DEPOT/main/points_de_contr%C3%B4le_2026-05-20_addedKeywords_embeddings_tsneviz.csv';
+    
+    let rawData = [];
+
+    // 1. Charger et parser le CSV automatiquement
+    Papa.parse(csvUrl, {
+      download: true,
+      header: true,
+      delimiter: ";",
+      complete: function(results) {
+        // Filtrer les lignes qui n'ont pas de coordonnées valides
+        rawData = results.data.filter(row => row.x && row.y);
+        // Affichage initial au Niveau 2
+        updateGraph("Niveau 2");
+      }
+    });
+
+    // 2. Écouter les changements du menu déroulant
+    document.getElementById('colorDimension').addEventListener('change', function(e) {
+      updateGraph(e.target.value);
+    });
+
+    // 3. Fonction de mise à jour dynamique du graphique
+    function updateGraph(dimension) {
+      const groups = {};
+
+      rawData.forEach(row => {
+        let groupKey = row[dimension] ? row[dimension].trim() : "Non classifié";
+        if (groupKey === "" || groupKey === "nan") groupKey = "Non classifié";
+
+        if (!groups[groupKey]) {
+          groups[groupKey] = { x: [], y: [], text: [], hierarchy: [], tags: [] };
+        }
+        
+        groups[groupKey].x.push(parseFloat(row.x));
+        groups[groupKey].y.push(parseFloat(row.y));
+        // Ajuste 'label' ou 'point' selon le nom de ta colonne de texte principal
+        groups[groupKey].text.push(row.label || row.point); 
+        groups[groupKey].hierarchy.push(row.hierarchy || '');
+        groups[groupKey].tags.push(row.Tags || '-');
+      });
+
+      const traces = Object.keys(groups).map(key => {
+        return {
+          x: groups[key].x,
+          y: groups[key].y,
+          mode: 'markers',
+          type: 'scatter',
+          name: key,
+          text: groups[key].text,
+          customdata: groups[key].hierarchy.map((h, idx) => [h, groups[key].tags[idx]]),
+          hovertemplate: '<b>%{text}</b><br><br><b>Hiérarchie :</b> %{customdata[0]}<br><b>Tags :</b> %{customdata[1]}<extra></extra>',
+          marker: { size: 6, opacity: 0.7 } // Taille réduite à 6 pour la densité de 4000 points
+        };
+      });
+
+      const layout = {
+        plot_bgcolor: 'white',
+        margin: { l: 20, r: 20, b: 20, t: 20 },
+        xaxis: { showgrid: true, gridcolor: '#f0f0f0', zeroline: false },
+        yaxis: { showgrid: true, gridcolor: '#f0f0f0', zeroline: false },
+        hovermode: 'closest',
+        legend: { font: { size: 10 } }
+      };
+
+      Plotly.newPlot('tsne-div', traces, layout, { responsive: true });
+    }
+  </script>
+</body>
+</html>
