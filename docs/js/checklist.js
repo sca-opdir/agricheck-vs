@@ -73,7 +73,7 @@ if (btnUncheckAll) {
 
     // 3. On charge la matrice de similarité
     try {
-      const res = await fetch('https://raw.githubusercontent.com/sca-opdir/agricheck-vs/main/data/points_de_contr%C3%B4le_2026-05-20_addedKeywords_embeddings_matrixsim.json');
+      const res = await fetch('https://raw.githubusercontent.com/sca-opdir/agricheck-vs/main/data/points_de_contr%C3%B4le_2026-05-20_addedKeywords_embeddings_matrixsim_NaNreplaced.json');
       if (!res.ok) throw new Error(`Statut HTTP: ${res.status}`);
       similarityMatrix = await res.json();
     } catch (jsonError) {
