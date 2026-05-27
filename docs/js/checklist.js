@@ -1,47 +1,55 @@
 import { fetchBindings, buildNodeMap } from './model.js';
-await window.__i18nReady;
 
 const BASE_URI = 'https://agriculture.ld.admin.ch/inspection/';
 const content      = document.getElementById('content');
 const metaDateEl   = document.getElementById('metaDate');
 const printBtn     = document.getElementById('printBtn');
 const copyLinkBtn  = document.getElementById('copyLinkBtn');
-const btnCheckAll = document.getElementById('btnCheckAll');
+const btnCheckAll  = document.getElementById('btnCheckAll');
 const btnUncheckAll = document.getElementById('btnUncheckAll');
 
 let nodeMap;
 let similarityMatrix = null; // Stockera les données du JSON matriciel
 
-printBtn.addEventListener('click', () => window.print());
-copyLinkBtn.addEventListener('click', () => {
-  navigator.clipboard.writeText(location.href).then(() => {
-    copyLinkBtn.classList.replace('btn-outline-secondary', 'btn-success');
-    copyLinkBtn.innerHTML = `<i class="bi bi-clipboard-check"></i> ${t('copied')}`;
-    setTimeout(() => {
-      copyLinkBtn.classList.replace('btn-success', 'btn-outline-secondary');
-      copyLinkBtn.innerHTML = `<i class="bi bi-clipboard"></i> ${t('copyLink')}`;
-    }, 2000);
-  });
-});
+// Écouteurs d'événements pour les boutons de contrôle de la page
+if (printBtn) printBtn.addEventListener('click', () => window.print());
 
-// Logique pour tout cocher
-btnCheckAll.addEventListener('click', () => {
-  document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb => {
-    cb.checked = true;
+if (copyLinkBtn) {
+  copyLinkBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(location.href).then(() => {
+      copyLinkBtn.classList.replace('btn-outline-secondary', 'btn-success');
+      copyLinkBtn.innerHTML = `<i class="bi bi-clipboard-check"></i> ${t('copied')}`;
+      setTimeout(() => {
+        copyLinkBtn.classList.replace('btn-success', 'btn-outline-secondary');
+        copyLinkBtn.innerHTML = `<i class="bi bi-clipboard"></i> ${t('copyLink')}`;
+      }, 2000);
+    });
   });
-});
+}
 
-// Logique pour tout décocher
-btnUncheckAll.addEventListener('click', () => {
-  document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb => {
-    cb.checked = false;
+if (btnCheckAll) {
+  btnCheckAll.addEventListener('click', () => {
+    document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb => {
+      cb.checked = true;
+    });
   });
-});
+}
 
-// Initialisation globale avec chargement parallèle de la matrice sémantique
+if (btnUncheckAll) {
+  btnUncheckAll.addEventListener('click', () => {
+    document.querySelectorAll('.checklist input[type="checkbox"]').forEach(cb => {
+      cb.checked = false;
+    });
+  });
+}
+
+// Initialisation globale corrigée
 (async function init() {
   try {
-    // On lance les deux téléchargements en même temps pour gagner du temps
+    // 1. On attend d'abord que le framework d'i18n de layout.js soit complètement chargé
+    await window.__i18nReady;
+
+    // 2. On lance les deux téléchargements de données en parallèle
     const [bindings, similarityData] = await Promise.all([
       fetchBindings(),
       fetch('https://raw.githubusercontent.com/sca-opdir/agricheck-vs/main/data/points_de_contr%C3%B4le_2026-05-20_addedKeywords_embeddings_matrixsim.json').then(res => res.json())
@@ -50,7 +58,9 @@ btnUncheckAll.addEventListener('click', () => {
     nodeMap = buildNodeMap(bindings);
     similarityMatrix = similarityData;
 
-    rebuildPage(window.__APP_LANG);
+    // 3. On génère la page avec la bonne langue
+    rebuildPage(window.__APP_LANG || 'fr');
+
   } catch (error) {
     console.error("Erreur lors de l'initialisation d'Agricheck:", error);
   }
@@ -68,10 +78,14 @@ function addDescendantsAndSelf(uri, set) {
 }
 
 window.rebuildPage = function(lang) {
+  if (!content) return;
   content.innerHTML = '';
-  metaDateEl.textContent = new Date().toLocaleDateString(lang, {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
+  
+  if (metaDateEl) {
+    metaDateEl.textContent = new Date().toLocaleDateString(lang, {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
 
   const params    = new URLSearchParams(location.search);
   const slugParam = params.get('groups');
@@ -80,9 +94,11 @@ window.rebuildPage = function(lang) {
     content.innerHTML = `<p class="text-danger">${t('noGroups')}</p>`;
     return;
   }
+  
   const groupUris = slugParam.split(',')
     .map(decodeURIComponent)
     .map(slug => BASE_URI + slug);
+    
   const displayableUris = new Set();
   groupUris.forEach(uri => {
     addDescendantsAndSelf(uri, displayableUris);
@@ -97,18 +113,19 @@ window.rebuildPage = function(lang) {
       }
     }
   });
+  
   const rootNodes = [...displayableUris].filter(uri => {
     const node = nodeMap.get(uri);
     const parentUri = node?.superGroup || node?.parentGroup;
     return !parentUri || !displayableUris.has(parentUri);
   });
+  
   rootNodes.forEach((uri, idx) => renderCollection(uri, [idx + 1], lang, displayableUris));
 };
 
 function renderCollection(uri, numbers, lang, displayableUris) {
-  if (!displayableUris.has(uri)) {
-    return;
-  }
+  if (!displayableUris.has(uri)) return;
+  
   const node = nodeMap.get(uri);
   if (!node) return;
 
@@ -156,7 +173,6 @@ function renderCollection(uri, numbers, lang, displayableUris) {
         const ipIdValue = ip.conjunctIdentifier || ip.identifier;
         const ipIdString = ipIdValue ? ` (${ipIdValue})` : '';
 
-        // AJOUT du 3ème bouton "Points similaires" et de sa div de réception
         li.innerHTML = `
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="check-${ipId}">
@@ -259,8 +275,7 @@ async function fetchPossibleOutcomes(pointId) {
     }
 }
 
-// ÉCOUTEURS D'ÉVÉNEMENTS GENERIQUES (GESTION DU TOGGLE DES ACCORDEONS)
-
+// ÉCOUTEURS D'ÉVÉNEMENTS GÉNÉRIQUES (GESTION DU TOGGLE DES ACCORDÉONS)
 document.addEventListener('click', async (e) => {
     const lang = window.__APP_LANG || 'fr';
 
@@ -331,7 +346,7 @@ document.addEventListener('click', async (e) => {
         }
     }
 
-    // C. CLIC : Points Similaires (LOGIQUE MATRICIELLE SÉMANTIQUE)
+    // C. CLIC : Points Similaires
     if (e.target.closest('.btn-similar')) {
         const btn = e.target.closest('.btn-similar');
         const ipId = btn.dataset.id;
@@ -346,14 +361,12 @@ document.addEventListener('click', async (e) => {
         similarDiv.style.display = 'block';
         btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${t('hideSimilar')}`;
 
-        // Si le spinner est toujours actif, on calcule et injecte les points depuis la matrice globale
         if (similarDiv.innerHTML.includes('spinner-border')) {
             if (!similarityMatrix || !similarityMatrix[ipId]) {
                 similarDiv.innerHTML = `<span class="text-muted small">${t('noSimilar')}</span>`;
                 return;
             }
 
-            // Récupérer le tableau des 10 meilleurs scores [{ point_id: "...", score: 0.98 }, ...]
             const topSimilars = similarityMatrix[ipId];
             
             let html = '<div class="alert alert-success py-2 px-3 small">';
@@ -361,7 +374,6 @@ document.addEventListener('click', async (e) => {
 
             topSimilars.forEach(item => {
                 const targetUri = `${BASE_URI}${item.point_id}`;
-                // Recherche du nœud correspondant dans notre dictionnaire général pour avoir son texte traduit
                 const targetNode = nodeMap.get(targetUri);
                 
                 let labelText = "Point inconnu (Base fédérale)";
@@ -373,7 +385,6 @@ document.addEventListener('click', async (e) => {
                     if (coreId) idBadge = ` <span class="badge bg-secondary font-monospace" style="font-size:10px;">${coreId}</span>`;
                 }
 
-                // Pourcentage de correspondance sémantique
                 const matchPercentage = Math.round(item.score * 100);
 
                 html += `
