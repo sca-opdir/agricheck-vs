@@ -58,6 +58,8 @@ de:
     thHierarchy: "Hierarchie"
     thLabel: "Bezeichnung"
     filter: "Filtern..."
+    thCodeFull: ID
+    thCode: ID (kurz)             
   
   footerText: © Bundesamt für Landwirtschaft und beteiligte Labelorganisationen, Stand Februar 2026 - Anpassung OPDir-VS June 2026
   
@@ -154,6 +156,8 @@ fr:
     thHierarchy: "Hiérarchie"
     thLabel: "Libellé"
     filter: "Filtrer..."
+    thCodeFull: ID
+    thCode: ID (court)             
   
   footerText: © Office fédéral de l'agriculture et organisations de labels participantes, état en février 2026 - Adaptation OPDir-VS Juin 2026
   
@@ -242,6 +246,8 @@ it:
     thPoint: "Punto di controllo"
     thDescription: "Descrizione"
     thLink: "Link"
+    thCodeFull: ID
+    thCode: ID (corto)             
 
   allPoints:
     title: "Tutti i punti di controllo (Vallese)"
