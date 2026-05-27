@@ -24,19 +24,19 @@
       </a>
     </div>
 
-    <h1 class="mb-2" data-i18n="actions.tsne">Cartographie Sémantique t-SNE</h1>
-    <p class="text-muted mb-4" data-i18n="searchPage.help">Visualisation en 2D de la proximité sémantique entre les points de contrôle.</p>
+<h1 class="mb-2" data-i18n="tsne.title">Cartographie Sémantique t-SNE</h1>
+<p class="text-muted mb-4" data-i18n="tsne.subtitle">Visualisation en 2D...</p>
 
-    <div class="card shadow-sm mb-4" style="max-width: 500px;">
-      <div class="card-body d-flex align-items-center gap-3 py-2">
-        <label id="labelColorDimension" for="colorDimension" class="fw-bold mb-0" style="white-space: nowrap;">Niveau de couleur :</label>
-        <select id="colorDimension" class="form-select">
-          <option value="Niveau 1">Niveau 1 (Global)</option>
-          <option value="Niveau 2" selected>Niveau 2 (Intermédiaire)</option>
-          <option value="Niveau 3">Niveau 3 (Détaillé)</option>
-        </select>
-      </div>
-    </div>
+<div class="card shadow-sm mb-4" style="max-width: 500px;">
+  <div class="card-body d-flex align-items-center gap-3 py-2">
+    <label for="colorDimension" class="fw-bold mb-0" data-i18n="tsne.colormap" style="white-space: nowrap;">Code couleur :</label>
+    <select id="colorDimension" class="form-select">
+      <option value="Niveau 1" data-i18n="tsne.firstlevel">Niveau 1</option>
+      <option value="Niveau 2" selected data-i18n="tsne.secondlevel">Niveau 2</option>
+      <option value="Niveau 3" data-i18n="tsne.thirdlevel">Niveau 3</option>
+    </select>
+  </div>
+</div>
 
     <div class="card shadow-sm mb-5">
       <div class="card-body p-1">
