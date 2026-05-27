@@ -36,10 +36,10 @@ if (copyLinkBtn) {
   copyLinkBtn.addEventListener('click', () => {
     navigator.clipboard.writeText(location.href).then(() => {
       copyLinkBtn.classList.replace('btn-outline-secondary', 'btn-success');
-      copyLinkBtn.innerHTML = `<i class="bi bi-clipboard-check"></i> ${safeT('copied')}`;
+      copyLinkBtn.innerHTML = `<i class="bi bi-clipboard-check"></i> ${safeT('checklist.copied')}`;
       setTimeout(() => {
         copyLinkBtn.classList.replace('btn-success', 'btn-outline-secondary');
-        copyLinkBtn.innerHTML = `<i class="bi bi-clipboard"></i> ${safeT('copyLink')}`;
+        copyLinkBtn.innerHTML = `<i class="bi bi-clipboard"></i> ${safeT('checklist.copyLink')}`;
       }, 2000);
     });
   });
@@ -321,7 +321,7 @@ document.addEventListener('click', async (e) => {
 
         if (detailsDiv.style.display === 'block') {
             detailsDiv.style.display = 'none';
-            btn.innerHTML = `<i class="bi bi-plus-circle"></i> <span data-i18n="checklist.techDetails">${safeT('techDetails')}</span>`;
+            btn.innerHTML = `<i class="bi bi-plus-circle"></i> <span data-i18n="checklist.techDetails">${safeT('checklist.techDetails')}</span>`;
             return;
         }
 
@@ -331,7 +331,7 @@ document.addEventListener('click', async (e) => {
         if (detailsDiv.innerHTML.includes('spinner-border')) {
             const bindings = await fetchPointDetails(ipId);
             if (bindings.length === 0) {
-                detailsDiv.innerHTML = `<span class="text-warning">${safeT('noDetails')}</span>`;
+                detailsDiv.innerHTML = `<span class="text-warning">${safeT('checklist.noDetails')}</span>`;
                 return;
             }
 
@@ -356,12 +356,12 @@ document.addEventListener('click', async (e) => {
 
         if (outcomesDiv.style.display === 'block') {
             outcomesDiv.style.display = 'none';
-            btn.innerHTML = `<i class="bi bi-exclamation-triangle"></i> <span data-i18n="checklist.possibleOutcomes">${safeT('possibleOutcomes')}</span>`;
+            btn.innerHTML = `<i class="bi bi-exclamation-triangle"></i> <span data-i18n="checklist.possibleOutcomes">${safeT('checklist.possibleOutcomes')}</span>`;
             return;
         }
 
         outcomesDiv.style.display = 'block';
-        btn.innerHTML = `<i class="bi bi-dash-circle"></i> <span data-i18n="checklist.hideOutcomes">${safeT('hideOutcomes')}</span>`;
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> <span data-i18n="checklist.hideOutcomes">${safeT('checklist.hideOutcomes')}</span>`;
 
         if (outcomesDiv.innerHTML.includes('spinner-border')) {
             const bindings = await fetchPossibleOutcomes(ipId);
@@ -388,12 +388,12 @@ document.addEventListener('click', async (e) => {
 
         if (similarDiv.style.display === 'block') {
             similarDiv.style.display = 'none';
-            btn.innerHTML = `<i class="bi bi-diagram-2"></i> <span data-i18n="checklist.similarPoints">${safeT('similarPoints')}</span>`;
+            btn.innerHTML = `<i class="bi bi-diagram-2"></i> <span data-i18n="checklist.similarPoints">${safeT('checklist.similarPoints')}</span>`;
             return;
         }
 
         similarDiv.style.display = 'block';
-        btn.innerHTML = `<i class="bi bi-dash-circle"></i> <span data-i18n="checklist.hideSimilar">${safeT('hideSimilar')}</span>`;
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> <span data-i18n="checklist.hideSimilar">${safeT('checklist.hideSimilar')}</span>`;
 
         if (similarDiv.innerHTML.includes('spinner-border')) {
             if (similarityMatrix === "ERROR") {
@@ -404,7 +404,7 @@ document.addEventListener('click', async (e) => {
             }
 
             if (!similarityMatrix || !similarityMatrix[ipId] || !similarityMatrix[ipId].similars) {
-                similarDiv.innerHTML = `<span class="text-muted small">${safeT('noSimilar')}</span>`;
+                similarDiv.innerHTML = `<span class="text-muted small">${safeT('checklist.noSimilar')}</span>`;
                 return;
             }
 
