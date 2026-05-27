@@ -39,15 +39,17 @@ de:
     noSimilar: Keine ähnlichen Kontrollpunkte gefunden
 
   searchPage:
-      back: "Zurück zur Startseite"
-      title: "Direktsuche in LINDAS"
-      help: "Geben Sie ein Stichwort in der aktiven Sprache der Website ein. Die Suche scannt Titel und Beschreibungen."
-      button: "Suchen"
-      loading: "Abfrage der Bundes-Server läuft..."
-      results: "Gefundene Ergebnisse"
-      thHierarchy: "Hierarchie (Ordner)"
-      thPoint: "Kontrollpunkt"
-      placeholder: Stichwort zu suchen
+    back: "Zurück zur Startseite"
+    title: "Direktsuche in LINDAS"
+    help: "Geben Sie ein Stichwort in der aktiven Sprache der Website ein. Die Suche scannt Titel und Beschreibungen."
+    placeholder: "Stichwort eingeben..."
+    button: "Suchen"
+    loading: "Abfrage der Bundesserver..."
+    results: "Gefundene Ergebnisse"
+    thHierarchy: "Hierarchie"
+    thPoint: "Kontrollpunkt"
+    thDescription: "Beschreibung"
+    thLink: "Link"
   
   footerText: © Bundesamt für Landwirtschaft und beteiligte Labelorganisationen, Stand Februar 2026
   
@@ -125,15 +127,17 @@ fr:
     noSimilar: Aucun point similaire trouvé
   
   searchPage:
-      back: Retour à l'accueil
-      title: Recherche directe dans LINDAS
-      help: Saisissez un mot-clé dans la langue active du site. La recherche scanne les titres et descriptions."
-      button: Rechercher
-      loading: Interrogation des serveurs fédéraux en cours...
-      results: Résultats trouvés
-      thHierarchy: Hiérarchie (Dossiers)
-      thPoint: Point de contrôle
-      placeholder: Mot-clé à chercher
+    back: "Retour à l'accueil"
+    title: "Recherche directe dans LINDAS"
+    help: "Saisissez un mot-clé dans la langue active du site. La recherche scanne les titres et descriptions."
+    placeholder: "Saisissez un mot-clé..."
+    button: "Rechercher"
+    loading: "Interrogation des serveurs fédéraux..."
+    results: "Résultats trouvés"
+    thHierarchy: "Hiérarchie"
+    thPoint: "Point de contrôle"
+    thDescription: "Description"
+    thLink: "Lien"
   
   footerText: © Office fédéral de l'agriculture et organisations de labels participantes, état en février 2026
   
@@ -211,15 +215,17 @@ it:
     noSimilar: Nessun punto simile trovato
   
   searchPage:
-      back: Torna alla home
-      title: Ricerca diretta in LINDAS
-      help: Inserisci una parola chiave nella lingua attiva del sito. La ricerca scansiona titoli e descrizioni.
-      button: Cerca
-      loading: Interrogazione dei server federali in corso...
-      results: Risultati trovati
-      thHierarchy: Gerarchia (Cartelle)
-      thPoint: Punto di controllo
-      placeholder: Parola chiave
+    back: "Torna alla home"
+    title: "Ricerca diretta in LINDAS"
+    help: "Inserisci una parola chiave nella lingua attiva del sito. La ricerca scansiona i titoli e le descrizioni."
+    placeholder: "Inserisci una parola chiave..."
+    button: "Cerca"
+    loading: "Interrogazione dei server federali..."
+    results: "Risultati trovati"
+    thHierarchy: "Gerarchia"
+    thPoint: "Punto di controllo"
+    thDescription: "Descrizione"
+    thLink: "Link"
   
   footerText: © Ufficio federale dell'agricoltura e organizzazioni di label partecipanti, stato febbraio 2026
   
