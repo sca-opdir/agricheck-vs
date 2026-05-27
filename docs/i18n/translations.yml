@@ -50,7 +50,17 @@ de:
     thPoint: "Kontrollpunkt"
     thDescription: "Beschreibung"
     thLink: "Link"
+    
+  tsne:
+    title: "Semantische t-SNE-Kartierung"
+    subtitle: "2D-Visualisierung der semantischen Nähe zwischen Kontrollpunkten"
+    colormap: "Farbebene"
+    firstlevel: "Ebene 1"
+    secondlevel: "Ebene 2"
+    thirdlevel: "Ebene 3"
+    
 
+    
   allPoints:
     title: "Alle Kontrollpunkte (Wallis)"
     back: "Zurück"
@@ -59,7 +69,9 @@ de:
     thLabel: "Bezeichnung"
     filter: "Filtern..."
     thCodeFull: ID
-    thCode: ID (kurz)             
+    thCode: ID (kurz)         
+
+
   
   footerText: © Bundesamt für Landwirtschaft und beteiligte Labelorganisationen, Stand Februar 2026 - Anpassung OPDir-VS June 2026
   
@@ -149,6 +161,14 @@ fr:
     thDescription: "Description"
     thLink: "Lien"
 
+  tsne:
+    title: Cartographie Sémantique t-SNE
+    subtitle: Visualisation en 2D de la proximité sémantique entre les points de contrôle
+    firstlevel: Niveau 1
+    secondlevel: Niveau 2
+    thirdlevel : Niveau 3
+    colormap : Code couleur
+
   allPoints:
     title: "Tous les points d'inspection (Valais)"
     back: "Retour"
@@ -233,6 +253,14 @@ it:
     similarPoints: "Punti simili"
     hideSimilar: "Nascondi similitudini"
     noSimilar: Nessun punto simile trovato
+
+  tsne:
+    title: "Mappatura Semantica t-SNE"
+    subtitle: "Visualizzazione 2D della vicinanza semantica tra i punti di controllo"
+    colormap: "Livello di colore"
+    firstlevel: "Livello 1"
+    secondlevel: "Livello 2"
+    thirdlevel: "Livello 3"
   
   searchPage:
     back: "Torna alla home"
