@@ -226,17 +226,17 @@ function renderCollection(uri, numbers, lang, displayableUris) {
             <div class="ms-4 mt-2 d-print-none d-flex gap-3">
                 <div>
                     <button class="btn btn-sm btn-link p-0 text-decoration-none btn-details" data-id="${ipId}">
-                        <i class="bi bi-plus-circle"></i> <span data-i18n="checklist.techDetails">...</span>
+                        <i class="bi bi-plus-circle"></i> <span data-i18n="checklist.techDetails">${safeT('checklist.techDetails')}</span>
                     </button>
                 </div>
                 <div>
                     <button class="btn btn-sm btn-link p-0 text-decoration-none text-danger btn-outcomes" data-id="${ipId}">
-                        <i class="bi bi-exclamation-triangle"></i> <span data-i18n="checklist.possibleOutcomes">...</span>
+              <i class="bi bi-exclamation-triangle"></i> <span data-i18n="checklist.possibleOutcomes">${safeT('checklist.possibleOutcomes')}</span>
                     </button>
                 </div>
                 <div>
                     <button class="btn btn-sm btn-link p-0 text-decoration-none text-success btn-similar" data-id="${ipId}">
-                        <i class="bi bi-diagram-2"></i> <span data-i18n="checklist.similarPoints">...</span>
+                   <i class="bi bi-diagram-2"></i> <span data-i18n="checklist.similarPoints">${safeT('checklist.similarPoints')}</span>
                     </button>
                 </div>
             </div>
