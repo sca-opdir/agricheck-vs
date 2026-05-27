@@ -5,7 +5,7 @@ const content      = document.getElementById('content');
 const metaDateEl   = document.getElementById('metaDate');
 const printBtn     = document.getElementById('printBtn');
 const copyLinkBtn  = document.getElementById('copyLinkBtn');
-const btnCheckAll  = document.getElementById('btnCheckAll');
+const btnCheckAll   = document.getElementById('btnCheckAll');
 const btnUncheckAll = document.getElementById('btnUncheckAll');
 
 let nodeMap;
@@ -18,7 +18,7 @@ function safeT(key) {
   return key; 
 }
 
-// Fonction sécurisée pour le texte localisé (évite le crash si layout.js n'a pas fini)
+// Fonction sécurisée pour le texte localisé
 function safeGetLocalizedText(obj, lang, fallbackToFirst = true) {
   if (typeof window.getLocalizedText === 'function') {
     return window.getLocalizedText(obj, lang, fallbackToFirst);
@@ -64,10 +64,10 @@ if (btnUncheckAll) {
 // Initialisation globale
 (async function init() {
   try {
-    // 1. On attend que layout.js signale qu'il est prêt
+    // 1. On attend d'abord que le dictionnaire i18n (YAML) soit chargé
     await window.__i18nReady;
 
-    // 2. On lance le téléchargement des structures principales
+    // 2. On télécharge les structures principales (SPARQL)
     const bindings = await fetchBindings();
     nodeMap = buildNodeMap(bindings);
 
@@ -91,6 +91,7 @@ if (btnUncheckAll) {
     }
   }
 
+  // Masquer le loader une fois que TOUT (y compris le rendu de la page) est fini
   if (typeof window.hideLoader === 'function') {
     window.hideLoader();
   }
@@ -147,6 +148,12 @@ window.rebuildPage = function(lang) {
   });
   
   rootNodes.forEach((uri, idx) => renderCollection(uri, [idx + 1], lang, displayableUris));
+
+  // MODIFICATION CRITIQUE : Relancer la traduction globale du Layout
+  // sur les nouveaux éléments injectés par le rendu ci-dessus !
+  if (typeof window.applyTranslations === 'function') {
+    window.applyTranslations();
+  }
 };
 
 function renderCollection(uri, numbers, lang, displayableUris) {
@@ -165,7 +172,6 @@ function renderCollection(uri, numbers, lang, displayableUris) {
   numSpan.textContent = numbers.join('.');
   
   heading.appendChild(numSpan);
-  // CORRECTION ICI : Utilisation du wrapper sécurisé safeGetLocalizedText
   heading.innerHTML += safeGetLocalizedText(node.label, lang) + idBadge;
   content.appendChild(heading);
 
@@ -200,6 +206,7 @@ function renderCollection(uri, numbers, lang, displayableUris) {
         const ipIdValue = ip.conjunctIdentifier || ip.identifier;
         const ipIdString = ipIdValue ? ` (${ipIdValue})` : '';
 
+        // Notez l'utilisation de data-i18n pour garantir la mise à jour par applyTranslations()
         li.innerHTML = `
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" id="check-${ipId}">
@@ -219,17 +226,17 @@ function renderCollection(uri, numbers, lang, displayableUris) {
             <div class="ms-4 mt-2 d-print-none d-flex gap-3">
                 <div>
                     <button class="btn btn-sm btn-link p-0 text-decoration-none btn-details" data-id="${ipId}">
-                        <i class="bi bi-plus-circle"></i> ${safeT('techDetails')}
+                        <i class="bi bi-plus-circle"></i> <span data-i18n="checklist.techDetails">...</span>
                     </button>
                 </div>
                 <div>
                     <button class="btn btn-sm btn-link p-0 text-decoration-none text-danger btn-outcomes" data-id="${ipId}">
-                        <i class="bi bi-exclamation-triangle"></i> ${safeT('possibleOutcomes')}
+                        <i class="bi bi-exclamation-triangle"></i> <span data-i18n="checklist.possibleOutcomes">...</span>
                     </button>
                 </div>
                 <div>
                     <button class="btn btn-sm btn-link p-0 text-decoration-none text-success btn-similar" data-id="${ipId}">
-                        <i class="bi bi-diagram-2"></i> ${safeT('similarPoints')}
+                        <i class="bi bi-diagram-2"></i> <span data-i18n="checklist.similarPoints">...</span>
                     </button>
                 </div>
             </div>
@@ -314,12 +321,12 @@ document.addEventListener('click', async (e) => {
 
         if (detailsDiv.style.display === 'block') {
             detailsDiv.style.display = 'none';
-            btn.innerHTML = `<i class="bi bi-plus-circle"></i> ${safeT('techDetails')}`;
+            btn.innerHTML = `<i class="bi bi-plus-circle"></i> <span data-i18n="checklist.techDetails">${safeT('techDetails')}</span>`;
             return;
         }
 
         detailsDiv.style.display = 'block';
-        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${safeT('hideDetails')}`;
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> <span data-i18n="checklist.hideDetails">${safeT('hideDetails')}</span>`;
 
         if (detailsDiv.innerHTML.includes('spinner-border')) {
             const bindings = await fetchPointDetails(ipId);
@@ -349,12 +356,12 @@ document.addEventListener('click', async (e) => {
 
         if (outcomesDiv.style.display === 'block') {
             outcomesDiv.style.display = 'none';
-            btn.innerHTML = `<i class="bi bi-exclamation-triangle"></i> ${safeT('possibleOutcomes')}`;
+            btn.innerHTML = `<i class="bi bi-exclamation-triangle"></i> <span data-i18n="checklist.possibleOutcomes">${safeT('possibleOutcomes')}</span>`;
             return;
         }
 
         outcomesDiv.style.display = 'block';
-        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${safeT('hideOutcomes')}`;
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> <span data-i18n="checklist.hideOutcomes">${safeT('hideOutcomes')}</span>`;
 
         if (outcomesDiv.innerHTML.includes('spinner-border')) {
             const bindings = await fetchPossibleOutcomes(ipId);
@@ -381,12 +388,12 @@ document.addEventListener('click', async (e) => {
 
         if (similarDiv.style.display === 'block') {
             similarDiv.style.display = 'none';
-            btn.innerHTML = `<i class="bi bi-diagram-2"></i> ${safeT('similarPoints')}`;
+            btn.innerHTML = `<i class="bi bi-diagram-2"></i> <span data-i18n="checklist.similarPoints">${safeT('similarPoints')}</span>`;
             return;
         }
 
         similarDiv.style.display = 'block';
-        btn.innerHTML = `<i class="bi bi-dash-circle"></i> ${safeT('hideSimilar')}`;
+        btn.innerHTML = `<i class="bi bi-dash-circle"></i> <span data-i18n="checklist.hideSimilar">${safeT('hideSimilar')}</span>`;
 
         if (similarDiv.innerHTML.includes('spinner-border')) {
             if (similarityMatrix === "ERROR") {
