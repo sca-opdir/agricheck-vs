@@ -161,34 +161,42 @@ function hideLoaderSafe() {
   }
 }
 
-
 function applyFilters() {
+  // On récupère uniquement la table visible
   const activeTable = document.querySelector('.tab-pane.active table');
   if (!activeTable) return;
 
-  const rows = activeTable.querySelector('tbody').rows;
+  const tbody = activeTable.querySelector('tbody');
+  const rows = tbody.querySelectorAll('tr'); // Utiliser querySelectorAll pour plus de sécurité
   const filters = activeTable.querySelectorAll('.column-filter');
 
-  for (const row of rows) {
+  rows.forEach(row => {
     let isVisible = true;
+    
     filters.forEach((input) => {
       const colIndex = parseInt(input.getAttribute('data-col'));
       const filterValue = input.value.toLowerCase();
+      const cells = row.querySelectorAll('td'); // Récupère les cellules de la ligne
       
-      // Sécurité : vérifie que la cellule existe avant d'accéder à innerText
-      const cell = row.cells[colIndex];
-      const cellText = cell ? cell.innerText.toLowerCase() : "";
-      
-      if (filterValue && !cellText.includes(filterValue)) {
-        isVisible = false;
+      if (cells[colIndex]) {
+        const cellText = cells[colIndex].innerText.toLowerCase();
+        if (filterValue && !cellText.includes(filterValue)) {
+          isVisible = false;
+        }
       }
     });
+    
     row.style.display = isVisible ? '' : 'none';
-  }
+  });
 }
 
+// Remplacez votre écouteur actuel par celui-ci
 document.addEventListener('input', function(e) {
-  if (e.target.classList.contains('column-filter')) {
-    applyFilters();
+  if (e.target && e.target.classList.contains('column-filter')) {
+    // Petit délai (debounce) pour éviter que ça calcule à chaque milliseconde de frappe
+    clearTimeout(window.filterTimeout);
+    window.filterTimeout = setTimeout(() => {
+      applyFilters();
+    }, 150); // 150ms de délai rend la saisie fluide
   }
 });
