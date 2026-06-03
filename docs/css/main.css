@@ -245,3 +245,11 @@ ul.checklist label .text-muted {
 .table-secondary .column-filter {
     background-color: #f8f9fa !important;
 }
+
+
+.tab-content > .tab-pane {
+    display: none;
+}
+.tab-content > .active {
+    display: block;
+}
