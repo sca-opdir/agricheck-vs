@@ -126,20 +126,33 @@ async function loadCsvTable() {
     skipEmptyLines: true,
 
     complete: function(results) {
-      console.log("CSV chargé avec succès, lignes :", results.data.length);
+      const allTags = new Set();
+      
       results.data.forEach(row => {
         const tr = document.createElement("tr");
+        const tagsRaw = row.Tags || row.tags || "";
+        
+        // Extraction des tags pour le dropdown
+        tagsRaw.split(',').forEach(t => {
+          const trimmed = t.trim();
+          if (trimmed) allTags.add(trimmed);
+        });
 
         tr.innerHTML = `
           <td class="small text-muted">${row.hierarchy || row.Hierarchy || ""}</td>
           <td>${row.code || row.Code || row.code_full || ""}</td>
           <td>${row.label || row.Label || row.point || ""}</td>
-          <td><span class="badge bg-info">${row.Tags || row.tags || "-"}</span></td>
+          <td class="tag-cell">${tagsRaw}</td> 
         `;
-
         tbody.appendChild(tr);
       });
+
+      // Création dynamique du dropdown
+      renderTagDropdown(Array.from(allTags).sort());
     },
+
+ 
+    
 
     error: function(error) {
       console.error("Erreur CSV :", error);
@@ -165,41 +178,36 @@ let filterTimer = null;
 
 function applyFilters() {
   const activePane = document.querySelector('.tab-pane.active');
-  if (!activePane) return;
-
-  const activeTable = activePane.querySelector('table');
-  if (!activeTable) return;
-
-  const tbody = activeTable.querySelector('tbody');
-  if (!tbody) return;
-
+  const tbody = activePane.querySelector('tbody');
   const rows = Array.from(tbody.rows);
-  const filters = Array.from(activeTable.querySelectorAll('.column-filter'));
-
-  const activeFilters = filters
-    .map(input => ({
-      col: Number(input.dataset.col),
-      value: input.value.trim().toLowerCase()
-    }))
-    .filter(f => f.value !== '');
-
-  if (activeFilters.length === 0) {
-    rows.forEach(row => {
-      row.style.display = '';
-    });
-    return;
-  }
+  
+  // 1. Filtres textes classiques
+  const textFilters = Array.from(activePane.querySelectorAll('.column-filter')).filter(i => i.value !== '');
+  
+  // 2. Filtres tags (checkboxes cochées)
+  const checkedTags = Array.from(activePane.querySelectorAll('.tag-checkbox:checked')).map(c => c.value);
 
   rows.forEach(row => {
-    const visible = activeFilters.every(f => {
-      const cell = row.cells[f.col];
-      const text = cell ? cell.textContent.toLowerCase() : '';
-      return text.includes(f.value);
+    // Filtre texte
+    const textMatch = textFilters.every(f => {
+      const cell = row.cells[Number(f.dataset.col)];
+      return cell.textContent.toLowerCase().includes(f.value.toLowerCase());
     });
 
-    row.style.display = visible ? '' : 'none';
+    // Filtre tags (on vérifie si la cellule contient TOUS les tags sélectionnés)
+    const tagCellText = row.cells[3].textContent;
+    const tagMatch = checkedTags.every(tag => tagCellText.includes(tag));
+
+    row.style.display = (textMatch && tagMatch) ? '' : 'none';
   });
 }
+
+// Écouteur pour les checkboxes
+document.addEventListener('change', function(e) {
+  if (e.target.classList.contains('tag-checkbox')) {
+    applyFilters();
+  }
+});
 
 document.addEventListener('input', function(e) {
   if (!e.target.classList.contains('column-filter')) return;
@@ -210,3 +218,24 @@ document.addEventListener('input', function(e) {
     applyFilters();
   }, 250);
 });
+function renderTagDropdown(tags) {
+  const filterCell = document.querySelector('th[data-col="3"]'); // Correspond à la colonne Tags
+  if (!filterCell) return;
+
+  filterCell.innerHTML = `
+    <div class="dropdown">
+      <button class="btn btn-sm btn-light border dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        Filtrer tags
+      </button>
+      <ul class="dropdown-menu p-2" style="max-height: 300px; overflow-y: auto;">
+        ${tags.map(tag => `
+          <li>
+            <label class="dropdown-item">
+              <input type="checkbox" class="tag-checkbox" value="${tag}"> ${tag}
+            </label>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `;
+}
