@@ -53,36 +53,43 @@ async function executeSearch() {
   const currentLang = window.__APP_LANG || 'fr';
 
   // Ta requête SPARQL adaptée pour filtrer selon la langue active
+// Requête SPARQL robuste avec recherche sur Label OU Description
   const sparqlQuery = `
-PREFIX : <https://agriculture.ld.admin.ch/inspection/>
-PREFIX schema: <http://schema.org/>
+    PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+    PREFIX schema: <http://schema.org/>
 
-SELECT ?point ?codeFull ?code ?label ?description (GROUP_CONCAT(?parentName; separator=" / ") AS ?hierarchy)
-WHERE {
-  ?point a :InspectionPoint ;
-         schema:name ?label .
-  FILTER(LANG(?label) = "${currentLang}")
-  FILTER(CONTAINS(LCASE(?label), LCASE("${queryText}")))
-  
-  # Récupération des codes (utilisation de MIN ou MAX pour éviter les doublons lors du groupement)
-  OPTIONAL { ?point :conjunctIdentifier ?codeFull . }
-  OPTIONAL { ?point :identifier ?code . }
-  
-  OPTIONAL { 
-    ?point schema:description ?description . 
-    FILTER(LANG(?description) = "${currentLang}")
-  }
-  
-  # Hiérarchie
-  ?point (:belongsToGroup|schema:isPartOf)+ ?parent .
-  ?parent schema:name ?parentName .
-  FILTER(LANG(?parentName) = "${currentLang}")
-  
-  FILTER(?parent != ?point)
-  FILTER(STR(?parentName) != "BFCen" && STR(?parentName) != "BFC")
-}
-GROUP BY ?point ?codeFull ?code ?label ?description
-LIMIT 100
+    SELECT ?point ?codeFull ?code ?label ?description (GROUP_CONCAT(DISTINCT ?parentName; separator=" / ") AS ?hierarchy)
+    WHERE {
+      # Recherche : Union sur Label OU Description
+      {
+        ?point a :InspectionPoint ; schema:name ?label .
+        FILTER(LANG(?label) = "${currentLang}")
+        FILTER(REGEX(?label, "${queryText}", "i"))
+      }
+      UNION
+      {
+        ?point a :InspectionPoint ; schema:description ?description .
+        FILTER(LANG(?description) = "${currentLang}")
+        FILTER(REGEX(?description, "${queryText}", "i"))
+        # On récupère le label pour l'affichage même si on a trouvé via la description
+        ?point schema:name ?label .
+        FILTER(LANG(?label) = "${currentLang}")
+      }
+
+      # Données complémentaires
+      OPTIONAL { ?point :conjunctIdentifier ?codeFull . }
+      OPTIONAL { ?point :identifier ?code . }
+      
+      # Hiérarchie (obligatoire selon votre logique)
+      ?point (:belongsToGroup|schema:isPartOf)+ ?parent .
+      ?parent schema:name ?parentName .
+      FILTER(LANG(?parentName) = "${currentLang}")
+      
+      FILTER(?parent != ?point)
+      FILTER(STR(?parentName) != "BFCen" && STR(?parentName) != "BFC")
+    }
+    GROUP BY ?point ?codeFull ?code ?label ?description
+    LIMIT 100
   `;
 
   const url = `https://agriculture.ld.admin.ch/query?query=${encodeURIComponent(sparqlQuery)}`;
