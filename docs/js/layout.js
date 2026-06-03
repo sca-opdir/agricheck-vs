@@ -17,7 +17,7 @@ window.__i18nReady = (async () => {
   const urlParams  = new URLSearchParams(location.search);
   const urlLang    = urlParams.get('lang');
   const storedLang = localStorage.getItem('akcLang');
-  const lang       = (urlLang || storedLang || 'de').toLowerCase();
+  const lang       = (urlLang || storedLang || 'fr').toLowerCase();
 
   window.__APP_LANG = lang;
   document.documentElement.lang = lang;
@@ -47,11 +47,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   const resolvePath = (obj, path) => path.split('.').reduce((acc, part) => acc && acc[part], obj);
 
   window.t = key => {
-    const langData = translationsAll[window.__APP_LANG] || translationsAll['de'];
+    const langData = translationsAll[window.__APP_LANG] || translationsAll['fr'];
     let val = resolvePath(langData, key);
 
-    if (val === undefined && window.__APP_LANG !== 'de') {
-      val = resolvePath(translationsAll['de'], key);
+    if (val === undefined && window.__APP_LANG !== 'fr') {
+      val = resolvePath(translationsAll['fr'], key);
     }
 
     if (val === undefined) return key;
