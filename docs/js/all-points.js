@@ -162,22 +162,22 @@ function hideLoaderSafe() {
 }
 
 
-// Remplacez votre fonction applyFilters par celle-ci :
 function applyFilters() {
-  // On cible uniquement la table qui est dans l'onglet actif (visible)
   const activeTable = document.querySelector('.tab-pane.active table');
   if (!activeTable) return;
 
   const rows = activeTable.querySelector('tbody').rows;
-  // On récupère les inputs de la table active uniquement
   const filters = activeTable.querySelectorAll('.column-filter');
 
   for (const row of rows) {
     let isVisible = true;
     filters.forEach((input) => {
-      const colIndex = input.getAttribute('data-col');
+      const colIndex = parseInt(input.getAttribute('data-col'));
       const filterValue = input.value.toLowerCase();
-      const cellText = row.cells[colIndex].innerText.toLowerCase();
+      
+      // Sécurité : vérifie que la cellule existe avant d'accéder à innerText
+      const cell = row.cells[colIndex];
+      const cellText = cell ? cell.innerText.toLowerCase() : "";
       
       if (filterValue && !cellText.includes(filterValue)) {
         isVisible = false;
@@ -187,3 +187,8 @@ function applyFilters() {
   }
 }
 
+document.addEventListener('input', function(e) {
+  if (e.target.classList.contains('column-filter')) {
+    applyFilters();
+  }
+});
