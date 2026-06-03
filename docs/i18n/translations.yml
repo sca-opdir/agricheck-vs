@@ -70,6 +70,8 @@ de:
     filter: "Filtern..."
     thCodeFull: ID
     thCode: ID (kurz)         
+    tabSansTag: "Ohne Tags / Up-to-date"
+    tabAvecTag: "Mit Tags / Frozen"
 
 
   
@@ -178,6 +180,9 @@ fr:
     filter: "Filtrer..."
     thCodeFull: ID
     thCode: ID (court)             
+    tabSansTag: "Sans tags / Up-to-date"
+    tabAvecTag: "Avec tags / Frozen"
+
   
   footerText: © Office fédéral de l'agriculture et organisations de labels participantes, état en février 2026 - Adaptation OPDir-VS Juin 2026
   
@@ -283,7 +288,10 @@ it:
     loading: "Caricamento..."
     thHierarchy: "Gerarchia"
     thLabel: "Etichetta"
-    filter: "Filtra..."
+    filter: "Filtra..."    
+    tabSansTag: "Con tags / Up-to-date"
+    tabAvecTag: "Senza tags / Frozen"
+
   
   footerText: © Ufficio federale dell'agricoltura e organizzazioni di label partecipanti, stato febbraio 2026 - Adattamento OPDir-VS giugno 2026
   
