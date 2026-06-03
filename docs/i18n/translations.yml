@@ -41,7 +41,7 @@ de:
   searchPage:
     back: "Zurück zur Startseite"
     title: "Direktsuche in LINDAS"
-    help: "Geben Sie ein Stichwort in der aktiven Sprache der Website ein. Die Suche scannt Titel und Beschreibungen."
+    help: "Geben Sie ein Stichwort in der aktiven Sprache der Website ein. Die Suche scannt Titel und Beschreibungen (max. 100 Ergebnisse)."
     placeholder: "Stichwort eingeben..."
     button: "Suchen"
     loading: "Abfrage der Bundesserver..."
@@ -73,6 +73,7 @@ de:
     thCode: ID (kurz)         
     tabSansTag: "Ohne Tags / Up-to-date"
     tabAvecTag: "Mit Tags / Frozen"
+    onlyFR: "(nur auf Französisch verfügbar)"
 
 
   
@@ -154,7 +155,7 @@ fr:
   searchPage:
     back: "Retour à l'accueil"
     title: "Recherche directe dans LINDAS"
-    help: "Saisissez un mot-clé dans la langue active du site. La recherche scanne les titres et descriptions."
+    help: "Saisissez un mot-clé dans la langue active du site. La recherche scanne les titres et descriptions (max. 100 résultats)."
     placeholder: "Saisissez un mot-clé..."
     button: "Rechercher"
     loading: "Interrogation des serveurs fédéraux..."
@@ -169,8 +170,8 @@ fr:
     subtitle: Visualisation en 2D de la proximité sémantique entre les points de contrôle
     firstlevel: Niveau 1
     secondlevel: Niveau 2
-    thirdlevel : Niveau 3
-    colormap : Code couleur
+    thirdlevel: Niveau 3
+    colormap: Code couleur
 
   allPoints:
     title: "Tous les points d'inspection (Valais)"
@@ -184,6 +185,7 @@ fr:
     tabSansTag: "Sans tags / Up-to-date"
     tabAvecTag: "Avec tags / Frozen"
     thTags: "Tags"
+    onlyFR: "(disponible seulement en français)"
 
   
   footerText: © Office fédéral de l'agriculture et organisations de labels participantes, état en février 2026 - Adaptation OPDir-VS Juin 2026
@@ -197,7 +199,7 @@ fr:
     
     L'Office fédéral de l'agriculture a élaboré cette application web en 2025 dans le cadre du plan d'action « Contrôles sur les exploitations agricoles », en collaboration avec les organisations signataires de ce plan.
     
-    Les points suivants sont à prendre en considération :
+    Les points suivants sont à prendre en considération
     
     * Les points de contrôle sont mis à jour une fois par an, avant le début de la nouvelle année civile.
     * Certaines branches de production plutôt mineures ne sont pas représentées pour des raisons de clarté (par ex. les insectes).
@@ -211,15 +213,15 @@ fr:
   terms-of-use: |
     ### Conditions d'utilisation
     
-    <img alt="Conditions d'utilisation : utilisation libre, source obligatoire, utilisation commerciale sur autorisation" src="https://wp.opendata.swiss/wp-content/uploads/2021/02/terms_by-ask.png" style="height:30px;margin-bottom:10px">
+    <img alt="Conditions d'utilisation utilisation libre, source obligatoire, utilisation commerciale sur autorisation" src="https://wp.opendata.swiss/wp-content/uploads/2021/02/terms_by-ask.png" style="height:30px;margin-bottom:10px">
     
     **Utilisation libre. La mention de la source est obligatoire. L'utilisation commerciale n'est autorisée qu'avec l'accord du fournisseur des données.**
     
-    Les données publiées sur Agricheck sont accessibles au public. Veuillez toutefois noter les points suivants :
+    Les données publiées sur Agricheck sont accessibles au public. Veuillez toutefois noter les points suivants
     
-    * **Pas d'utilisation commerciale sans autorisation :** l'utilisation des données à des fins commerciales n'est pas autorisée sans accord explicite.
-    * **Responsabilité :** Le fournisseur de données responsable est l'organisation de labellisation qui a rédigé les points de contrôle spécifiques. Pour obtenir une autorisation, veuillez contacter directement l'organisation concernée.
-    * **Droits d'auteur :** Tous les droits d'auteur demeurent la propriété de l'auteur. Seuls les droits d'utilisation susmentionnés sont accordés.
+    * **Pas d'utilisation commerciale sans autorisation** l'utilisation des données à des fins commerciales n'est pas autorisée sans accord explicite.
+    * **Responsabilité** Le fournisseur de données responsable est l'organisation de labellisation qui a rédigé les points de contrôle spécifiques. Pour obtenir une autorisation, veuillez contacter directement l'organisation concernée.
+    * **Droits d'auteur** Tous les droits d'auteur demeurent la propriété de l'auteur. Seuls les droits d'utilisation susmentionnés sont accordés.
 
 it:
   header:
@@ -272,7 +274,7 @@ it:
   searchPage:
     back: "Torna alla home"
     title: "Ricerca diretta in LINDAS"
-    help: "Inserisci una parola chiave nella lingua attiva del sito. La ricerca scansiona i titoli e le descrizioni."
+    help: "Inserisci una parola chiave nella lingua attiva del sito. La ricerca scansiona i titoli e le descrizioni (max. 100 risultati)."
     placeholder: "Inserisci una parola chiave..."
     button: "Cerca"
     loading: "Interrogazione dei server federali..."
@@ -295,7 +297,9 @@ it:
     tabAvecTag: "Senza tags / Frozen"
     thTags: "Tags"
     thCodeFull: ID
-    thCode: ID (corto)             
+    thCode: ID (corto)          
+    onlyFR: "Disponibile solo in francese"
+    
 
 
   
