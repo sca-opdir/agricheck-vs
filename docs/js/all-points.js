@@ -161,42 +161,52 @@ function hideLoaderSafe() {
   }
 }
 
+let filterTimer = null;
+
 function applyFilters() {
-  // On récupère uniquement la table visible
-  const activeTable = document.querySelector('.tab-pane.active table');
+  const activePane = document.querySelector('.tab-pane.active');
+  if (!activePane) return;
+
+  const activeTable = activePane.querySelector('table');
   if (!activeTable) return;
 
   const tbody = activeTable.querySelector('tbody');
-  const rows = tbody.querySelectorAll('tr'); // Utiliser querySelectorAll pour plus de sécurité
-  const filters = activeTable.querySelectorAll('.column-filter');
+  if (!tbody) return;
+
+  const rows = Array.from(tbody.rows);
+  const filters = Array.from(activeTable.querySelectorAll('.column-filter'));
+
+  const activeFilters = filters
+    .map(input => ({
+      col: Number(input.dataset.col),
+      value: input.value.trim().toLowerCase()
+    }))
+    .filter(f => f.value !== '');
+
+  if (activeFilters.length === 0) {
+    rows.forEach(row => {
+      row.style.display = '';
+    });
+    return;
+  }
 
   rows.forEach(row => {
-    let isVisible = true;
-    
-    filters.forEach((input) => {
-      const colIndex = parseInt(input.getAttribute('data-col'));
-      const filterValue = input.value.toLowerCase();
-      const cells = row.querySelectorAll('td'); // Récupère les cellules de la ligne
-      
-      if (cells[colIndex]) {
-        const cellText = cells[colIndex].innerText.toLowerCase();
-        if (filterValue && !cellText.includes(filterValue)) {
-          isVisible = false;
-        }
-      }
+    const visible = activeFilters.every(f => {
+      const cell = row.cells[f.col];
+      const text = cell ? cell.textContent.toLowerCase() : '';
+      return text.includes(f.value);
     });
-    
-    row.style.display = isVisible ? '' : 'none';
+
+    row.style.display = visible ? '' : 'none';
   });
 }
 
-// Remplacez votre écouteur actuel par celui-ci
 document.addEventListener('input', function(e) {
-  if (e.target && e.target.classList.contains('column-filter')) {
-    // Petit délai (debounce) pour éviter que ça calcule à chaque milliseconde de frappe
-    clearTimeout(window.filterTimeout);
-    window.filterTimeout = setTimeout(() => {
-      applyFilters();
-    }, 150); // 150ms de délai rend la saisie fluide
-  }
+  if (!e.target.classList.contains('column-filter')) return;
+
+  clearTimeout(filterTimer);
+
+  filterTimer = setTimeout(() => {
+    applyFilters();
+  }, 250);
 });
