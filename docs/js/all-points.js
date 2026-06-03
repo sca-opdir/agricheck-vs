@@ -57,7 +57,7 @@ window.rebuildPage = async function(lang) {
 async function loadQueryTable(lang) {
   const tbody = document.getElementById("resultsBodyQuery");
   if (!tbody) return;
-
+ 
   tbody.innerHTML = "";
 
   const url = "https://lindas.admin.ch/query";
@@ -105,7 +105,7 @@ async function loadQueryTable(lang) {
 async function loadCsvTable() {
   const tbody = document.getElementById("resultsBodyCSV");
   if (!tbody) return;
-
+  console.log("Tentative de chargement du CSV..."); // <--- AJOUTEZ CECI
   tbody.innerHTML = "";
 
   if (typeof Papa === "undefined") {
@@ -126,6 +126,7 @@ async function loadCsvTable() {
     skipEmptyLines: true,
 
     complete: function(results) {
+      console.log("CSV chargé avec succès, lignes :", results.data.length);
       results.data.forEach(row => {
         const tr = document.createElement("tr");
 
