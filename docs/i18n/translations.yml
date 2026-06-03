@@ -66,7 +66,6 @@ de:
     back: "Zurück"
     loading: "Laden..."
     thHierarchy: "Hierarchie"
-    thCode: "Code"
     thTags: "Tags"
     thLabel: "Bezeichnung"
     filter: "Filtern..."
@@ -184,7 +183,6 @@ fr:
     thCode: ID (court)             
     tabSansTag: "Sans tags / Up-to-date"
     tabAvecTag: "Avec tags / Frozen"
-    thCode: "Code"
     thTags: "Tags"
 
   
@@ -295,8 +293,10 @@ it:
     filter: "Filtra..."    
     tabSansTag: "Con tags / Up-to-date"
     tabAvecTag: "Senza tags / Frozen"
-    thCode: "Codice"
     thTags: "Tags"
+    thCodeFull: ID
+    thCode: ID (corto)             
+
 
   
   footerText: © Ufficio federale dell'agricoltura e organizzazioni di label partecipanti, stato febbraio 2026 - Adattamento OPDir-VS giugno 2026
