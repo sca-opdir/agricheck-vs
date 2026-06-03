@@ -45,9 +45,15 @@ ORDER BY ?hierarchy
   }
 })();
 
+
 window.rebuildPage = async function(lang) {
+  // 1. Charger les données
   await loadQueryTable(lang);
   await loadCsvTable();
+  
+  // 2. Traduire les interfaces
+  await translatePage(lang);
+  
   hideLoaderSafe();
 };
 
