@@ -54,25 +54,35 @@ async function executeSearch() {
 
   // Ta requête SPARQL adaptée pour filtrer selon la langue active
   const sparqlQuery = `
-    PREFIX : <https://agriculture.ld.admin.ch/inspection/>
-    PREFIX schema: <http://schema.org/>
-    
-    SELECT ?point ?codeFull ?code ?label ?description ?hierarchy
-    WHERE {
-      ?point a :InspectionPoint ;
-             schema:name ?label .
-      FILTER(LANG(?label) = "${currentLang}")
-      FILTER(CONTAINS(LCASE(?label), LCASE("${queryText}")))
-      
-      OPTIONAL { ?point :conjunctIdentifier ?codeFull . }
-      OPTIONAL { ?point :identifier ?code . }
-      OPTIONAL { 
-        ?point schema:description ?description . 
-        FILTER(LANG(?description) = "${currentLang}")
-      }
-      OPTIONAL { ?point :hierarchy ?hierarchy . }
-    }
-    LIMIT 100
+PREFIX : <https://agriculture.ld.admin.ch/inspection/>
+PREFIX schema: <http://schema.org/>
+
+SELECT ?point ?codeFull ?code ?label ?description (GROUP_CONCAT(?parentName; separator=" / ") AS ?hierarchy)
+WHERE {
+  ?point a :InspectionPoint ;
+         schema:name ?label .
+  FILTER(LANG(?label) = "${currentLang}")
+  FILTER(CONTAINS(LCASE(?label), LCASE("${queryText}")))
+  
+  # Récupération des codes (utilisation de MIN ou MAX pour éviter les doublons lors du groupement)
+  OPTIONAL { ?point :conjunctIdentifier ?codeFull . }
+  OPTIONAL { ?point :identifier ?code . }
+  
+  OPTIONAL { 
+    ?point schema:description ?description . 
+    FILTER(LANG(?description) = "${currentLang}")
+  }
+  
+  # Hiérarchie
+  ?point (:belongsToGroup|schema:isPartOf)+ ?parent .
+  ?parent schema:name ?parentName .
+  FILTER(LANG(?parentName) = "${currentLang}")
+  
+  FILTER(?parent != ?point)
+  FILTER(STR(?parentName) != "BFCen" && STR(?parentName) != "BFC")
+}
+GROUP BY ?point ?codeFull ?code ?label ?description
+LIMIT 100
   `;
 
   const url = `https://agriculture.ld.admin.ch/query?query=${encodeURIComponent(sparqlQuery)}`;
