@@ -195,8 +195,12 @@ function applyFilters() {
     });
 
     // Filtre tags (on vérifie si la cellule contient TOUS les tags sélectionnés)
-    const tagCellText = row.cells[3].textContent;
-    const tagMatch = checkedTags.every(tag => tagCellText.includes(tag));
+const tagCellText = row.cells[3].textContent.toLowerCase();
+const tagMatch = checkedTags.every(tag => {
+  // On découpe la cellule par virgule pour comparer des tags exacts
+  const tagsInRow = tagCellText.split(',').map(t => t.trim());
+  return tagsInRow.includes(tag.toLowerCase());
+});
 
     row.style.display = (textMatch && tagMatch) ? '' : 'none';
   });
@@ -218,13 +222,15 @@ document.addEventListener('input', function(e) {
     applyFilters();
   }, 250);
 });
-function renderTagDropdown(tags) {
-  const filterCell = document.querySelector('th[data-col="3"]'); // Correspond à la colonne Tags
-  if (!filterCell) return;
 
-  filterCell.innerHTML = `
+
+function renderTagDropdown(tags) {
+  const container = document.getElementById('tag-filter-container');
+  if (!container) return;
+
+  container.innerHTML = `
     <div class="dropdown">
-      <button class="btn btn-sm btn-light border dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <button class="btn btn-sm btn-light border dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
         Filtrer tags
       </button>
       <ul class="dropdown-menu p-2" style="max-height: 300px; overflow-y: auto;">
