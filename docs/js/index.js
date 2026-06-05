@@ -56,6 +56,8 @@ window.rebuildPage = function(lang) {
   function buildNode(uri) {
     const n = nodeMap.get(uri);
     const labelText = window.getLocalizedText(n.label, lang);
+    const collectionId = n.conjunctIdentifier || n.identifier;
+    const idBadge = collectionId ? ` (${collectionId})` : '';
     const descriptionText = window.getLocalizedText(n.comment, lang, false);
 
     const strongHaystack = [...Object.values(n.label)];
@@ -78,7 +80,7 @@ window.rebuildPage = function(lang) {
     
     const textWithIcon = `
       <span class="jstree-item-wrapper">
-        ${labelText}
+        ${labelText}${idBadge}
         <a href="${externalUrl}" target="_blank" class="ms-2 text-decoration-none text-muted link-icon-hover" onclick="event.stopPropagation();" title="${tooltipText}">
           <i class="bi bi-box-arrow-up-right" style="font-size: 0.85em;"></i>
         </a>
