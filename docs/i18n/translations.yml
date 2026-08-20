@@ -231,6 +231,7 @@ it:
     title: Punti di controllo svizzeri? >> Agricheck - versione adattata
     lead: Con Agricheck è possibile cercare i punti di controllo verificati nelle aziende agricole svizzere (controlli di diritto pubblico e organizzazioni di labellizzazione). Versione originale: <a href="https://agricheck.me/" target="_blank">https://agricheck.me</a>
     subtitle: Quale rubrica viene controllata durante un controllo di base (e quali sono i relativi punti di controllo del label)? <a href="https://sca-opdir.github.io/checklist-controle" target="_blank">https://sca-opdir.github.io/checklist-controle</a>  
+    
   search:
     placeholder: Cerca qui una parola chiave e tutti i gruppi trovati verranno colorati.
     button: Cerca
