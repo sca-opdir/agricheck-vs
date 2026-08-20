@@ -1,8 +1,9 @@
 de:
   header:
-    title: Schweizer Kontrollpunkte? Einfach gefunden mit Agricheck! >>> Version WALLIS
-    lead: Durchsuchen Sie mit Agricheck die Kontrollpunkte, die auf Schweizer Landwirtschaftsbetrieben geprüft werden. Verfügbar sind alle schweizweit geltenden öffentlich-rechtlichen Kontrollpunkte und Kontrollpunkte, die von unterzeichnenden Label-Organisationen des Aktionsplans «Kontrollen auf Landwirtschaftsbetrieben" zur Verfügung gestellt wurden. Für weitere Informationen zu Entstehung, Inhalt und Einschränkungen von Agricheck, [besuchen Sie unsere Hilfsseite](about.html).
-  
+    title: Schweizer Kontrollpunkte? >> Agricheck - angepasste Version
+    lead: Durchsuchen Sie mit Agricheck die Kontrollpunkte, die auf Schweizer Landwirtschaftsbetrieben geprüft werden (öffentlich-rechtliche Kontrolle und Label-Organisationen). Originalversion: <a href="https://agricheck.me/" target="_blank">https://agricheck.me</a>.
+    subtitle: Welche Rubrik wird bei einer Grundkontrolle kontrolliert (und zugehörige Label-Kontrollpunkte): <a href="https://sca-opdir.github.io/checklist-controle" target="_blank">https://sca-opdir.github.io/checklist-controle</a>    
+    
   search:
     placeholder: Suchen Sie hier nach einem Stichwort und es werden alle Kontrollbereiche dazu grün eingefärbt.
     button: Suche
@@ -114,8 +115,10 @@ de:
 
 fr:
   header:
-    title: Points de contrôle suisses ? Simplifiez-vous la vie avec Agricheck ! >>> Version VALAIS
-    lead: Avec Agricheck, recherchez les points de contrôle qui sont vérifiés dans les exploitations agricoles suisses. Sont disponibles tous les points de contrôle de droit public valables dans toute la Suisse ainsi que les points de contrôle mis à disposition mis à la disposition des développeurs par les organisations de labellisation signataires du plan d’action « Contrôles dans les exploitations agricoles » . Pour plus d'informations sur l'origine, le contenu et les limites d'Agricheck, [consultez notre page d'aide](about.html).
+    title: Points de contrôle suisses ? >> Agricheck - version adaptée
+    lead: Avec Agricheck, recherchez les points de contrôle qui sont vérifiés dans les exploitations agricoles suisses (contrôles de droit publics et organisations de labellisation). Version originale : <a href="https://agricheck.me/" target="_blank">https://agricheck.me</a>
+    subtitle: Quelle rubrique va être contrôlée lors d'un contrôle de base (et points de contrôle label associés) : <a href="https://sca-opdir.github.io/checklist-controle" target="_blank">https://sca-opdir.github.io/checklist-controle</a>.
+
   
   search:
     placeholder: Recherchez ici un mot-clé et tous les groupes correspondants seront colorés.
@@ -225,9 +228,9 @@ fr:
 
 it:
   header:
-    title: Punti di controllo svizzeri? Trovati facilmente con Agricheck! >>> Version VALAIS
-    lead: Con Agricheck puoi cercare i punti di controllo verificati nelle aziende agricole svizzere. Sono disponibili tutti i punti di controllo di diritto pubblico validi a livello nazionale e i punti di controllo messi a disposizione degli sviluppatori dalle organizzazioni di certificazione firmatarie del piano d'azione «Controlli nelle aziende agricole». Per maggiori informazioni sull'origine, il contenuto e le limitazioni di Agricheck, [visita la nostra pagina di aiuto](about.html).
-  
+    title: Punti di controllo svizzeri? >> Agricheck - versione adattata
+    lead: Con Agricheck è possibile cercare i punti di controllo verificati nelle aziende agricole svizzere (controlli di diritto pubblico e organizzazioni di labellizzazione). Versione originale: <a href="https://agricheck.me/" target="_blank">https://agricheck.me</a>
+    subtitle: Quale rubrica viene controllata durante un controllo di base (e quali sono i relativi punti di controllo del label)? <a href="https://sca-opdir.github.io/checklist-controle" target="_blank">https://sca-opdir.github.io/checklist-controle</a>  
   search:
     placeholder: Cerca qui una parola chiave e tutti i gruppi trovati verranno colorati.
     button: Cerca
